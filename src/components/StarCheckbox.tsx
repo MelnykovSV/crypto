@@ -12,7 +12,6 @@ export default function StarCheckbox({ checkStatus = false }) {
   return (
     <button onClick={checkHandler}>
       <span>{isChecked ? <FaStar /> : <FaRegStar />}</span>
-      Button
     </button>
   );
 }

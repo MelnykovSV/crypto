@@ -7,6 +7,11 @@ const nextConfig = {
         hostname: "assets.coingecko.com",
         port: "",
       },
+      {
+        protocol: "http",
+        hostname: "res.cloudinary.com",
+        port: "",
+      },
     ],
   },
 };

@@ -21,6 +21,7 @@ export default function Page() {
     <div>
       <h2>CurrenciesPage</h2>
       <CurrenciesTable />
+      <div>Some currencies content</div>
     </div>
   );
 }
