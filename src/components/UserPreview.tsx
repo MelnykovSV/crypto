@@ -1,4 +1,3 @@
-import logoIcon from "../assets/Logo.svg";
 import Image from "next/image";
 
 interface UserPreviewProps {
@@ -18,6 +17,7 @@ export default function UserPreview({
         alt={`${userName} avatar`}
         width={48}
         height={48}
+        className="block rounded-full"
       />
     </div>
   );

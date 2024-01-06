@@ -1,4 +1,6 @@
 import type { Config } from "tailwindcss";
+// const plugin = require("tailwindcss/plugin");
+// import BgGradientSvg from "/public/bg-gradient.svg";
 
 const config: Config = {
   content: [
@@ -28,14 +30,25 @@ const config: Config = {
         "line/3": "#C9CDD4",
         "text/3": "#86909C",
         cyan: "#0FC6C2",
+        "purple-grad": "rgba(24, 75, 255, 0.40)",
       },
       backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        // "gradient-radial":
+        //   " radial-gradient(circle, rgba(11,11,15,1)  0%, rgba(255,255,255,0) 100%)",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+
+        "radial-gradient-1":
+          " radial-gradient(circle, rgba(255,255,255,0)  0%, #0B0B0F 100%), url('/bg-gradient.svg')",
+        "accent-gradient":
+          "linear-gradient(101deg, #1F8EBE -5.36%, #440495 29.46%, #440495 56.03%, #B102CD 81.92%);",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // plugin(function plugin1({ addUtilities, addComponents, e, config }) {
+    //   // Add your custom styles here
+    // }),
+  ],
 };
 export default config;

@@ -1,5 +1,5 @@
 import { ICurrencyData } from "@/interfaces";
-import StarCheckbox from "./StarCheckbox";
+import { StarCheckbox } from "@/UI";
 import Image from "next/image";
 
 interface ICurrencyTabItemProps extends ICurrencyData {
