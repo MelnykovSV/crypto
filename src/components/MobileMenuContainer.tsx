@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import MobileMenu from "./MobileMenu";
+import BurgerIcon from "./../assets/burger.svg";
+import Image from "next/image";
 
 export default function MobileMenuContainer() {
   const [isOpen, setisOpen] = useState(false);
@@ -15,8 +17,14 @@ export default function MobileMenuContainer() {
 
   return (
     <div>
-      <button type="button" onClick={modalOpenHandler}>
-        Menu
+      <button type="button" onClick={modalOpenHandler} className="lg:hidden">
+        <Image
+          src={BurgerIcon}
+          alt="Burger icon"
+          width={30}
+          height={30}
+          className=" block"
+        />
       </button>
 
       <MobileMenu modalCloseHandler={modalCloseHandler} isOpen={isOpen} />

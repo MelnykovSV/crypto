@@ -14,6 +14,30 @@ const config: Config = {
         inter: ["var(--font-inter)"],
         mont: ["var(--font-montserrat)"],
       },
+      screens: {
+        // 'tablet': '640px',
+        // // => @media (min-width: 640px) { ... }
+
+        // 'laptop': '1024px',
+        // // => @media (min-width: 1024px) { ... }
+
+        desktop: "1440px",
+        // => @media (min-width: 1280px) { ... }
+      },
+      animation: {
+        "hue-rotate": "hue-rotate 3s linear infinite forwards",
+      },
+      keyframes: {
+        "hue-rotate": {
+          "0%": {
+            filter: "hue-rotate(0deg)",
+          },
+          "100%": {
+            filter: "hue-rotate(360deg)",
+          },
+        },
+      },
+
       colors: {
         white: "#ffffff",
         "black-5": "#0B0B0F",
@@ -33,15 +57,12 @@ const config: Config = {
         "purple-grad": "rgba(24, 75, 255, 0.40)",
       },
       backgroundImage: {
-        // "gradient-radial":
-        //   " radial-gradient(circle, rgba(11,11,15,1)  0%, rgba(255,255,255,0) 100%)",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
 
         "radial-gradient-1":
-          " radial-gradient(circle, rgba(255,255,255,0)  0%, #0B0B0F 100%), url('/bg-gradient.svg')",
-        "accent-gradient":
-          "linear-gradient(101deg, #1F8EBE -5.36%, #440495 29.46%, #440495 56.03%, #B102CD 81.92%);",
+          " radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%), url('/bg-gradient.svg')",
+        "accent-gradient": "linear-gradient(101deg, #1f8ebe 0%, #b102cd 100%);",
       },
     },
   },
