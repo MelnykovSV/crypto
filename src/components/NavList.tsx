@@ -3,12 +3,13 @@ import Link from "next/link";
 import { pages } from "@/constants";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 export default function NavList() {
   const pathname = usePathname();
 
   return (
-    <ul className=" mt-10 flex flex-col gap-4">
+    <ul className={twMerge("mt-10 flex flex-col gap-4")}>
       {pages.map((page) => (
         <li key={page[0]}>
           <Link

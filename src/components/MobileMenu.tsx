@@ -3,9 +3,7 @@ import { createPortal } from "react-dom";
 import { useRef, useEffect, useState, ReactNode } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
-import { pages } from "@/constants";
 import { Logo } from "@/UI";
-import Link from "next/link";
 import Image from "next/image";
 import LogoutIcon from "../assets/logout.svg";
 import CloseIcon from "../assets/close.svg";
@@ -43,13 +41,13 @@ export default function MobileMenu({
     }
 
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isOpen]);
+  }, [isOpen, modalCloseHandler]);
 
   useEffect(() => {
     if (matches) {
       modalCloseHandler();
     }
-  }, [matches]);
+  }, [matches, modalCloseHandler]);
 
   return mounted && ref.current
     ? createPortal(

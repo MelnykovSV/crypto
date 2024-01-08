@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { twMerge } from "tailwind-merge";
 
 interface UserPreviewProps {
   userName: string;
@@ -10,7 +11,7 @@ export default function UserPreview({
   userAvatar,
 }: UserPreviewProps) {
   return (
-    <div className="flex gap-4 justify-center items-center">
+    <div className={twMerge("flex gap-4 justify-center items-center")}>
       <p>{userName}</p>
       <Image
         src={userAvatar}

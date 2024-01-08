@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import MobileMenu from "./MobileMenu";
 import BurgerIcon from "./../assets/burger.svg";
 import Image from "next/image";
+import { useCallback } from "react";
 
 export default function MobileMenuContainer() {
   const [isOpen, setisOpen] = useState(false);
@@ -11,9 +12,9 @@ export default function MobileMenuContainer() {
     setisOpen(false);
   };
 
-  const modalOpenHandler = () => {
+  const modalOpenHandler = useCallback(() => {
     setisOpen(true);
-  };
+  }, []);
 
   return (
     <div>
