@@ -9,3 +9,5 @@ export const pages = [
   ["Transactions", "/transactions", TransactionsIcon],
   ["Profile", "/profile", ProfileIcon],
 ];
+
+export const currenciesPerPage = 30;

@@ -8,7 +8,7 @@ export default function Layout({ children }: any) {
   return (
     <>
       <main className=" flex p-4 h-screen bg-black-5 md:px-10">
-        <aside className="flex-col justify-between w-80 pt-10  pr-7 pb-28   hidden lg:flex relative z-20  ">
+        <aside className="flex-col justify-between w-80 pt-10  pr-7 pb-28   hidden desktop:flex relative z-20  ">
           <nav>
             <Logo />
             <NavList />
@@ -30,7 +30,7 @@ export default function Layout({ children }: any) {
 
         <div className="private-layout w-full  items-stretch  relative z-10">
           <div className="private-container  max-w-[1440px] mx-auto flex flex-col max-h-full relative flex-1 before:content-[''] before:block before:fixed before:top-0 before:left-0 before:w-[min(55vw,797px)] before:h-[min(55vw,797px)] before:-z-10  before:bg-cover before:bg-radial-gradient-1 after:content-[''] after:block after:fixed after:top-[60px] after:right-[-120px] after:w-[min(55vw,797px)] after:h-[min(55vw,797px)] after:-z-10 after:bg-cover after:bg-radial-gradient-1 desktop:before:absolute desktop:before:top-[-150px] desktop:before:left-[-150px] desktop:after:absolute desktop:after:top-0 desktop:after:right-[-400px]">
-            <header className="flex justify-between  items-center  lg:justify-end py-4  flex-1">
+            <header className="flex justify-between  items-center  desktop:justify-end py-4  flex-1">
               <MobileMenuContainer />
               <UserPreview
                 userName="Test_user"

@@ -1,40 +1,30 @@
 import CurrenciesTableItem from "./CurrenciesTableItem";
 import { ICurrencyData } from "@/interfaces";
+import { getCurrenciesData, getCurrenciesAmmount } from "@/api";
 
 const favArray = ["bitcoin", "ethereum"];
 
-export const getCurrenciesData = async () => {
-  try {
-    const res = await fetch(
-      "https://api.coingecko.com/api/v3/coins/markets?order=market_cap_desc&page=1&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=20&precision=3"
-    );
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    console.log(`Error: ${error}`);
-  }
-};
-
 export default async function CurrenciesTable() {
-  const currenciesData = await getCurrenciesData();
+  const currenciesData = await getCurrenciesData(1);
 
-  console.log(currenciesData);
+  const currenciesAmmount = await getCurrenciesAmmount();
+
+  console.log(currenciesAmmount);
 
   return (
-    <table>
+    <table className="min-w-[950px]">
       <thead>
         <tr>
           <th></th>
-          <th>#</th>
-          <th>Coin</th>
-          <th>Price</th>
-          <th>1h</th>
-          <th>24h</th>
-          <th>7d</th>
-          <th>24h Volume</th>
-          <th>market Cap</th>
-          <th>Last 7 days</th>
+          <th className="text-left">#</th>
+          <th className="text-left">Coin</th>
+          <th className="text-left">Price</th>
+          <th className="text-left">1h</th>
+          <th className="text-left">24h</th>
+          <th className="text-left">7d</th>
+          <th className="text-left">24h Volume</th>
+          <th className="text-left">market Cap</th>
+          <th className="text-left">Last 7 days</th>
         </tr>
       </thead>
       <tbody>

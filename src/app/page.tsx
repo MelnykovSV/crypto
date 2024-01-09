@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
+import { Sparkline } from "@/UI";
 // import { Inter, Montserrat } from "next/font/google";
 
 // const inter = Inter({

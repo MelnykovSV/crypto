@@ -18,7 +18,10 @@ export default function MobileMenuContainer() {
 
   return (
     <div>
-      <button type="button" onClick={modalOpenHandler} className="lg:hidden">
+      <button
+        type="button"
+        onClick={modalOpenHandler}
+        className="desktop:hidden">
         <Image
           src={BurgerIcon}
           alt="Burger icon"

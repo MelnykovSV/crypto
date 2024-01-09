@@ -21,7 +21,7 @@ export default function MobileMenu({
   const ref = useRef<Element | null>(null);
   const [mounted, setMounted] = useState(false);
 
-  const matches = useMediaQuery("(min-width: 1024px)");
+  const matches = useMediaQuery("(min-width: 1440px)");
 
   useEffect(() => {
     ref.current = document.querySelector<HTMLElement>("#mobile-menu-root");

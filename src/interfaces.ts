@@ -25,7 +25,7 @@ export interface ICurrencyData {
   atl_date: string;
   //   roi: null;
   last_updated: string;
-  sparkline_in_7d: { price: string[] }; ///
+  sparkline_in_7d: { price: number[] }; ///
   price_change_percentage_1h_in_currency: number; //
   price_change_percentage_24h_in_currency: number; //
   price_change_percentage_7d_in_currency: number; //
