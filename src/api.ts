@@ -26,3 +26,18 @@ export const getCurrenciesAmmount = async () => {
     console.log(`Error: ${error}`);
   }
 };
+
+export const searchCoins = async (query: string) => {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/search?query=${query}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs`
+    );
+    const data = await res.json();
+
+    console.log(data);
+
+    return data.coins;
+  } catch (error) {
+    console.log(`Error: ${error}`);
+  }
+};
