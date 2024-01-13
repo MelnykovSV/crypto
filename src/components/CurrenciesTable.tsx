@@ -1,16 +1,13 @@
 import CurrenciesTableItem from "./CurrenciesTableItem";
-import { ICurrencyData } from "@/interfaces";
-import { getCurrenciesData, getCurrenciesAmmount } from "@/api";
+import { ICoinTableData } from "@/interfaces";
 
 const favArray = ["bitcoin", "ethereum"];
 
-export default async function CurrenciesTable() {
-  const currenciesData = await getCurrenciesData(1);
+interface ITableProps {
+  tableData: ICoinTableData[];
+}
 
-  const currenciesAmmount = await getCurrenciesAmmount();
-
-  console.log(currenciesAmmount);
-
+export default async function CurrenciesTable({ tableData }: ITableProps) {
   return (
     <table className="min-w-[950px]">
       <thead>
@@ -28,7 +25,7 @@ export default async function CurrenciesTable() {
         </tr>
       </thead>
       <tbody>
-        {currenciesData.map((props: ICurrencyData) => (
+        {tableData.map((props: ICoinTableData) => (
           <CurrenciesTableItem
             key={props.id}
             {...props}

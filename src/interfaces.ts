@@ -30,3 +30,22 @@ export interface ICurrencyData {
   price_change_percentage_24h_in_currency: number; //
   price_change_percentage_7d_in_currency: number; //
 }
+
+export interface ICoinTableData
+  extends Pick<
+    ICurrencyData,
+    | "id"
+    | "name"
+    | "symbol"
+    | "current_price"
+    | "image"
+    | "market_cap_rank"
+    | "price_change_percentage_1h_in_currency"
+    | "price_change_percentage_24h_in_currency"
+    | "price_change_percentage_7d_in_currency"
+    | "market_cap"
+    | "market_cap_change_24h"
+    | "sparkline_in_7d"
+  > {
+  favorite: boolean;
+}

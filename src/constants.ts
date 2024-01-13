@@ -10,4 +10,4 @@ export const pages = [
   ["Profile", "/profile", ProfileIcon],
 ];
 
-export const currenciesPerPage = 30;
+export const coinsPerPage = 30;

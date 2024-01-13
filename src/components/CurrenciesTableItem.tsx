@@ -3,10 +3,7 @@ import { ICurrencyData } from "@/interfaces";
 import { StarCheckbox } from "@/UI";
 import Image from "next/image";
 import { Sparkline } from "@/UI";
-
-interface ICurrencyTabItemProps extends ICurrencyData {
-  favorite: boolean;
-}
+import { ICoinTableData } from "@/interfaces";
 
 export default function CurrenciesTableItem({
   id,
@@ -22,7 +19,7 @@ export default function CurrenciesTableItem({
   market_cap_change_24h,
   favorite,
   sparkline_in_7d,
-}: ICurrencyTabItemProps) {
+}: ICoinTableData) {
   return (
     <tr>
       <td className=" w-7">

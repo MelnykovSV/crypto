@@ -30,7 +30,6 @@ export default function MobileMenu({
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      console.log("handler");
       if (e.key === "Escape") {
         modalCloseHandler();
       }
