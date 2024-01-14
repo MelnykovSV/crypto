@@ -14,7 +14,7 @@ export default function NavList() {
         <li key={page[0]}>
           <Link
             className={`text-lg flex gap-5 py-4 px-6 max-w-80 items-center rounded-2xl  ${
-              pathname === page[1]
+              pathname.startsWith(page[1]) 
                 ? " before:opacity-100 pointer-events-none"
                 : ""
             } relative z-10 overflow-hidden before:content-[''] before:absolute before:left-0  before:top-0  before:transition-opacity before:duration-300 before:ease-linear before:w-full  before:h-full before:-z-10 before:bg-accent-gradient before:opacity-0 before:bg-cover before:animate-hue-rotate hover:before:opacity-100  `}
