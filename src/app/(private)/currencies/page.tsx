@@ -16,8 +16,9 @@ export default async function Page({ searchParams }: ICoinsPageProps) {
 
   return (
     <div>
-      <h2>CurrenciesPage</h2>
-      <Search />
+
+      {/* <h2>CurrenciesPage</h2>
+      <Search /> */}
       <CurrenciesTable tableData={currenciesData} />
 
       <PaginationComponent totalPages={pagesAmount || 1} />

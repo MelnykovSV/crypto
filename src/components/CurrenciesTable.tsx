@@ -7,9 +7,12 @@ interface ITableProps {
   tableData: ICoinTableData[];
 }
 
-export default async function CurrenciesTable({ tableData }: ITableProps) {
+export default async function CurrenciesTable({
+  tableData,
+  ...props
+}: ITableProps) {
   return (
-    <table className="min-w-[950px]">
+    <table className="min-w-[950px] mb-5">
       <thead>
         <tr>
           <th></th>

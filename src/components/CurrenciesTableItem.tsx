@@ -1,9 +1,9 @@
 "use client";
 import { ICurrencyData } from "@/interfaces";
 import { StarCheckbox } from "@/UI";
-import Image from "next/image";
 import { Sparkline } from "@/UI";
 import { ICoinTableData } from "@/interfaces";
+import { ImageComponent } from "@/UI";
 
 export default function CurrenciesTableItem({
   id,
@@ -25,33 +25,48 @@ export default function CurrenciesTableItem({
       <td className=" w-7">
         <StarCheckbox checkStatus={favorite} />
       </td>
-      <td className="w-16">{market_cap_rank}.</td>
+      <td className="w-16">{market_cap_rank || "--"}.</td>
       <td className=" w-80">
         <div className="flex gap-3 items-center">
-          <Image
-            src={image}
-            alt="Picture of the author"
+          <ImageComponent
+            src={
+              image.startsWith("https://assets.coingecko.com/coins/images")
+                ? image
+                : "/--"
+            }
+            alt={`${name} coin image`}
             width={30}
             height={30}
-            // blurDataURL="data:..." automatically provided
-            // placeholder="blur" // Optional blur-up while loading
           />
-          <p className=" max-w-52 truncate ">{name}</p>
-          <p className=" text-zinc-400">{symbol}</p>
+
+          <p className=" max-w-52 truncate ">{name || "--"}</p>
+          <p className=" text-zinc-400">{symbol || "--"}</p>
         </div>
       </td>
-      <td className=" w-32">${current_price.toFixed(2)}</td>
-      <td className=" w-[56px]">
-        {price_change_percentage_1h_in_currency.toFixed(1)}
+      <td className=" w-32">
+        ${current_price ? current_price.toFixed(2) : "--"}
       </td>
       <td className=" w-[56px]">
-        {price_change_percentage_24h_in_currency.toFixed(1)}
+        {price_change_percentage_1h_in_currency
+          ? price_change_percentage_1h_in_currency.toFixed(1)
+          : "--"}
       </td>
       <td className=" w-[56px]">
-        {price_change_percentage_7d_in_currency.toFixed(1)}
+        {price_change_percentage_24h_in_currency
+          ? price_change_percentage_24h_in_currency.toFixed(1)
+          : "--"}
       </td>
-      <td className=" w-[150px]">${Math.floor(market_cap_change_24h)}</td>
-      <td className=" w-[150px]">${Math.floor(market_cap)}</td>
+      <td className=" w-[56px]">
+        {price_change_percentage_7d_in_currency
+          ? price_change_percentage_7d_in_currency.toFixed(1)
+          : "--"}
+      </td>
+      <td className=" w-[150px]">
+        ${market_cap_change_24h ? Math.floor(market_cap_change_24h) : "--"}
+      </td>
+      <td className=" w-[150px]">
+        ${market_cap ? Math.floor(market_cap) : "--"}
+      </td>
       <td
         className="w-[200px] h-[56px] min-w-[120px] pr-3"
         width={200}

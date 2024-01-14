@@ -4,7 +4,8 @@ import { MobileMenuContainer, MobileMenu } from "@/components";
 import LogoutIcon from "../../assets/logout.svg";
 import Image from "next/image";
 
-export default function Layout({ children }: any) {
+export default function Layout({ children}: any) {
+
   return (
     <>
       <main className=" flex p-4 h-screen bg-black-5 md:px-10">

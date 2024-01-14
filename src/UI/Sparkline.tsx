@@ -8,9 +8,13 @@ interface ISparkline {
 }
 
 export default function Sparkline({ data, dif }: ISparkline) {
+  if (!data.price.length) {
+    return <p>No data</p>;
+  }
   const formattedData = data.price.map((item) => ({ price: item }));
   return (
     <ResponsiveContainer width="100%" height="100%">
+      {}
       <LineChart width={300} height={100} data={formattedData}>
         <defs>
           <linearGradient id="colorGradient1" x1="0" y1="0" x2="1" y2="0">

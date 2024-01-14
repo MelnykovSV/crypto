@@ -12,15 +12,15 @@ export default function Search() {
   };
 
   return (
-    <>
-      <input type="text" onChange={inputChangehandler} />
-      <ul>
-        {coinsFound.map((item: {id:string, name:string}) => (
+    <div className="w-[350px] relative">
+      <input type="text" className=" w-full text-slate-950 px-3 py-2 rounded-lg bg-slate-200" onChange={inputChangehandler} />
+      <ul className="absolute w-full h-full top-[40px] left-0">
+        {coinsFound.map((item: { id: string; name: string }) => (
           <li key={item.id}>
             <Link href={`/currencies/${item.id}`}> {item.name}</Link>
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 }

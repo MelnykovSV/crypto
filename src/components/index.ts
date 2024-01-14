@@ -6,6 +6,7 @@ import NavList from "./NavList";
 import MobileMenuContainer from "./MobileMenuContainer";
 import PaginationComponent from "./PaginationComponent";
 import Search from "./Search";
+import Breadcrumbs from "./Breadcrumbs";
 
 export {
   CurrenciesTable,
@@ -15,5 +16,6 @@ export {
   MobileMenuContainer,
   NavList,
   PaginationComponent,
-  Search
+  Search,
+  Breadcrumbs
 };
