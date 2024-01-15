@@ -1,11 +1,11 @@
 "use client";
-import { ICurrencyData } from "@/interfaces";
+
 import { StarCheckbox } from "@/UI";
 import { Sparkline } from "@/UI";
 import { ICoinTableData } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 
-export default function CurrenciesTableItem({
+export default function CoinsTableItem({
   id,
   name,
   symbol,
@@ -44,28 +44,49 @@ export default function CurrenciesTableItem({
         </div>
       </td>
       <td className=" w-32">
-        ${current_price ? current_price.toFixed(2) : "--"}
+        {current_price ? current_price.toFixed(2) : "0.00"} $
       </td>
-      <td className=" w-[56px]">
+      <td
+        className={`w-[63px] ${
+          price_change_percentage_1h_in_currency > 0
+            ? "text-success"
+            : "text-error"
+        }`}>
         {price_change_percentage_1h_in_currency
           ? price_change_percentage_1h_in_currency.toFixed(1)
-          : "--"}
+          : "--"}{" "}
+        %
       </td>
-      <td className=" w-[56px]">
+      <td
+        className={`w-[63px] ${
+          price_change_percentage_24h_in_currency > 0
+            ? "text-success"
+            : "text-error"
+        }`}>
         {price_change_percentage_24h_in_currency
           ? price_change_percentage_24h_in_currency.toFixed(1)
-          : "--"}
+          : "--"}{" "}
+        %
       </td>
-      <td className=" w-[56px]">
+      <td
+        className={`w-[63px] ${
+          price_change_percentage_7d_in_currency > 0
+            ? "text-success"
+            : "text-error"
+        }`}>
         {price_change_percentage_7d_in_currency
           ? price_change_percentage_7d_in_currency.toFixed(1)
-          : "--"}
+          : "--"}{" "}
+        %
+      </td>
+      <td
+        className={`w-[150px] ${
+          market_cap_change_24h > 0 ? "text-success" : "text-error"
+        }`}>
+        {market_cap_change_24h ? Math.floor(market_cap_change_24h) : "--"} $
       </td>
       <td className=" w-[150px]">
-        ${market_cap_change_24h ? Math.floor(market_cap_change_24h) : "--"}
-      </td>
-      <td className=" w-[150px]">
-        ${market_cap ? Math.floor(market_cap) : "--"}
+        {market_cap ? Math.floor(market_cap) : "--"} $
       </td>
       <td
         className="w-[200px] h-[56px] min-w-[120px] pr-3"

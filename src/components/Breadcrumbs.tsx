@@ -9,7 +9,7 @@ export default function Breadcrumbs() {
   const breadcrumbsData = useBreadcrumbs();
 
   return (
-    <ul className="flex gap-2">
+    <ul className="flex gap-2 items-center">
       {breadcrumbsData.map((item, i, arr) => (
         <li className="flex gap-2" key={item.page}>
           {i ? (

@@ -1,4 +1,4 @@
-import CurrenciesTable from "@/components/CurrenciesTable";
+import CurrenciesTable from "@/components/CoinsTable";
 import ReactPaginate from "react-paginate";
 import Pagination from "@mui/material/Pagination";
 import { PaginationComponent, Search } from "@/components";
@@ -16,7 +16,6 @@ export default async function Page({ searchParams }: ICoinsPageProps) {
 
   return (
     <div>
-
       {/* <h2>CurrenciesPage</h2>
       <Search /> */}
       <CurrenciesTable tableData={currenciesData} />

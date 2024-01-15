@@ -1,4 +1,4 @@
-import CurrenciesTableItem from "./CurrenciesTableItem";
+import CurrenciesTableItem from "./CoinsTableItem";
 import { ICoinTableData } from "@/interfaces";
 
 const favArray = ["bitcoin", "ethereum"];
@@ -7,10 +7,7 @@ interface ITableProps {
   tableData: ICoinTableData[];
 }
 
-export default async function CurrenciesTable({
-  tableData,
-  ...props
-}: ITableProps) {
+export default async function CoinsTable({ tableData, ...props }: ITableProps) {
   return (
     <table className="min-w-[950px] mb-5">
       <thead>

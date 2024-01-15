@@ -31,6 +31,7 @@ export default function PaginationComponent({
       shape="rounded"
       className=" justify-center"
       sx={{
+        paddingBottom: "15px",
         "& .MuiPagination-ul": {
           justifyContent: "center",
         },

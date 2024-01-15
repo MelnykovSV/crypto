@@ -1,5 +1,5 @@
-import CurrenciesTable from "./CurrenciesTable";
-import CurrenciesTableItem from "./CurrenciesTableItem";
+import CoinsTable from "./CoinsTable";
+import CoinsTableItem from "./CoinsTableItem";
 import UserPreview from "./UserPreview";
 import MobileMenu from "./MobileMenu";
 import NavList from "./NavList";
@@ -9,13 +9,13 @@ import Search from "./Search";
 import Breadcrumbs from "./Breadcrumbs";
 
 export {
-  CurrenciesTable,
-  CurrenciesTableItem,
+  CoinsTable,
+  CoinsTableItem,
   UserPreview,
   MobileMenu,
   MobileMenuContainer,
   NavList,
   PaginationComponent,
   Search,
-  Breadcrumbs
+  Breadcrumbs,
 };

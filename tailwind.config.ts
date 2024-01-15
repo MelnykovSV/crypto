@@ -45,7 +45,6 @@ const config: Config = {
         "black-20": "#2B2C3B",
         "black-40": "#565976",
         "black-60": "#898CA9",
-        accent: "#F54C18",
         "motion-light": "#FFC34D",
         power: "#1AD9FF",
         "brand1-6": "#165DFF",
@@ -55,6 +54,9 @@ const config: Config = {
         "text/3": "#86909C",
         cyan: "#0FC6C2",
         "purple-grad": "rgba(24, 75, 255, 0.40)",
+        success: "#0DBB7C",
+        error: "#FF8282",
+        accent: "#b102cd",
       },
       backgroundImage: {
         "gradient-conic":

@@ -1,4 +1,4 @@
-export interface ICurrencyData {
+export interface ICoinData {
   id: string; //
   symbol: string; //
   name: string; //
@@ -33,7 +33,7 @@ export interface ICurrencyData {
 
 export interface ICoinTableData
   extends Pick<
-    ICurrencyData,
+    ICoinData,
     | "id"
     | "name"
     | "symbol"

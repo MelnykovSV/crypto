@@ -38,7 +38,7 @@ export default function Layout({ children}: any) {
                 userAvatar="http://res.cloudinary.com/dzrvw6uic/image/upload/c_fill,h_250,w_250/c1l9bkqlokigwsggloin.jpg"
               />
             </header>
-            <div className="max-h-[100%-80px] overflow-y-auto  flex-1 w-full max-w-7xl mr-auto ml-auto h-overflow-y-auto ">
+            <div className="max-h-[100%-80px] overflow-y-auto flex flex-col  flex-1 w-full max-w-7xl mr-auto ml-auto h-overflow-y-auto ">
               {children}
             </div>
           </div>
