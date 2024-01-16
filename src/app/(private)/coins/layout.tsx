@@ -5,7 +5,7 @@ export default function Layout({ children, params }: any) {
 
   return (
     <>
-      <div className="flex justify-between pt-1 pb-5 px-5">
+      <div className="flex flex-col gap-2 justify-between pt-1 pb-5 laptop:flex-row">
         <Breadcrumbs />
 
         <Search />

@@ -60,7 +60,7 @@ export default function Search() {
   }, [isOpen]);
 
   return (
-    <div className="w-[350px] relative" ref={containerRef}>
+    <div className="w-[min(100%,350px)] relative" ref={containerRef}>
       <Image
         src={searchIcon}
         alt="Search icon"
