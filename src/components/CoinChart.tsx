@@ -1,58 +1,251 @@
 "use client";
-// import Chart from "react-apexcharts";
+
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
-import { useState } from "react";
-import { formatCandleChartData, formatLineChartData } from "@/app/lib";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const options: ApexOptions = {
-  chart: {
-    type: "line",
-    height: 420,
-    width: 700,
+const lineOptions: ApexOptions = {
+  tooltip: {
+    enabled: true,
+    enabledOnSeries: undefined,
+    shared: true,
+    followCursor: false,
+    intersect: false,
+    inverseOrder: false,
+    custom: undefined,
+    fillSeriesColor: false,
+
+    style: {
+      fontSize: "12px",
+      fontFamily: undefined,
+    },
+    onDatasetHover: {
+      highlightDataSeries: false,
+    },
+    x: {
+      show: true,
+      format: "ddd dd MMM yyyy, HH:mm:ss",
+      formatter: undefined,
+    },
+    y: {
+      formatter: undefined,
+      title: {
+        formatter: (seriesName) => seriesName,
+      },
+    },
+    marker: {
+      show: true,
+    },
+
+    fixed: {
+      enabled: false,
+      position: "topRight",
+      offsetX: 0,
+      offsetY: 0,
+    },
   },
-  title: {
-    text: "CandleStick Chart",
-    align: "left",
+  chart: {
+    type: "area",
+    stacked: false,
+    height: 350,
+    width: "100%",
+    zoom: {
+      type: "x",
+      enabled: true,
+      autoScaleYaxis: true,
+    },
+    toolbar: {
+      autoSelected: "zoom",
+    },
+  },
+
+  dataLabels: {
+    enabled: false,
   },
   xaxis: {
     type: "datetime",
+    title: {
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: undefined,
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 600,
+        cssClass: "apexcharts-xaxis-title",
+      },
+    },
+    labels: {
+      show: true,
+      rotate: -45,
+      rotateAlways: false,
+      hideOverlappingLabels: true,
+      showDuplicates: false,
+      trim: false,
+      minHeight: undefined,
+      maxHeight: 120,
+      style: {
+        colors: "#86909C",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 400,
+        cssClass: "apexcharts-xaxis-label",
+      },
+
+      offsetX: 0,
+      offsetY: 0,
+      format: undefined,
+      formatter: undefined,
+      datetimeUTC: true,
+      datetimeFormatter: {
+        year: "yyyy",
+        month: "MMM 'yy",
+        day: "dd MMM",
+        hour: "HH:mm",
+      },
+    },
   },
   yaxis: {
     tooltip: {
       enabled: false,
     },
+    title: {
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: undefined,
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 600,
+        cssClass: "apexcharts-xaxis-title",
+      },
+    },
+    labels: {
+      style: {
+        colors: "#86909C",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 400,
+        cssClass: "apexcharts-xaxis-label",
+      },
+      formatter: (value) => {
+        return `${value.toFixed(6)}$`;
+      },
+    },
   },
 };
 
-const lineOptions: ApexOptions = {
-  chart: {
-    height: 350,
-    type: "line",
-    zoom: {
-      enabled: false,
+const candleOptions: ApexOptions = {
+  tooltip: {
+    enabled: true,
+
+    style: {
+      fontSize: "12px",
+    },
+    onDatasetHover: {
+      highlightDataSeries: false,
+    },
+    x: {
+      format: "ddd dd MMM yyyy, HH:mm:ss",
+    },
+    y: {
+      title: {
+        formatter: (seriesName) => `${seriesName}$`,
+      },
+    },
+    marker: {
+      show: true,
     },
   },
+  chart: {
+    type: "area",
+    stacked: false,
+    // height: 350,
+    width: "100%",
+    zoom: {
+      type: "x",
+      enabled: true,
+      autoScaleYaxis: true,
+    },
+    toolbar: {
+      autoSelected: "zoom",
+    },
+  },
+
   dataLabels: {
     enabled: false,
   },
-  stroke: {
-    curve: "straight",
-  },
-  title: {
-    text: "Product Trends by Month",
-    align: "left",
-  },
-  grid: {
-    row: {
-      colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-      opacity: 0.5,
+  xaxis: {
+    type: "datetime",
+    title: {
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: undefined,
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 600,
+        cssClass: "apexcharts-xaxis-title",
+      },
+    },
+    labels: {
+      show: true,
+      rotate: -45,
+      rotateAlways: false,
+      hideOverlappingLabels: true,
+      showDuplicates: false,
+      trim: false,
+      minHeight: undefined,
+      maxHeight: 120,
+      style: {
+        colors: "#86909C",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 400,
+        cssClass: "apexcharts-xaxis-label",
+      },
+
+      offsetX: 0,
+      offsetY: 0,
+      format: undefined,
+      formatter: undefined,
+      datetimeUTC: true,
+      datetimeFormatter: {
+        year: "yyyy",
+        month: "MMM 'yy",
+        day: "dd MMM",
+        hour: "HH:mm",
+      },
     },
   },
-  xaxis: {
-    categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
+  yaxis: {
+    tooltip: {
+      enabled: false,
+    },
+    title: {
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        color: undefined,
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 600,
+        cssClass: "apexcharts-xaxis-title",
+      },
+    },
+    labels: {
+      style: {
+        colors: "#86909C",
+        fontSize: "12px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 400,
+        cssClass: "apexcharts-xaxis-label",
+      },
+      formatter: (value) => {
+        return `${value.toFixed(6)}$`;
+      },
+    },
   },
 };
 
@@ -62,19 +255,17 @@ interface ICoinChartProps {
 }
 
 export default function CoinChart({ series, type }: ICoinChartProps) {
-
-
   switch (type) {
     case "candlestick":
       return (
-        <div>
-          <div className="app h-[600px]">
+        <div className=" text-zinc-950">
+          <div className="app h-[420px] overflow-hidden">
             <ApexChart
-              options={options}
+              options={candleOptions}
               series={series}
               type="candlestick"
               height={420}
-              width={700}
+              width={"100%"}
             />
           </div>
         </div>
@@ -83,17 +274,17 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
     case "line":
       return (
         //Container with fixed height needed
-        <div>
+        <div className=" text-zinc-950">
           <button></button>
 
-          <div className="app h-[600px]">
+          <div className="app h-[420px] overflow-hidden">
             {
               <ApexChart
-                options={options}
+                options={lineOptions}
                 series={series}
-                type="line"
+                type="area"
                 height={420}
-                width={700}
+                width={"100%"}
               />
             }
           </div>

@@ -1,4 +1,5 @@
 import { coinsPerPage } from "./constants";
+import { toast } from "react-toastify";
 
 export const getCurrenciesData = async (page: number) => {
   try {
@@ -9,28 +10,40 @@ export const getCurrenciesData = async (page: number) => {
 
     return data;
   } catch (error) {
-    console.log(`Error: ${error}`);
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
   }
 };
 
 export const getCurrenciesAmmount = async () => {
   try {
     const res = await fetch(
-      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs"
+      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD"
     );
     const data = await res.json();
     console.log(data.length);
 
     return Math.ceil(data.length / coinsPerPage);
   } catch (error) {
-    console.log(`Error: ${error}`);
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
   }
 };
 
 export const searchCoins = async (query: string) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/search?query=${query}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs`
+      `https://api.coingecko.com/api/v3/search?query=${query}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD`
     );
     const data = await res.json();
 
@@ -38,7 +51,13 @@ export const searchCoins = async (query: string) => {
 
     return data.coins;
   } catch (error) {
-    console.log(`Error: ${error}`);
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
   }
 };
 
@@ -50,13 +69,23 @@ export const getCoinMarketChartData = async (
 ) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs`
+      `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFj`
     );
+
+    console.log(res);
+
     const data = await res.json();
+    console.log(data);
 
     return data.prices;
-  } catch (error) {
-    console.log(error);
+  } catch (error: unknown) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
   }
 };
 
@@ -68,12 +97,45 @@ export const getCoinOHLCData = async (
 ) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coin}/ohlc?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs`
+      `https://api.coingecko.com/api/v3/coins/${coin}/ohlc?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFj`
+    );
+
+    console.log(res);
+
+    if (!res.ok) {
+      // Log the status code and throw an error
+      console.error("HTTP status code:", res.status);
+      throw new Error("Network response was not ok");
+    }
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
+  }
+};
+
+export const getSingleCoinData = async (coin: string) => {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=${coinsPerPage}&precision=3`
     );
     const data = await res.json();
 
     return data;
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
   }
 };
