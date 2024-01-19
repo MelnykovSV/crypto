@@ -4,6 +4,7 @@ import { StarCheckbox } from "@/UI";
 import { Sparkline } from "@/UI";
 import { ICoinTableData } from "@/interfaces";
 import { ImageComponent } from "@/UI";
+import Link from "next/link";
 
 export default function CoinsTableItem({
   id,
@@ -21,13 +22,13 @@ export default function CoinsTableItem({
   sparkline_in_7d,
 }: ICoinTableData) {
   return (
-    <tr>
-      <td className=" w-7">
+    <tr className=" transition-colors hover:bg-accent/30 ">
+      <td className=" w-7 pl-2">
         <StarCheckbox checkStatus={favorite} />
       </td>
       <td className="w-16">{market_cap_rank || "--"}.</td>
       <td className=" w-80">
-        <div className="flex gap-3 items-center">
+        <Link href={`coins/${id}`} className="flex gap-3 items-center">
           <ImageComponent
             src={
               image.startsWith("https://assets.coingecko.com/coins/images")
@@ -41,7 +42,7 @@ export default function CoinsTableItem({
 
           <p className=" max-w-52 truncate ">{name || "--"}</p>
           <p className=" text-zinc-400">{symbol || "--"}</p>
-        </div>
+        </Link>
       </td>
       <td className=" w-32">
         {current_price ? current_price.toFixed(2) : "0.00"} $

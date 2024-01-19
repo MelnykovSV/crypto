@@ -145,13 +145,12 @@ export default function CoinChartModule({
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        {" "}
+      <div className="flex flex-col gap-5 justify-between items-start tablet:flex-row tablet:items-center">
         <div className="flex gap-3">
           <button
             type="button"
             className={`p-3 border-[1px] rounded-lg ${
-              chartType === "line" ? "bg-violet-500" : ""
+              chartType === "line" ? "bg-accent/40" : ""
             }`}
             onClick={lineClickHandler}>
             <Image
@@ -164,7 +163,7 @@ export default function CoinChartModule({
           <button
             type="button"
             className={`p-3 border-[1px] rounded-lg  ${
-              chartType === "candlestick" ? "bg-violet-500" : ""
+              chartType === "candlestick" ? "bg-accent/40" : ""
             }`}
             onClick={candleClickHandler}>
             <Image
@@ -175,13 +174,13 @@ export default function CoinChartModule({
             />
           </button>
         </div>
-        <div className="flex">
+        <div className="flex text-xs tablet:text-base">
           {daysAmount.map(({ value, label }) => (
             <button
               key={label}
               type="button"
               className={`border-[1px] p-2 first-of-type:rounded-tl-lg  first-of-type:rounded-bl-lg last-of-type:rounded-tr-lg last-of-type:rounded-br-lg ${
-                days === value ? " bg-violet-500" : ""
+                days === value ? " bg-accent/40" : ""
               }`}
               onClick={() => {
                 daysChangeHandler(value);

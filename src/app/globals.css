@@ -37,3 +37,7 @@ body {
   border-radius: 12px;
   width: 5px;
 }
+
+.coin-description a {
+  color: #b102cd;
+}

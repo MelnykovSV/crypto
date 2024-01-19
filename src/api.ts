@@ -26,7 +26,6 @@ export const getCurrenciesAmmount = async () => {
       "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD"
     );
     const data = await res.json();
-    console.log(data.length);
 
     return Math.ceil(data.length / coinsPerPage);
   } catch (error) {
@@ -46,8 +45,6 @@ export const searchCoins = async (query: string) => {
       `https://api.coingecko.com/api/v3/search?query=${query}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD`
     );
     const data = await res.json();
-
-    console.log(data);
 
     return data.coins;
   } catch (error) {
@@ -72,10 +69,7 @@ export const getCoinMarketChartData = async (
       `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFj`
     );
 
-    console.log(res);
-
     const data = await res.json();
-    console.log(data);
 
     return data.prices;
   } catch (error: unknown) {
@@ -99,8 +93,6 @@ export const getCoinOHLCData = async (
     const res = await fetch(
       `https://api.coingecko.com/api/v3/coins/${coin}/ohlc?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFj`
     );
-
-    console.log(res);
 
     if (!res.ok) {
       // Log the status code and throw an error

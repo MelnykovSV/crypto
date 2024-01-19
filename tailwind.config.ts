@@ -15,7 +15,7 @@ const config: Config = {
         mont: ["var(--font-montserrat)"],
       },
       screens: {
-        // 'tablet': '640px',
+        tablet: "640px",
         // // => @media (min-width: 640px) { ... }
 
         // 'laptop': '1024px',
@@ -65,6 +65,8 @@ const config: Config = {
         "radial-gradient-1":
           " radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%), url('/bg-gradient.svg')",
         "accent-gradient": "linear-gradient(101deg, #1f8ebe 0%, #b102cd 100%);",
+        "progress-gradient":
+          "linear-gradient(101deg, #FF8282 0%, #0DBB7C 100%);",
       },
     },
   },

@@ -25,7 +25,7 @@ export default function PaginationComponent({
   return (
     <Pagination
       count={totalPages}
-      page={Number(searchParams.get("page"))}
+      page={Number(searchParams.get("page"))||1}
       onChange={paginationHandler}
       color="secondary"
       shape="rounded"
@@ -44,7 +44,7 @@ export default function PaginationComponent({
         },
         "& .MuiPaginationItem-ellipsis": { border: "none" },
         "& .Mui-selected": {
-          backgroundColor: "red",
+          backgroundColor: "#b102cd",
           color: "white",
         },
       }}
