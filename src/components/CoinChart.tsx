@@ -15,6 +15,9 @@ interface ICoinChartProps {
 export default function CoinChart({ series, type }: ICoinChartProps) {
   const [isChartLoading, setIsChartLoading] = useState(true);
 
+
+  console.log(series)
+
   const lineOptions: ApexOptions = {
     tooltip: {
       enabled: true,

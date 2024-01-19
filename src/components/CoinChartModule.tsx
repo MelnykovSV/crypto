@@ -191,7 +191,7 @@ export default function CoinChartModule({
         </div>
       </div>
 
-      {!!series && <CoinChart series={series} type={chartType} />}
+      {series[0].data.length>1 ? <CoinChart series={series} type={chartType} />: <p className=" text-xl mt-5">No chart data</p>}
     </div>
   );
 }

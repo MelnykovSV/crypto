@@ -46,9 +46,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
 
           <div className="flex gap-3 items-center justify-center w-fit mb-6">
             <p className=" text-3xl font-bold">
-              $
               {coinData.market_data.current_price.usd
-                ? coinData.market_data.current_price.usd.toLocaleString("en-US")
+                ? `$${coinData.market_data.current_price.usd.toLocaleString(
+                    "en-US"
+                  )}`
                 : "No data"}
             </p>
 
@@ -70,11 +71,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     : "text-error"
                 }`}>
                 {coinData.market_data.price_change_percentage_24h
-                  ? Math.abs(
+                  ? `${Math.abs(
                       coinData.market_data.price_change_percentage_24h
-                    ).toFixed(2)
+                    ).toFixed(2)}%`
                   : "No data"}
-                %
               </p>
             </div>
           </div>
@@ -99,16 +99,18 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
             </div>
             <div className="flex justify-between">
               <p>
-                $
                 {coinData.market_data.low_24h.usd
-                  ? coinData.market_data.low_24h.usd.toLocaleString("en-US")
+                  ? `$${coinData.market_data.low_24h.usd.toLocaleString(
+                      "en-US"
+                    )}`
                   : "No data"}
               </p>
               <p>24h Range</p>
               <p>
-                $
                 {coinData.market_data.high_24h.usd
-                  ? coinData.market_data.high_24h.usd.toLocaleString("en-US")
+                  ? `$${coinData.market_data.high_24h.usd.toLocaleString(
+                      "en-US"
+                    )}`
                   : "No data"}
               </p>
             </div>
@@ -119,31 +121,30 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
               <dt>Market Cap</dt>
               <dd>
                 {coinData.market_data.market_cap.usd
-                  ? coinData.market_data.market_cap.usd.toLocaleString("en-US")
+                  ? `${coinData.market_data.market_cap.usd.toLocaleString(
+                      "en-US"
+                    )}$`
                   : "No data"}
-                $
               </dd>
             </div>
             <div className="flex gap-3 justify-between">
               <dt>24 Market Cap Change</dt>
               <dd>
                 {coinData.market_data.market_cap_change_24h
-                  ? coinData.market_data.market_cap_change_24h.toLocaleString(
+                  ? `${coinData.market_data.market_cap_change_24h.toLocaleString(
                       "en-US"
-                    )
+                    )}$`
                   : "No data"}
-                $
               </dd>
             </div>
             <div className="flex gap-3 justify-between">
               <dt>Fully Diluted Valuation</dt>
               <dd>
                 {coinData.market_data.fully_diluted_valuation.usd
-                  ? coinData.market_data.fully_diluted_valuation.usd.toLocaleString(
+                  ? `${coinData.market_data.fully_diluted_valuation.usd.toLocaleString(
                       "en-US"
-                    )
+                    )}$`
                   : "No data"}
-                $
               </dd>
             </div>
             <div className="flex gap-3 justify-between">
@@ -209,11 +210,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     />
                     <p>
                       {coinData.market_data.price_change_percentage_24h
-                        ? Math.abs(
+                        ? `${Math.abs(
                             coinData.market_data.price_change_percentage_24h
-                          ).toFixed(2)
+                          ).toFixed(2)}%`
                         : "No data"}
-                      %
                     </p>
                   </div>
                 </td>
@@ -236,11 +236,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     />
                     <p>
                       {coinData.market_data.price_change_percentage_7d
-                        ? Math.abs(
+                        ? `${Math.abs(
                             coinData.market_data.price_change_percentage_7d
-                          ).toFixed(2)
+                          ).toFixed(2)}%`
                         : "No data"}
-                      %
                     </p>
                   </div>
                 </td>
@@ -263,11 +262,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     />
                     <p>
                       {coinData.market_data.price_change_percentage_14d
-                        ? Math.abs(
+                        ? `${Math.abs(
                             coinData.market_data.price_change_percentage_14d
-                          ).toFixed(2)
+                          ).toFixed(2)}%`
                         : "No data"}
-                      %
                     </p>
                   </div>
                 </td>
@@ -290,11 +288,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     />
                     <p>
                       {coinData.market_data.price_change_percentage_30d
-                        ? Math.abs(
+                        ? `${Math.abs(
                             coinData.market_data.price_change_percentage_30d
-                          ).toFixed(2)
+                          ).toFixed(2)}%`
                         : "No data"}
-                      %
                     </p>
                   </div>
                 </td>
@@ -317,11 +314,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     />
                     <p>
                       {coinData.market_data.price_change_percentage_60d
-                        ? Math.abs(
+                        ? `${Math.abs(
                             coinData.market_data.price_change_percentage_60d
-                          ).toFixed(2)
+                          ).toFixed(2)}%`
                         : "No data"}
-                      %
                     </p>
                   </div>
                 </td>
@@ -345,11 +341,10 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     />
                     <p>
                       {coinData.market_data.price_change_percentage_1y
-                        ? Math.abs(
+                        ? `${Math.abs(
                             coinData.market_data.price_change_percentage_1y
-                          ).toFixed(2)
+                          ).toFixed(2)}%`
                         : "No data"}
-                      %
                     </p>
                   </div>
                 </td>
