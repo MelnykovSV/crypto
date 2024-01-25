@@ -9,6 +9,8 @@ import LogoutIcon from "../assets/logout.svg";
 import CloseIcon from "../assets/close.svg";
 import { NavList } from ".";
 
+import { signOut } from "next-auth/react";
+
 interface IMobileMenuProps {
   modalCloseHandler: () => void;
   isOpen: boolean;
@@ -77,7 +79,10 @@ export default function MobileMenu({
                 </nav>
                 <button
                   className=" text-lg flex gap-5 py-4 px-6 items-center rounded-2xl max-w-80 hover:bg-accent-gradient relative z-10 overflow-hidden before:content-[''] before:absolute before:left-0  before:top-0  before:transition-opacity before:duration-300 before:ease-linear before:w-full  before:h-full before:-z-10 before:bg-accent-gradient before:opacity-0 before:bg-cover before:animate-hue-rotate hover:before:opacity-100"
-                  type="button">
+                  type="button"
+                  onClick={() => {
+                    signOut();
+                  }}>
                   <Image
                     src={LogoutIcon}
                     alt="Logout icon"

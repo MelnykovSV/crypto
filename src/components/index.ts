@@ -8,6 +8,9 @@ import PaginationComponent from "./PaginationComponent";
 import Search from "./Search";
 import Breadcrumbs from "./Breadcrumbs";
 import CoinChart from "./CoinChart";
+import RegisterForm from "./RegisterForm";
+import LoginForm from "./LoginForm";
+import AsideMenu from "./AsideMenu";
 
 export {
   CoinsTable,
@@ -20,4 +23,7 @@ export {
   Search,
   Breadcrumbs,
   CoinChart,
+  RegisterForm,
+  LoginForm,
+  AsideMenu
 };
