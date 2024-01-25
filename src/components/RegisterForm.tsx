@@ -26,6 +26,9 @@ export default function RegisterForm() {
     resolver: yupResolver(registerFormValidation),
   });
 
+
+
+  
   useEffect(() => {
     if (sessionStatus === "authenticated") {
       router.replace("/profile");
