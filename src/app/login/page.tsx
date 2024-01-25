@@ -1,4 +1,4 @@
-import { Logo } from "@/UI";
+import { Logo } from "@/components";
 import { LoginForm } from "@/components";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -8,18 +8,18 @@ export default async function LoginPage() {
     redirect("/profile");
   }
   return (
-
     <>
-    {!session ? (
-      <div className="flex justify-end items-center bg-black-5">
-      <div>
-        <Logo />
+      {!session ? (
+        <div className="darken-image     bg-cover tablet:bg-contain bg-no-repeat bg-left-bottom h-screen">
+          <div className="flex justify-end items-center h-full mx-auto max-w-[1440px]  ">
+            <div className="w-full tablet:w-1/2 p-4 ">
+              <Logo size="large" />
 
-        <LoginForm />
-      </div>
-    </div>
-    ) : null}
-  </>
-    
+              <LoginForm />
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

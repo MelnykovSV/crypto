@@ -11,6 +11,8 @@ import CoinChart from "./CoinChart";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
 import AsideMenu from "./AsideMenu";
+import Logo from "./Logo";
+import UserForm from "./UserForm";
 
 export {
   CoinsTable,
@@ -25,5 +27,7 @@ export {
   CoinChart,
   RegisterForm,
   LoginForm,
-  AsideMenu
+  AsideMenu,
+  Logo,
+  UserForm,
 };

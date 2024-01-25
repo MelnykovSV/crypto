@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useRef, useEffect, useState, ReactNode } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
-import { Logo } from "@/UI";
+import { Logo } from ".";
 import Image from "next/image";
 import LogoutIcon from "../assets/logout.svg";
 import CloseIcon from "../assets/close.svg";
