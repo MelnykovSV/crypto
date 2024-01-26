@@ -3,6 +3,7 @@ import { Logo } from ".";
 import { NavList } from ".";
 import Image from "next/image";
 import LogoutIcon from "@/assets/logout.svg";
+
 import { signOut } from "next-auth/react";
 
 export default function AsideMenu() {
