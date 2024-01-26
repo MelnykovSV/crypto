@@ -12,7 +12,7 @@ interface ExtendedSession {
   };
 }
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",
@@ -52,14 +52,13 @@ export const authOptions: NextAuthOptions = {
       return user ? { ...token } : token;
     },
     async session({ session, token, user }) {
-
       // Note that this if condition is needed
       // if (session.user) {
-        session.user = {
-          ...session.user,
-          email: token.email,
-          name: token.name,
-        } as ExtendedSession["user"];
+      session.user = {
+        ...session.user,
+        email: token.email,
+        name: token.name,
+      } as ExtendedSession["user"];
       // }
 
       return session;
