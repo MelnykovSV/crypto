@@ -12,9 +12,9 @@ interface IUserData {
 
 export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = (await getServerSession(authOptions)) as any;
 
-    console.log(session)
+    console.log(session);
     if (!session || !session.user) {
       return NextResponse.json(
         {
@@ -45,7 +45,10 @@ export async function POST(req: Request) {
     const { email, name, phone, birthday } = await req.json();
 
     const userFoundByEmail = await User.findOne({ email });
-    if (userFoundByEmail && userFoundByEmail._id.toString() !== session.user.id) {
+    if (
+      userFoundByEmail &&
+      userFoundByEmail._id.toString() !== session.user.id
+    ) {
       return NextResponse.json(
         {
           message: "This email already in use",
@@ -57,7 +60,6 @@ export async function POST(req: Request) {
     }
 
     const userFoundByName = await User.findOne({ name });
-
 
     if (userFoundByName && userFoundByName._id.toString() !== session.user.id) {
       return NextResponse.json(
