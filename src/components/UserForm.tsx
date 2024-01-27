@@ -5,42 +5,49 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { userFormValidation } from "@/validation/userFormValidation";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 interface UserFormValues {
   name: string;
   email: string;
-  password: string;
   phone: string;
   birthday: Date;
 }
 
 export default function UserForm() {
+  const session = useSession() as any;
+
   const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<UserFormValues>({
     resolver: yupResolver(userFormValidation),
   });
 
+  useEffect(() => {
+    setValue("name", session.data?.user?.name || "");
+    setValue("email", session.data?.user?.email || "");
+    setValue("phone", session.data?.user?.phone || "");
+    setValue("birthday", session.data?.user?.birthday || "");
+  }, [setValue, session]);
+
   const onSubmit = async (data: UserFormValues) => {
+    console.log("res");
+
     try {
-      //   const res = await fetch("/api/register", {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     body: JSON.stringify(data),
-      //   });
-      //   const body = await res.json();
-      //   if (res.status === 409) {
-      //     setError(body.message);
-      //   }
-      //   if (res.status === 200) {
-      //     setError("");
-      //     router.push("/login");
-      //   }
+      const res = await fetch("/api/user", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+
+      console.log(res);
+
+      if (res.ok) {
+        await session.update(data);
+      }
     } catch (error) {
       setError("Error, try again");
       console.log(error);
@@ -48,7 +55,10 @@ export default function UserForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form
+      onSubmit={handleSubmit(onSubmit, (err) => {
+        console.log(err);
+      })}>
       <label className="flex flex-col  leading-none ">
         <span className=" h-5 mb-[10px] ">Email</span>
 

@@ -4,12 +4,14 @@ import { User } from "@/models";
 import connectDB from "@/app/lib/dbConnect";
 import { NextAuthOptions } from "next-auth";
 
-interface ExtendedSession {
-  user: {
-    name?: string | null | undefined;
-    email?: string | null | undefined;
-    image?: string | null | undefined;
-  };
+interface IUser {
+  id: string;
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  image?: string | null | undefined;
+  phone?: string | null | undefined;
+  avatar?: string | null | undefined;
+  birthday?: Date | null | undefined;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -37,9 +39,12 @@ export const authOptions: NextAuthOptions = {
 
         if (passwordCorrect) {
           return {
-            id: user.id,
+            id: user._id,
             email: user.email,
             name: user.name,
+            phone: user.phone,
+            birthday: user.birthday,
+            avatar: user.avatar as any,
           };
         }
 
@@ -48,8 +53,20 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, session }) {
-      return user ? { ...token } : token;
+    async jwt({ token, user, session, trigger }: any) {
+      if (trigger === "update" && session) {
+        return { ...token, ...session };
+      }
+
+      return user
+        ? {
+            ...token,
+            id: user.id,
+            phone: user.phone,
+            birthday: user.birthday,
+            avatar: user.avatar,
+          }
+        : token;
     },
     async session({ session, token, user }) {
       // Note that this if condition is needed
@@ -58,7 +75,11 @@ export const authOptions: NextAuthOptions = {
         ...session.user,
         email: token.email,
         name: token.name,
-      } as ExtendedSession["user"];
+        id: token.id,
+        phone: token.phone,
+        birthday: token.birthday,
+        avatar: token.avatar,
+      } as IUser;
       // }
 
       return session;

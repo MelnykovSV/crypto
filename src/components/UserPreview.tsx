@@ -13,9 +13,10 @@ export default function UserPreview({
   userAvatar,
 }: UserPreviewProps) {
   const session = useSession();
+  console.log(session.data?.user.name);
   return (
     <div className={twMerge("flex gap-4 justify-center items-center")}>
-      <p>{userName || "User name"}</p>
+      <p>{session.data? session.data?.user.name : "User name"}</p>
       <Image
         src={userAvatar}
         alt={`${userName} avatar`}

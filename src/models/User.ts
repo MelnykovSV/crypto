@@ -17,8 +17,19 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    phone: {
+      type: String,
+      default: null,
+    },
+    birthday: {
+      type: Date,
+      default: null,
+    },
+    avatar: {
+      type: String,
+      default: null,
+    },
     password: { type: String, required: true },
-    completed: Boolean,
   },
   { versionKey: false, timestamps: true }
 );

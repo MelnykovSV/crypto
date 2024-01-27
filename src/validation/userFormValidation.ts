@@ -14,10 +14,6 @@ export const userFormValidation = object({
   email: string()
     .required("Please enter your email")
     .matches(emailRegexp, "Email is not valid."),
-
-  password: string()
-    .required("Please enter the password")
-    .matches(passwordRegexp, "Password is not valid."),
-  phone: string().required("Please enter the password"),
-  birthday: date().required("Please enter the password"),
+  phone: string().required("Please enter the phone"),
+  birthday: date().required("Please enter the birthday"),
 });
