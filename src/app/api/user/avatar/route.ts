@@ -93,11 +93,11 @@ export async function PATCH(req: IFormDataRequest) {
         cloudinary.v2.uploader
           .upload_stream({}, function (error, result) {
             if (error) {
-              console.log(error);
+              console.log('error', error);
               reject(error);
               return;
             }
-            console.log(result);
+            console.log('result', result);
             resolve(result);
           })
           .end(buffer);
