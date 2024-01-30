@@ -35,8 +35,11 @@ console.log({
 });
 
 export async function PATCH(req: IFormDataRequest) {
+  console.log("start");
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
+
+    console.log("session", session);
 
     if (!session || !session.user) {
       return NextResponse.json(
