@@ -3,22 +3,8 @@ import { compare } from "bcrypt";
 import { User } from "@/models";
 import connectDB from "@/app/lib/dbConnect";
 import { NextAuthOptions } from "next-auth";
-
 import "next-auth";
-
-declare module "next-auth" {
-  interface DefaultSession {
-    user: {
-      id: string;
-      name?: string | null | undefined;
-      email?: string | null | undefined;
-      image?: string | null | undefined;
-      phone?: string | null | undefined;
-      avatar?: string | null | undefined;
-      birthday?: Date | null | undefined;
-    };
-  }
-}
+import { JWT } from "next-auth/jwt";
 
 interface IUser {
   id: string;
@@ -28,6 +14,13 @@ interface IUser {
   phone?: string | null | undefined;
   avatar?: string | null | undefined;
   birthday?: Date | null | undefined;
+}
+
+interface IJWTParams {
+  token: JWT;
+  user: IUser;
+  trigger?: "signIn" | "update" | "signUp" | undefined;
+  session?: any;
 }
 
 export const authOptions: NextAuthOptions = {
@@ -60,8 +53,8 @@ export const authOptions: NextAuthOptions = {
             name: user.name,
             phone: user.phone,
             birthday: user.birthday,
-            avatar: user.avatar as any,
-          };
+            avatar: user.avatar,
+          } as any;
         }
 
         return null;
@@ -69,7 +62,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user, session, trigger }: any) {
+    async jwt({ token, user, session, trigger }: IJWTParams) {
       if (trigger === "update" && session) {
         return { ...token, ...session };
       }
@@ -84,7 +77,7 @@ export const authOptions: NextAuthOptions = {
           }
         : token;
     },
-    async session({ session, token, user }:any) {
+    async session({ session, token, user }) {
       // Note that this if condition is needed
       // if (session.user) {
       session.user = {
@@ -98,7 +91,7 @@ export const authOptions: NextAuthOptions = {
       } as IUser;
       // }
 
-      return session as any;
+      return session;
     },
   },
 };
