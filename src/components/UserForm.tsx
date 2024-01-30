@@ -12,16 +12,23 @@ import { Controller } from "react-hook-form";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { CustomSession } from "@/interfaces";
 
 interface UserFormValues {
   name: string;
   email: string;
   phone: string;
-  birthday: Date;
+  birthday: Date | null;
 }
 
 export default function UserForm() {
-  const session = useSession() as any;
+  const session = useSession() as {
+    data: CustomSession;
+    status: string;
+    update: any;
+  };
+
+  console.log("session", session);
 
   const [error, setError] = useState("");
   const {
@@ -35,16 +42,27 @@ export default function UserForm() {
   });
 
   useEffect(() => {
-    if (session.status === "authenticated") {
+    if (
+      session &&
+      session.data &&
+      session.data.user &&
+      session.status === "authenticated"
+    ) {
       setValue("name", session.data?.user?.name || "");
       setValue("email", session.data?.user?.email || "");
       setValue("phone", session.data?.user?.phone || "");
-      setValue("birthday", new Date(session.data?.user?.birthday) || null);
+      setValue(
+        "birthday",
+        session.data.user.birthday ? new Date(session.data.user.birthday) : null
+      );
     }
   }, [setValue, session]);
 
   const onSubmit = async (data: UserFormValues) => {
-    const requestBody = { ...data, birthday: data.birthday.toISOString() };
+    const requestBody = {
+      ...data,
+      birthday: data.birthday ? data.birthday.toISOString() : null,
+    };
 
     try {
       const res = await fetch("/api/user", {

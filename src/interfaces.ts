@@ -55,12 +55,12 @@ export interface ICoinTableData
 
 export interface CustomSession extends DefaultSession {
   user?: {
-    name?: string | null;
-    email?: string | null;
-    id?: string | null;
-    phone?: string | null;
-    birthday?: Date | null;
-    avatar?: string | null;
+    name: string | null;
+    email: string | null;
+    id: string | null;
+    phone: string | null;
+    birthday: string | null;
+    avatar: string | null;
   };
 }
 

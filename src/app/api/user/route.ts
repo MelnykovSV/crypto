@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { User } from "@/models";
 import { authOptions } from "../../../../options";
+import { CustomSession } from "@/interfaces";
 
 interface IUserData {
   email: string;
@@ -17,7 +18,7 @@ export async function POST(req: Request) {
 
   // console.log(a);
   try {
-    const session = (await getServerSession(authOptions)) as any;
+    const session = (await getServerSession(authOptions)) as CustomSession ;
 
     console.log(session);
     if (!session || !session.user) {

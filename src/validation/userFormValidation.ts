@@ -15,5 +15,5 @@ export const userFormValidation = object({
     .required("Please enter your email")
     .matches(emailRegexp, "Email is not valid."),
   phone: string().required("Please enter the phone"),
-  birthday: date().required("Please enter the birthday"),
+  birthday: date().required("Please enter the birthday").nullable(),
 });

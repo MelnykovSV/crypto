@@ -127,7 +127,7 @@ export async function PATCH(req: IFormDataRequest) {
       });
     };
 
-    const response = (await uploadToCloudinary()) as any;
+    const response = (await uploadToCloudinary()) as { url: string };
 
     console.log("response", response);
 
