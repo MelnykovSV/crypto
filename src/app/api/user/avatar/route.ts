@@ -28,6 +28,12 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
+console.log({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
+
 export async function PATCH(req: IFormDataRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
@@ -60,7 +66,7 @@ export async function PATCH(req: IFormDataRequest) {
     console.log("formData", formData);
 
     const avatar = formData.get("avatar") as File;
-
+    console.log("avatar", avatar);
     if (
       avatar &&
       avatar.type &&
@@ -77,6 +83,8 @@ export async function PATCH(req: IFormDataRequest) {
     const arrayBuffer = await avatar.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
 
+    console.log("buffer", buffer);
+
     const response = await new Promise<{ url: string } | undefined>(
       (resolve, reject) => {
         cloudinary.v2.uploader
@@ -92,6 +100,8 @@ export async function PATCH(req: IFormDataRequest) {
           .end(buffer);
       }
     );
+
+    console.log("response", response);
 
     if (!response) {
       return NextResponse.json(
