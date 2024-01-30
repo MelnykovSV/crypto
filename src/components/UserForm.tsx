@@ -66,7 +66,7 @@ export default function UserForm() {
 
     try {
       const res = await fetch("/api/user", {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(requestBody),
       });
 

@@ -6,7 +6,7 @@ import { CustomSession } from "@/interfaces";
 import { userFormValidation } from "@/validation/userFormValidation";
 import { validate } from "@/validation/validation";
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
   console.log("POST");
   const { email, name, phone, birthday } = await req.json();
 
