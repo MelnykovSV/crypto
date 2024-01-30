@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 // import { DefaultSession } from "next-auth";
 import { CustomSession } from "@/interfaces";
 
@@ -18,13 +18,17 @@ import cloudinary from "cloudinary";
 //   };
 // }
 
+interface IFormDataRequest extends NextRequest {
+  formData: () => Promise<FormData>;
+}
+
 cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-export async function PATCH(req: { formData: () => Promise<FormData> }) {
+export async function PATCH(req: IFormDataRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
 
@@ -51,7 +55,7 @@ export async function PATCH(req: { formData: () => Promise<FormData> }) {
       );
     }
 
-    const formData = await  req.formData();
+    const formData = await req.formData();
 
     console.log("formData", formData);
 
