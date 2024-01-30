@@ -1,3 +1,5 @@
+import { DefaultSession } from "next-auth";
+
 export interface ICoinData {
   id: string; //
   symbol: string; //
@@ -49,3 +51,18 @@ export interface ICoinTableData
   > {
   favorite: boolean;
 }
+
+
+export interface CustomSession extends DefaultSession {
+  user?: {
+    name?: string | null;
+    email?: string | null;
+    id?: string | null;
+    phone?: string | null;
+    birthday?: Date | null;
+    avatar?: string | null;
+  };
+}
+
+
+

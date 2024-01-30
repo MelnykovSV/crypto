@@ -4,6 +4,22 @@ import { User } from "@/models";
 import connectDB from "@/app/lib/dbConnect";
 import { NextAuthOptions } from "next-auth";
 
+import "next-auth";
+
+declare module "next-auth" {
+  interface DefaultSession {
+    user: {
+      id: string;
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+      phone?: string | null | undefined;
+      avatar?: string | null | undefined;
+      birthday?: Date | null | undefined;
+    };
+  }
+}
+
 interface IUser {
   id: string;
   name?: string | null | undefined;
@@ -68,7 +84,7 @@ export const authOptions: NextAuthOptions = {
           }
         : token;
     },
-    async session({ session, token, user }) {
+    async session({ session, token, user }:any) {
       // Note that this if condition is needed
       // if (session.user) {
       session.user = {
@@ -82,7 +98,7 @@ export const authOptions: NextAuthOptions = {
       } as IUser;
       // }
 
-      return session;
+      return session as any;
     },
   },
 };

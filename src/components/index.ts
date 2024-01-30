@@ -13,6 +13,7 @@ import LoginForm from "./LoginForm";
 import AsideMenu from "./AsideMenu";
 import Logo from "./Logo";
 import UserForm from "./UserForm";
+import AvatarUploader from "./AvatarUploader";
 
 export {
   CoinsTable,
@@ -30,4 +31,5 @@ export {
   AsideMenu,
   Logo,
   UserForm,
+  AvatarUploader
 };

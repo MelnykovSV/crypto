@@ -1,11 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-
+import dayjs, { Dayjs } from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { userFormValidation } from "@/validation/userFormValidation";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { Controller } from "react-hook-form";
+
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 interface UserFormValues {
   name: string;
@@ -23,30 +29,31 @@ export default function UserForm() {
     handleSubmit,
     formState: { errors },
     setValue,
+    control,
   } = useForm<UserFormValues>({
     resolver: yupResolver(userFormValidation),
   });
 
   useEffect(() => {
-    setValue("name", session.data?.user?.name || "");
-    setValue("email", session.data?.user?.email || "");
-    setValue("phone", session.data?.user?.phone || "");
-    setValue("birthday", session.data?.user?.birthday || "");
+    if (session.status === "authenticated") {
+      setValue("name", session.data?.user?.name || "");
+      setValue("email", session.data?.user?.email || "");
+      setValue("phone", session.data?.user?.phone || "");
+      setValue("birthday", new Date(session.data?.user?.birthday) || null);
+    }
   }, [setValue, session]);
 
   const onSubmit = async (data: UserFormValues) => {
-    console.log("res");
+    const requestBody = { ...data, birthday: data.birthday.toISOString() };
 
     try {
       const res = await fetch("/api/user", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify(requestBody),
       });
 
-      console.log(res);
-
       if (res.ok) {
-        await session.update(data);
+        await session.update(requestBody);
       }
     } catch (error) {
       setError("Error, try again");
@@ -59,7 +66,7 @@ export default function UserForm() {
       onSubmit={handleSubmit(onSubmit, (err) => {
         console.log(err);
       })}>
-      <label className="flex flex-col  leading-none ">
+      <label className="flex flex-col  leading-none">
         <span className=" h-5 mb-[10px] ">Email</span>
 
         <input
@@ -97,12 +104,23 @@ export default function UserForm() {
       </label>
       <label className="flex flex-col  leading-none ">
         <span className=" h-5 mb-[10px]">Birthday</span>
-
-        <input
-          type="birthday"
-          className="mb-2 p-4 bg-[#16161E] rounded-[10px]"
-          {...register("birthday", { required: true, maxLength: 80 })}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Controller
+            control={control}
+            name="birthday"
+            render={({ field }) => {
+              console.log(field.value);
+              return (
+                <DatePicker
+                  value={field.value ? dayjs(field.value) : null}
+                  onChange={(date) => {
+                    field.onChange(date);
+                  }}
+                />
+              );
+            }}
+          />
+        </LocalizationProvider>
         <span className="h-3 text-xs text-error">
           {errors.birthday && errors.birthday.message}
         </span>

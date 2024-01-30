@@ -11,6 +11,11 @@ interface IUserData {
 }
 
 export async function POST(req: Request) {
+  console.log("POST");
+
+  // const a = await req.json();
+
+  // console.log(a);
   try {
     const session = (await getServerSession(authOptions)) as any;
 
@@ -26,7 +31,11 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log("SEARCH USER");
+
     const user = await User.findById(session.user.id);
+
+    console.log("user", user);
     if (!user) {
       return NextResponse.json(
         {
@@ -40,9 +49,9 @@ export async function POST(req: Request) {
 
     // Провалидировать данные
 
-    console.log("user", user);
-
     const { email, name, phone, birthday } = await req.json();
+
+    console.log({ email, name, phone, birthday });
 
     const userFoundByEmail = await User.findOne({ email });
     if (
@@ -82,11 +91,11 @@ export async function POST(req: Request) {
       },
       { new: true }
     );
-
+    console.log("updatedUser");
     console.log(updatedUser);
 
     return NextResponse.json(
-      { message: "Some response" },
+      { message: "User info updated" },
       {
         status: 200,
       }
