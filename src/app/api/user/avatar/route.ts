@@ -84,25 +84,50 @@ export async function PATCH(req: IFormDataRequest) {
       );
     }
     const arrayBuffer = await avatar.arrayBuffer();
+
+    var mime = avatar.type;
+    var encoding = "base64";
+    var base64Data = Buffer.from(arrayBuffer).toString("base64");
+    var fileUri = "data:" + mime + ";" + encoding + "," + base64Data;
+
     const buffer = new Uint8Array(arrayBuffer);
 
     console.log("buffer", buffer);
 
-    const response = await new Promise<{ url: string } | undefined>(
-      (resolve, reject) => {
-        cloudinary.v2.uploader
-          .upload_stream({}, function (error, result) {
-            if (error) {
-              console.log('error', error);
-              reject(error);
-              return;
-            }
-            console.log('result', result);
+    // const response = await new Promise<{ url: string } | undefined>(
+    //   (resolve, reject) => {
+    //     cloudinary.v2.uploader
+    //       .upload_stream({}, function (error, result) {
+    //         if (error) {
+    //           console.log('error', error);
+    //           reject(error);
+    //           return;
+    //         }
+    //         console.log('result', result);
+    //         resolve(result);
+    //       })
+    //       .end(buffer);
+    //   }
+
+    // );
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        var result = cloudinary.v2.uploader
+          .upload(fileUri, {
+            invalidate: true,
+          })
+          .then((result) => {
+            console.log(result);
             resolve(result);
           })
-          .end(buffer);
-      }
-    );
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
+      });
+    };
+
+    const response = await uploadToCloudinary();
 
     console.log("response", response);
 
