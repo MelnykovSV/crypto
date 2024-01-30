@@ -35,6 +35,8 @@ export default function AvatarUploader() {
           body: formData,
         });
 
+        console.log(res);
+
         const body = await res.json();
 
         if (res.ok) {
