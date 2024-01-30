@@ -37,3 +37,16 @@ const UserSchema = new mongoose.Schema(
 // OUR TODO MODEL
 
 export const User = mongoose.models.User || mongoose.model("User", UserSchema);
+
+
+
+// const updateUserJoiSchema = Joi.object({
+//   birthday: Joi.string().pattern(dateRegexp, "YYYY-MM-DD").allow(""),
+//   phone: Joi.string().allow(""),
+//   skype: Joi.string().allow(""),
+//   email: Joi.string().pattern(emailRegexp, "email"),
+//   userName: Joi.string().pattern(
+//     userNameRegexp,
+//     "Username can contain only letters, numbers and underscores"
+//   ),
+// });

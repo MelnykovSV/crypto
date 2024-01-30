@@ -2,9 +2,25 @@ import { NextResponse } from "next/server";
 import { hash } from "bcrypt";
 import { User } from "@/models";
 import connectDB from "@/app/lib/dbConnect";
+import { registerFormValidation } from "@/validation/registerFormValidation";
+import { validate } from "@/validation/validation";
 
 export async function POST(request: Request) {
   const { email, name, password } = await request.json();
+
+  const errors = await validate(registerFormValidation, {
+    email,
+    name,
+    password,
+  });
+  console.log(errors);
+  if (errors) {
+    return NextResponse.json(
+      { errors: errors || "unknown validation error" },
+      { status: 400 }
+    );
+  }
+
 
   await connectDB();
 

@@ -3,22 +3,24 @@ import { NextResponse } from "next/server";
 import { User } from "@/models";
 import { authOptions } from "../../../../options";
 import { CustomSession } from "@/interfaces";
-
-interface IUserData {
-  email: string;
-  name: string;
-  phone: null | string;
-  birthday: Date | null;
-}
+import { userFormValidation } from "@/validation/userFormValidation";
+import { validate } from "@/validation/validation";
 
 export async function POST(req: Request) {
   console.log("POST");
+  const { email, name, phone, birthday } = await req.json();
 
-  // const a = await req.json();
-
-  // console.log(a);
   try {
-    const session = (await getServerSession(authOptions)) as CustomSession ;
+    const errors = await validate(userFormValidation, { email, name, phone, birthday });
+
+    if (errors) {
+      return NextResponse.json(
+        { errors: errors || "unknown validation error" },
+        { status: 400 }
+      );
+    }
+
+    const session = (await getServerSession(authOptions)) as CustomSession;
 
     console.log(session);
     if (!session || !session.user) {
@@ -49,10 +51,10 @@ export async function POST(req: Request) {
     }
 
     // Провалидировать данные
+    console.log("1");
+    // const { email, name, phone, birthday } = await req.json();
 
-    const { email, name, phone, birthday } = await req.json();
-
-    console.log({ email, name, phone, birthday });
+    console.log("2");
 
     const userFoundByEmail = await User.findOne({ email });
     if (

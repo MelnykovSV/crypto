@@ -17,8 +17,8 @@ import { CustomSession } from "@/interfaces";
 interface UserFormValues {
   name: string;
   email: string;
-  phone: string;
-  birthday: Date | null;
+  phone?: string;
+  birthday?: Date | null;
 }
 
 export default function UserForm() {
@@ -69,6 +69,19 @@ export default function UserForm() {
         method: "POST",
         body: JSON.stringify(requestBody),
       });
+
+      console.log(res.status);
+
+      const body = await res.json();
+
+      console.log(body);
+
+      if (res.status === 409) {
+        setError(body.message);
+      }
+      if (res.status === 200) {
+        setError("");
+      }
 
       if (res.ok) {
         await session.update(requestBody);
