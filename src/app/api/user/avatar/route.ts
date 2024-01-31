@@ -115,6 +115,7 @@ export async function PATCH(req: IFormDataRequest) {
         var result = cloudinary.v2.uploader
           .upload(fileUri, {
             invalidate: true,
+            transformation: [{ width: 220, height: 220, crop: "fill" }],
           })
           .then((result) => {
             console.log(result);
