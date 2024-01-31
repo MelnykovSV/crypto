@@ -26,6 +26,7 @@ const config: Config = {
       },
       animation: {
         "hue-rotate": "hue-rotate 3s linear infinite forwards",
+        rotate: "rotate 3s linear infinite forwards",
       },
       keyframes: {
         "hue-rotate": {
@@ -36,6 +37,15 @@ const config: Config = {
             filter: "hue-rotate(360deg)",
           },
         },
+        rotate: {
+          "0%": {
+            transform: "rotate(0)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
+      
       },
 
       colors: {
@@ -57,10 +67,11 @@ const config: Config = {
         success: "#0DBB7C",
         error: "#FF8282",
         accent: "#b102cd",
+        'accent-dark': "#933FFE"
       },
       backgroundImage: {
         "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+          "conic-gradient(from 90deg at 50% 50%, #b102cd, #933FFE, #1f8ebe, #933FFE, #b102cd), radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%)",
 
         "radial-gradient-1":
           " radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%), url('/bg-gradient.svg')",
@@ -69,8 +80,6 @@ const config: Config = {
           "linear-gradient(225deg, #18C8FF 14.89%, #933FFE 85.85%)",
         "progress-gradient":
           "linear-gradient(101deg, #FF8282 0%, #0DBB7C 100%);",
-
-       
       },
     },
   },

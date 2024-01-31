@@ -15,6 +15,7 @@ interface LoginValues {
 
 export default function LoginForm() {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { data: session, status: sessionStatus } = useSession();
   const {
@@ -32,6 +33,7 @@ export default function LoginForm() {
   }, [sessionStatus, router]);
 
   const onSubmit = async (data: LoginValues) => {
+    setIsLoading(true);
     try {
       const res = await signIn("credentials", { ...data, redirect: false });
 
@@ -47,6 +49,7 @@ export default function LoginForm() {
       setError("Error, try again");
       console.log(error);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -87,7 +90,9 @@ export default function LoginForm() {
 
       <button
         type="submit"
-        className="relative z-10 block text-base w-fit min-w-32 bg-auth-accent-gradient  rounded-[10px] before:rounded-[10px] py-[17px] px-[18px] leading-none  mx-auto before:content-[''] before:absolute before:left-0  before:top-0  before:transition-opacity before:duration-300 before:ease-linear before:w-full  before:h-full before:-z-10 before:bg-accent-gradient before:opacity-0 before:bg-cover before:animate-hue-rotate hover:before:opacity-100">
+        className={`${
+          isLoading && "loading blocked"
+        } relative z-10 block text-base w-fit min-w-32 bg-auth-accent-gradient  rounded-[10px] before:rounded-[10px] py-[17px] px-[18px] leading-none  mx-auto before:content-[''] before:absolute before:left-0  before:top-0  before:transition-opacity before:duration-300 before:ease-linear before:w-full  before:h-full before:-z-10 before:bg-accent-gradient before:opacity-0 before:bg-cover before:animate-hue-rotate hover:before:opacity-100`}>
         Sign In
       </button>
     </form>

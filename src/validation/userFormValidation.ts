@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { userNameRegexp, emailRegexp } from "../../regexp";
+import { userNameRegexp, emailRegexp, phoneRegExp } from "../../regexp";
 
 export const userFormValidation = Yup.object({
   name: Yup.string()
@@ -14,6 +14,6 @@ export const userFormValidation = Yup.object({
   email: Yup.string()
     .required("Please enter your email")
     .matches(emailRegexp, "Email is not valid."),
-  phone: Yup.string(),
+  phone: Yup.string().matches(phoneRegExp, "Invalid phone format"),
   birthday: Yup.date().nullable(),
 });

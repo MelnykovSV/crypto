@@ -13,21 +13,23 @@ export default function UserPreview({
   userName,
   userAvatar,
 }: UserPreviewProps) {
-  const session = useSession() as {data:CustomSession};
+  const session = useSession() as { data: CustomSession };
 
   return (
     <div className={twMerge("flex gap-4 justify-center items-center")}>
       <p>{session.data && session.data.user ? session.data?.user.name : ""}</p>
 
-      {session.data && session.data.user&& session.data.user.avatar ? (
-        <Image
-          src={session.data?.user.avatar}
-          alt={`User avatar`}
-          width={48}
-          height={48}
-          className="block rounded-full"
-        />
-      ) : null}
+      <div className="h-[48px] w-[48px]">
+        {session.data && session.data.user && session.data.user.avatar ? (
+          <Image
+            src={session.data?.user.avatar}
+            alt={`User avatar`}
+            width={48}
+            height={48}
+            className="block rounded-full w-full h-full object-cover"
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

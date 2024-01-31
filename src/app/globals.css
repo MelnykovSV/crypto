@@ -58,3 +58,36 @@ body {
     background-image: url("/auth-bg.jpg");
   }
 }
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+.loading {
+  animation: ripple 1s linear infinite;
+  transition: box-shadow 0.7s ease;
+
+  box-shadow: 10px 5px 5px 10px 200, 200;
+}
+
+.blocked {
+  pointer-events: none;
+}
+
+@keyframes ripple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(167, 36, 196, 0.3),
+      0 0 0 1px rgba(167, 36, 196, 0.3), 0 0 0 3px rgba(167, 36, 196, 0.3),
+      0 0 0 5px rgba(167, 36, 196, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(167, 36, 196, 0.3),
+      0 0 0 4px rgba(167, 36, 196, 0.3), 0 0 0 20px rgba(167, 36, 196, 0),
+      0 0 0 30px rgba(167, 36, 196, 0);
+  }
+}
