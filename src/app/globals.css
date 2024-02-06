@@ -91,3 +91,31 @@ body {
       0 0 0 30px rgba(167, 36, 196, 0);
   }
 }
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.MuiAutocomplete-listbox {
+  background-color: #565976;
+  color: #fff;
+}
+
+.MuiAutocomplete-listbox > .MuiAutocomplete-option[aria-selected="true"] {
+  background-color: #933ffe;
+}
+
+.MuiAutocomplete-listbox > .MuiAutocomplete-option.Mui-focused {
+  background-color: #b102cd;
+}
+
+.MuiAutocomplete-noOptions {
+  background-color: #565976;
+  color: #fff;
+}

@@ -3,7 +3,6 @@
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
-import React from "react";
 import { searchCoins } from "@/api";
 import {
   useDebounceCallback,
@@ -16,10 +15,11 @@ interface ICoin {
   name: string;
   symbol: string;
   large: string;
+  market_cap_rank: number;
 }
 
 interface ICoinsAutocompleteProps {
-  selectCoinHandler: (value: string | null) => void;
+  selectCoinHandler: (value: ICoin | null) => void;
   label: string;
 }
 
@@ -27,15 +27,13 @@ export default function CoinsAutocomplete({
   selectCoinHandler,
   label,
 }: ICoinsAutocompleteProps) {
-  const [open, setOpen] = React.useState(false);
-  const [options, setOptions] = React.useState<readonly ICoin[]>([]);
-  const [value, setValue] = React.useState(
-    options.length > 0 ? options[0] : null
-  );
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState<readonly ICoin[]>([]);
+  const [value, setValue] = useState(options.length > 0 ? options[0] : null);
 
-  const [inputValue, setInputValue] = React.useState("");
+  const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const debouncedQuery = useDebounce<string>(query, 500);
 
   useEffect(() => {
@@ -50,7 +48,19 @@ export default function CoinsAutocomplete({
 
   return (
     <Autocomplete
-      sx={{ width: 300 }}
+      sx={{
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: "10px",
+        backgroundColor: "#2B2C3B",
+
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderRadius: "10px",
+        },
+        "& .MuiInputBase-input": {
+          color: "#fff",
+        },
+      }}
       open={open}
       onOpen={() => {
         setOpen(true);
@@ -59,7 +69,9 @@ export default function CoinsAutocomplete({
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.name === value.name}
-      getOptionLabel={(option) => `${option.name} (${option.symbol})`}
+      getOptionLabel={(option) =>
+        `${option.name} (${option.symbol}) #${option.market_cap_rank}`
+      }
       options={options}
       loading={loading}
       value={value}
@@ -71,7 +83,7 @@ export default function CoinsAutocomplete({
 
         console.log("newValue");
         console.log(newValue);
-        selectCoinHandler(newValue ? newValue.symbol : null);
+        selectCoinHandler(newValue || null);
       }}
       inputValue={inputValue}
       onInputChange={async (
@@ -94,12 +106,12 @@ export default function CoinsAutocomplete({
           InputProps={{
             ...params.InputProps,
             endAdornment: (
-              <React.Fragment>
+              <>
                 {loading ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
                 {params.InputProps.endAdornment}
-              </React.Fragment>
+              </>
             ),
           }}
         />

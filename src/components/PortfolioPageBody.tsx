@@ -1,11 +1,18 @@
 "use client";
+import { useState } from "react";
+import { ExchangeForm } from ".";
+import { IPortfolio } from "@/interfaces";
 
-// import { useState } from "react";
+export default function PortfolioPageBody({ initialPortfolio }: {initialPortfolio:IPortfolio}) {
+  const [portfolio, setPortfolio] = useState(initialPortfolio);
 
-export default function PortfolioPageBody() {
+  return (
+    <>
 
-
-
-  
-  return <></>;
+    <div className=" bg-black-12 w-[800px]">
+    <ExchangeForm userPortfolio={portfolio} />
+    </div>
+      
+    </>
+  );
 }

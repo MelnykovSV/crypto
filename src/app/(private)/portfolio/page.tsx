@@ -4,22 +4,21 @@ import { getUserPortfolio } from "@/app/actions";
 import { PortfolioPageBody } from "@/components";
 import { ExchangeForm } from "@/components";
 import { getCoinPrice } from "@/api";
+import { IPortfolio } from "@/interfaces";
 
 export default async function PortfolioPage() {
   const portfolio = (await getUserPortfolio()) as string;
 
-  const res = await getCoinPrice("btc", "eth");
+  console.log("portfolio", portfolio);
+  const parsedPortfolio: IPortfolio = JSON.parse(portfolio);
 
-  console.log("apires", res);
+  console.log("parsedPortfolio", parsedPortfolio);
 
   return (
     <div>
-      {/* <PortfolioPageBody /> */}
-
       <h1>Portfolio page</h1>
-      {/* <TestForm /> */}
-      <ExchangeForm />
-      {/* <p>{portfolio}</p> */}
+
+      <PortfolioPageBody initialPortfolio={parsedPortfolio} />
     </div>
   );
 }

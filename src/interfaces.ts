@@ -52,7 +52,6 @@ export interface ICoinTableData
   favorite: boolean;
 }
 
-
 export interface CustomSession extends DefaultSession {
   user?: {
     name: string | null;
@@ -64,5 +63,23 @@ export interface CustomSession extends DefaultSession {
   };
 }
 
+export interface IPortfolioCoin {
+  amount: number;
+  symbol: string;
+  name: string;
+}
+export interface IPortfolioHistoryItem {
+  createdAt: string;
+  updatedAt: string;
+  totalInvested: number;
+  totalPortfolioPrice: number;
+  totalWithdrawn: number;
+  id: string;
+}
 
-
+export interface IPortfolio {
+  totalInvested: number;
+  totalWithdrawn: number;
+  historyData: IPortfolioHistoryItem[];
+  coins: IPortfolioCoin[];
+}

@@ -6,7 +6,13 @@ const isPositive = (value: number) => {
 
 const CoinSchema = new mongoose.Schema(
   {
-    coinId: {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    symbol: {
       type: String,
       required: true,
       trim: true,
