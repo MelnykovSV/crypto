@@ -14,6 +14,10 @@ import AsideMenu from "./AsideMenu";
 import Logo from "./Logo";
 import UserForm from "./UserForm";
 import AvatarUploader from "./AvatarUploader";
+import PortfolioPageBody from "./PortfolioPageBody";
+import FormSearch from "./FormSearch";
+import  ExchangeForm  from "./ExchangeForm";
+import CoinsAutocomplete from "./CoinsAutocomplete";
 
 export {
   CoinsTable,
@@ -31,5 +35,9 @@ export {
   AsideMenu,
   Logo,
   UserForm,
-  AvatarUploader
+  AvatarUploader,
+  PortfolioPageBody,
+  FormSearch,
+  ExchangeForm,
+  CoinsAutocomplete
 };

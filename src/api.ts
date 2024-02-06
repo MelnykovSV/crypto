@@ -1,5 +1,8 @@
 import { coinsPerPage } from "./constants";
 import { toast } from "react-toastify";
+import { getErrorMessage } from "./app/lib";
+
+const { coinMarketCupKey } = process.env;
 
 export const getCurrenciesData = async (page: number) => {
   try {
@@ -38,6 +41,8 @@ export const getCurrenciesAmmount = async () => {
     }
   }
 };
+
+
 
 export const searchCoins = async (query: string) => {
   try {
@@ -129,5 +134,33 @@ export const getSingleCoinData = async (coin: string) => {
     } else {
       toast.error("Unknown error");
     }
+  }
+};
+
+export const getCoinPrice = async (
+  symbol: string,
+  convert: string | undefined
+) => {
+  try {
+    const res = await fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}${
+        convert ? `&convert=${convert}` : ""
+      }`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+
+    console.log(res);
+
+    const data = await res.json();
+
+    return data;
+  } catch (error) {
+    console.log(error);
+    const message = getErrorMessage(error);
+    toast.error(message);
   }
 };

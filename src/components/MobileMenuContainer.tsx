@@ -27,7 +27,8 @@ export default function MobileMenuContainer() {
           alt="Burger icon"
           width={30}
           height={30}
-          className=" block"
+          className=" block w-[30px] h-[30px]"
+
         />
       </button>
 
