@@ -370,7 +370,7 @@ export async function getUserTransactions(formData: FormData) {
 
 
 export async function getCoinPrice(symbol: string,
-  convert: string | undefined) {
+  convert?: string | undefined) {
   try {
     const res = await fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}${

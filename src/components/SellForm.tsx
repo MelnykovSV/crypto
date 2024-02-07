@@ -14,14 +14,14 @@ interface ICoin {
   market_cap_rank: number;
 }
 
-export default function ExchangeForm({
+export default function SellForm({
   userPortfolio,
 }: {
   userPortfolio: IPortfolio;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
-  const [toCurrency, setToCurrency] = useState<ICoin | null>(null);
+  const toCurrency = "USD";
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
@@ -30,21 +30,19 @@ export default function ExchangeForm({
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
       return false;
     }
-    const areCurrenciesDifferent = fromCurrency.symbol !== toCurrency.symbol;
+
 
     const isFromCurrencyinPortfolio = userPortfolio?.coins?.find(
       (item) => item.symbol === fromCurrency.symbol
     )?.amount;
 
-    return areCurrenciesDifferent && isFromCurrencyinPortfolio;
+    return isFromCurrencyinPortfolio;
   };
 
   const fromCoinHandler = (value: ICoin | null) => {
     setFromCurrency(value);
   };
-  const toCoinHandler = (value: ICoin | null) => {
-    setToCurrency(value);
-  };
+
 
   const sliderHandler = (_: Event, newValue: number | number[]) => {
     setFromAmount(newValue as number);
@@ -60,14 +58,14 @@ export default function ExchangeForm({
   useEffect(() => {
     (async () => {
       if (fromCurrency && toCurrency) {
-        const res = await getCoinPrice(fromCurrency.symbol, toCurrency.symbol);
+        const res = await getCoinPrice(fromCurrency.symbol);
 
-        const coefficient = res.data[fromCurrency.symbol][0].quote[
-          toCurrency.symbol
-        ].price as number;
+        console.log(res);
+
+        const coefficient = res.data[fromCurrency.symbol][0].quote[toCurrency]
+          .price as number;
 
         setCoefficient(coefficient);
-
         if (fromAmount && toAmount) {
           setToAmount(
             Number((coefficient * (fromAmount as number)).toFixed(4))
@@ -125,6 +123,7 @@ export default function ExchangeForm({
             <span className="mb-2 "> Give</span>
 
             <TextField
+
               disabled={
                 !fromCurrency ||
                 !toCurrency ||
@@ -203,34 +202,19 @@ export default function ExchangeForm({
         <div className="flex items-center gap-2 w-full">
           <div className="  h-[50px] w-[50px]">
             {" "}
-            {!!toCurrency && (
-              <ImageComponent
-                src={toCurrency.large}
-                alt={`${toCurrency.name} icon`}
-                width={50}
-                height={50}
-              />
-            )}
+
           </div>
-          <div className="w-full">
-            <p className=" mb-2 h-[24px] w-full">
-              {!!toCurrency && toCurrency.symbol}
-            </p>
-            <CoinsAutocomplete selectCoinHandler={toCoinHandler} label="" />
-            <p className=" mt-2">
-              Balance:{" "}
-              {!!toCurrency && !!userPortfolio
-                ? userPortfolio?.coins?.find(
-                    (item) => item.symbol === toCurrency.symbol
-                  )?.amount || 0
-                : "--"}
-            </p>
-          </div>
+
         </div>
         <div className="w-full">
           <label className="flex flex-col w-full">
             <span className="mb-2"> Recieve</span>
             <TextField
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
               disabled={
                 !fromCurrency ||
                 !toCurrency ||
@@ -251,7 +235,7 @@ export default function ExchangeForm({
                   color: "#fff",
                 },
                 "& .MuiInputBase-input": {
-                  paddingLeft: "30px",
+
                   color: "#fff",
                 },
               }}
@@ -290,6 +274,8 @@ export default function ExchangeForm({
         {" "}
         Exchange
       </button>
+
+
     </form>
   );
 }

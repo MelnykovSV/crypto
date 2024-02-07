@@ -14,13 +14,13 @@ interface ICoin {
   market_cap_rank: number;
 }
 
-export default function ExchangeForm({
+export default function BuyForm({
   userPortfolio,
 }: {
   userPortfolio: IPortfolio;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
+  const [fromCurrency, setFromCurrency] = useState<string>("USD");
   const [toCurrency, setToCurrency] = useState<ICoin | null>(null);
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
@@ -30,47 +30,27 @@ export default function ExchangeForm({
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
       return false;
     }
-    const areCurrenciesDifferent = fromCurrency.symbol !== toCurrency.symbol;
 
-    const isFromCurrencyinPortfolio = userPortfolio?.coins?.find(
-      (item) => item.symbol === fromCurrency.symbol
-    )?.amount;
-
-    return areCurrenciesDifferent && isFromCurrencyinPortfolio;
+    return true;
   };
 
-  const fromCoinHandler = (value: ICoin | null) => {
-    setFromCurrency(value);
-  };
   const toCoinHandler = (value: ICoin | null) => {
     setToCurrency(value);
-  };
-
-  const sliderHandler = (_: Event, newValue: number | number[]) => {
-    setFromAmount(newValue as number);
-    if (coefficient && newValue) {
-      setToAmount(Number((coefficient * (newValue as number)).toFixed(4)));
-    } else if (newValue === 0) {
-      setToAmount(0);
-    } else if (newValue === null) {
-      setToAmount(null);
-    }
   };
 
   useEffect(() => {
     (async () => {
       if (fromCurrency && toCurrency) {
-        const res = await getCoinPrice(fromCurrency.symbol, toCurrency.symbol);
+        const res = await getCoinPrice(toCurrency.symbol);
 
-        const coefficient = res.data[fromCurrency.symbol][0].quote[
-          toCurrency.symbol
-        ].price as number;
+        const coefficient = res.data[toCurrency.symbol][0].quote[fromCurrency]
+          .price as number;
 
         setCoefficient(coefficient);
 
         if (fromAmount && toAmount) {
-          setToAmount(
-            Number((coefficient * (fromAmount as number)).toFixed(4))
+          setFromAmount(
+            Number((coefficient * (toAmount as number)).toFixed(4))
           );
         }
 
@@ -95,43 +75,20 @@ export default function ExchangeForm({
     <form className=" p-10 " onSubmit={submitHandler}>
       <div className="flex gap-20 py-2 justify-between w-full">
         <div className="flex items-center gap-2 w-full">
-          <div className="  h-[50px] w-[50px]">
-            {!!fromCurrency && (
-              <ImageComponent
-                src={fromCurrency.large}
-                alt={`${fromCurrency.name} icon`}
-                width={50}
-                height={50}
-              />
-            )}
-          </div>
-          <div className="w-full">
-            <p className=" mb-2 h-[24px] ">
-              {!!fromCurrency && fromCurrency.symbol}
-            </p>
-            <CoinsAutocomplete selectCoinHandler={fromCoinHandler} label="" />
-            <p className=" mt-2">
-              Balance:{" "}
-              {!!fromCurrency && !!userPortfolio
-                ? userPortfolio?.coins?.find(
-                    (item) => item.symbol === fromCurrency.symbol
-                  )?.amount || 0
-                : "--"}
-            </p>
-          </div>
+          <div className="  h-[50px] w-[50px]"></div>
+          <div className="w-full"></div>
         </div>
         <div className="w-full">
           <label className="flex flex-col ">
             <span className="mb-2 "> Give</span>
 
             <TextField
-              disabled={
-                !fromCurrency ||
-                !toCurrency ||
-                !userPortfolio?.coins?.find(
-                  (item) => item.symbol === fromCurrency.symbol
-                )?.amount
-              }
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">$</InputAdornment>
+                ),
+              }}
+              disabled={!fromCurrency || !toCurrency}
               sx={{
                 overflow: "hidden",
                 borderRadius: "10px",
@@ -146,7 +103,6 @@ export default function ExchangeForm({
                 },
                 "& .MuiInputBase-input": {
                   color: "#fff",
-                  paddingLeft: "30px",
                 },
               }}
               className="number-input h-[56px]  text-red-500"
@@ -164,7 +120,7 @@ export default function ExchangeForm({
                 if (e.target.value !== "" && coefficient) {
                   setFromAmount(Number(Number(e.target.value).toFixed(4)));
                   setToAmount(
-                    Number((Number(e.target.value) * coefficient).toFixed(4))
+                    Number((Number(e.target.value) / coefficient).toFixed(4))
                   );
                 } else if (e.target.value === "0") {
                   setFromAmount(0);
@@ -178,27 +134,7 @@ export default function ExchangeForm({
           </label>
         </div>
       </div>
-      <Slider
-        step={0.0001}
-        value={fromAmount || 0}
-        valueLabelDisplay="auto"
-        min={0}
-        disabled={
-          !fromCurrency ||
-          !toCurrency ||
-          !userPortfolio?.coins?.find(
-            (item) => item.symbol === fromCurrency.symbol
-          )?.amount
-        }
-        max={
-          !!fromCurrency && !!userPortfolio
-            ? userPortfolio?.coins?.find(
-                (item) => item.symbol === fromCurrency.symbol
-              )?.amount || 0
-            : 0
-        }
-        onChange={sliderHandler}
-      />
+
       <div className="flex gap-20 py-2 justify-between w-full">
         <div className="flex items-center gap-2 w-full">
           <div className="  h-[50px] w-[50px]">
@@ -231,13 +167,7 @@ export default function ExchangeForm({
           <label className="flex flex-col w-full">
             <span className="mb-2"> Recieve</span>
             <TextField
-              disabled={
-                !fromCurrency ||
-                !toCurrency ||
-                !userPortfolio?.coins?.find(
-                  (item) => item.symbol === fromCurrency.symbol
-                )?.amount
-              }
+              disabled={!fromCurrency || !toCurrency}
               sx={{
                 overflow: "hidden",
                 borderRadius: "10px",
@@ -267,7 +197,7 @@ export default function ExchangeForm({
                 if (e.target.value !== "" && coefficient) {
                   setToAmount(Number(Number(e.target.value).toFixed(4)));
                   setFromAmount(
-                    Number((Number(e.target.value) / coefficient).toFixed(4))
+                    Number((Number(e.target.value) * coefficient).toFixed(4))
                   );
                 } else if (e.target.value === "0") {
                   setFromAmount(0);

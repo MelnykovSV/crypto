@@ -16,8 +16,10 @@ import UserForm from "./UserForm";
 import AvatarUploader from "./AvatarUploader";
 import PortfolioPageBody from "./PortfolioPageBody";
 import FormSearch from "./FormSearch";
-import  ExchangeForm  from "./ExchangeForm";
+import ExchangeForm from "./ExchangeForm";
 import CoinsAutocomplete from "./CoinsAutocomplete";
+import SellForm from "./SellForm";
+import BuyForm from "./BuyForm";
 
 export {
   CoinsTable,
@@ -39,5 +41,7 @@ export {
   PortfolioPageBody,
   FormSearch,
   ExchangeForm,
-  CoinsAutocomplete
+  CoinsAutocomplete,
+  SellForm,
+  BuyForm
 };
