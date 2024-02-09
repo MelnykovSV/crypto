@@ -2,16 +2,17 @@ import { getUserPortfolio } from "@/app/actions";
 import { PortfolioPageBody } from "@/components";
 import { IPortfolio } from "@/interfaces";
 import { parseStrToJSON } from "@/app/lib";
+import { IPortfolioData } from "@/interfaces";
 
 export default async function PortfolioPage() {
-  const portfolio = (await getUserPortfolio()) as string;
+  const data = (await getUserPortfolio()) as string;
 
-  const parsedPortfolio: IPortfolio = parseStrToJSON(portfolio);
+  const { portfolio, priceList }: IPortfolioData = parseStrToJSON(data);
 
   return (
     <div>
-      {!!parsedPortfolio && (
-        <PortfolioPageBody initialPortfolio={parsedPortfolio} />
+      {!!portfolio && !!priceList && (
+        <PortfolioPageBody initialPortfolio={portfolio} priceList={priceList} />
       )}
     </div>
   );

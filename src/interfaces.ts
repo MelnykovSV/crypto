@@ -77,6 +77,11 @@ export interface IPortfolioHistoryItem {
   id: string;
 }
 
+export type IPriceList = Record<
+  string,
+  { name: string; symbol: string; price: number }
+>;
+
 export interface IPortfolio {
   totalInvested: number;
   totalWithdrawn: number;
@@ -84,26 +89,10 @@ export interface IPortfolio {
   coins: IPortfolioCoin[];
 }
 
-
-
-// export interface IPortfolio {
-//   coins: IPortfolioCoin[];
-//   totalInvested: number;
-//   totalWithdrawn: number;
-//   historyData: IHistoryPoint[];
-// }
-
-// export interface IPortfolioCoin {
-//   name: string;
-//   symbol: string;
-
-//   amount: number;
-// }
-// export interface IHistoryPoint {
-//   totalPortfolioPrice: number;
-//   totalInvested: number;
-//   totalWithdrawn: number;
-// }
+export interface IPortfolioData {
+  portfolio: IPortfolio;
+  priceList: IPriceList;
+}
 
 export interface ITransaction {
   type: "sell" | "buy" | "exchange";

@@ -10,6 +10,8 @@ import { newTransactionFormValidation } from "@/validation/newTransactionValidat
 import { createPriceList, processTransaction } from "./lib";
 import { IPortfolioCoin } from "@/interfaces";
 import connectDB from "./lib/dbConnect";
+import { IPortfolio } from "@/interfaces";
+import { IPriceList } from "@/interfaces";
 
 const { coinMarketCupKey } = process.env;
 
@@ -41,7 +43,28 @@ export async function getUserPortfolio() {
       const portfolio = await Portfolio.create({ owner: user._id });
       return JSON.stringify(portfolio);
     }
-    return JSON.stringify(portfolio);
+    const priceListQuery = [
+      ...portfolio.coins.map((item: IPortfolioCoin) => item.symbol),
+    ].join(",");
+    const res = await fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${priceListQuery}`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      const error = await res.json();
+      const errorMessage = error.status.error_message;
+      throw new Error(errorMessage);
+    }
+
+    const coinPrices = await res.json();
+
+    const priceList = createPriceList(coinPrices) as IPriceList;
+    return JSON.stringify({ portfolio, priceList });
   } catch (error) {
     return getErrorMessage(error);
   }
@@ -101,10 +124,7 @@ export async function createTransaction(formData: FormData) {
 
     const coinPrices = await res.json();
 
-    const priceList = createPriceList(coinPrices) as Record<
-      string,
-      { name: string; symbol: string; price: number }
-    >;
+    const priceList = createPriceList(coinPrices) as IPriceList;
 
     const processedPortfolio = processTransaction(
       portfolio,
@@ -124,7 +144,7 @@ export async function createTransaction(formData: FormData) {
       isSuccessful: true,
     });
 
-    return JSON.stringify(updatedPortfolio);
+    return JSON.stringify({ portfolio: updatedPortfolio, priceList });
   } catch (error) {
     console.log(getErrorMessage(error));
     return getErrorMessage(error);

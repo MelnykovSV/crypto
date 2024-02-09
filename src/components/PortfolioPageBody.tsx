@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { ExchangeForm, SellForm, BuyForm } from ".";
-import { IPortfolio } from "@/interfaces";
+import { IPortfolio, IPriceList } from "@/interfaces";
 import Box from "@mui/material/Box";
 
 import Modal from "@mui/material/Modal";
@@ -10,18 +10,19 @@ import Fade from "@mui/material/Fade";
 
 export default function PortfolioPageBody({
   initialPortfolio,
+  priceList,
 }: {
   initialPortfolio: IPortfolio;
+  priceList: IPriceList;
 }) {
   const [portfolio, setPortfolio] = useState(initialPortfolio);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formType, setFormType] = useState("buy");
 
-  console.log("body rerender");
-  const handleModalOpen = () => {
-    setIsModalOpen(true);
-  };
+  console.log(portfolio);
+  console.log(priceList)
+
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
@@ -54,14 +55,6 @@ export default function PortfolioPageBody({
           Exchange
         </button>
       </div>
-      <button type="button" onClick={handleModalOpen}>
-        Create a transaction
-      </button>
-      {/* <div className=" bg-black-12 w-[800px]">
-        <ExchangeForm userPortfolio={portfolio} />
-        <SellForm userPortfolio={portfolio} />
-        <BuyForm userPortfolio={portfolio} />
-      </div> */}
 
       <Modal
         open={isModalOpen}
@@ -88,6 +81,35 @@ export default function PortfolioPageBody({
               boxShadow: 24,
               p: 4,
             }}>
+            <div>
+              <button
+                className={formType === "buy" ? "bg-green-500" : ""}
+                type="button"
+                onClick={() => {
+                  setFormType("buy");
+                  setIsModalOpen(true);
+                }}>
+                Buy
+              </button>
+              <button
+                className={formType === "sell" ? "bg-green-500" : ""}
+                type="button"
+                onClick={() => {
+                  setFormType("sell");
+                  setIsModalOpen(true);
+                }}>
+                Sell
+              </button>
+              <button
+                className={formType === "exchange" ? "bg-green-500" : ""}
+                type="button"
+                onClick={() => {
+                  setFormType("exchange");
+                  setIsModalOpen(true);
+                }}>
+                Exchange
+              </button>
+            </div>
             {formType === "buy" ? <BuyForm userPortfolio={portfolio} /> : null}
             {formType === "sell" ? (
               <SellForm userPortfolio={portfolio} />
