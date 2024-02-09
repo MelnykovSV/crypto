@@ -83,3 +83,34 @@ export interface IPortfolio {
   historyData: IPortfolioHistoryItem[];
   coins: IPortfolioCoin[];
 }
+
+
+
+// export interface IPortfolio {
+//   coins: IPortfolioCoin[];
+//   totalInvested: number;
+//   totalWithdrawn: number;
+//   historyData: IHistoryPoint[];
+// }
+
+// export interface IPortfolioCoin {
+//   name: string;
+//   symbol: string;
+
+//   amount: number;
+// }
+// export interface IHistoryPoint {
+//   totalPortfolioPrice: number;
+//   totalInvested: number;
+//   totalWithdrawn: number;
+// }
+
+export interface ITransaction {
+  type: "sell" | "buy" | "exchange";
+  fromItem: string;
+  fromAmount: number;
+  fromPricePerItem: number;
+  toItem: string;
+  toAmount: number;
+  toPricePerItem: number;
+}

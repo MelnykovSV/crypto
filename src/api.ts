@@ -137,30 +137,30 @@ export const getSingleCoinData = async (coin: string) => {
   }
 };
 
-export const getCoinPrice = async (
-  symbol: string,
-  convert: string | undefined
-) => {
-  try {
-    const res = await fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}${
-        convert ? `&convert=${convert}` : ""
-      }`,
-      {
-        headers: {
-          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-        },
-      }
-    );
+// export const getCoinPrice = async (
+//   symbol: string,
+//   convert?: string | undefined
+// ) => {
+//   try {
+//     const res = await fetch(
+//       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}${
+//         convert ? `&convert=${convert}` : ""
+//       }`,
+//       {
+//         headers: {
+//           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+//         },
+//       }
+//     );
 
-    console.log(res);
+//     console.log(res);
 
-    const data = await res.json();
+//     const data = await res.json();
 
-    return data;
-  } catch (error) {
-    console.log(error);
-    const message = getErrorMessage(error);
-    toast.error(message);
-  }
-};
+//     return data;
+//   } catch (error) {
+//     console.log(error);
+//     const message = getErrorMessage(error);
+//     toast.error(message);
+//   }
+// };

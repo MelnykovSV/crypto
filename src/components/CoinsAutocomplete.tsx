@@ -9,7 +9,7 @@ import {
   useDebounce,
   useDebounceValue,
 } from "usehooks-ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ICoin {
   name: string;
@@ -29,15 +29,25 @@ export default function CoinsAutocomplete({
 }: ICoinsAutocompleteProps) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<readonly ICoin[]>([]);
-  const [value, setValue] = useState(options.length > 0 ? options[0] : null);
-
+  const [value, setValue] = useState(() =>
+    options.length > 0 ? options[0] : null
+  );
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const debouncedQuery = useDebounce<string>(query, 500);
 
+  console.log("loading", loading);
+
+  const firstUpdate = useRef(true);
+
   useEffect(() => {
     (async () => {
+      console.log(firstUpdate.current);
+      if (firstUpdate.current) {
+        firstUpdate.current = false;
+        return;
+      }
       setLoading(true);
       const data = await searchCoins(debouncedQuery);
       console.log(data);
@@ -50,7 +60,6 @@ export default function CoinsAutocomplete({
     <Autocomplete
       sx={{
         width: "100%",
-        overflow: "hidden",
         borderRadius: "10px",
         backgroundColor: "#2B2C3B",
 

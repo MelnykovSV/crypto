@@ -1,11 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getCoinPrice } from "@/app/actions";
 import { CoinsAutocomplete } from ".";
 import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
-import Slider from "@mui/material/Slider";
+import { createTransaction } from "@/app/actions";
 
 interface ICoin {
   name: string;
@@ -25,6 +25,9 @@ export default function BuyForm({
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
+  const firstUpdate = useRef(true);
+
+  console.log("form rerender");
 
   const isDataValid = () => {
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
@@ -40,6 +43,10 @@ export default function BuyForm({
 
   useEffect(() => {
     (async () => {
+      if (firstUpdate.current) {
+        firstUpdate.current = false;
+        return;
+      }
       if (fromCurrency && toCurrency) {
         const res = await getCoinPrice(toCurrency.symbol);
 
@@ -64,11 +71,23 @@ export default function BuyForm({
         setToAmount(null);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
+    const formData = new FormData();
+
+    if (toCurrency && fromAmount && toAmount) {
+      formData.append("type", "buy");
+      formData.append("fromItem", fromCurrency);
+      formData.append("toItem", toCurrency?.symbol);
+      formData.append("toItemName", toCurrency?.name);
+      formData.append("fromAmount", fromAmount.toString());
+      formData.append("toAmount", toAmount.toString());
+    }
+
+    createTransaction(formData);
   };
 
   return (
@@ -156,9 +175,9 @@ export default function BuyForm({
             <p className=" mt-2">
               Balance:{" "}
               {!!toCurrency && !!userPortfolio
-                ? userPortfolio?.coins?.find(
-                    (item) => item.symbol === toCurrency.symbol
-                  )?.amount || 0
+                ? userPortfolio?.coins
+                    ?.find((item) => item.symbol === toCurrency.symbol)
+                    ?.amount.toFixed(4) || 0
                 : "--"}
             </p>
           </div>

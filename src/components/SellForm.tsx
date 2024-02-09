@@ -6,6 +6,7 @@ import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import Slider from "@mui/material/Slider";
+import { createTransaction } from "@/app/actions";
 
 interface ICoin {
   name: string;
@@ -26,11 +27,20 @@ export default function SellForm({
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
 
+  const getPortfolioCoinAmount = (coin: ICoin | null): number => {
+    if (coin) {
+      return (
+        userPortfolio.coins.find((item) => item.symbol === coin.symbol)
+          ?.amount || 0
+      );
+    }
+    return 0;
+  };
+
   const isDataValid = () => {
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
       return false;
     }
-
 
     const isFromCurrencyinPortfolio = userPortfolio?.coins?.find(
       (item) => item.symbol === fromCurrency.symbol
@@ -43,11 +53,22 @@ export default function SellForm({
     setFromCurrency(value);
   };
 
-
   const sliderHandler = (_: Event, newValue: number | number[]) => {
-    setFromAmount(newValue as number);
+    setFromAmount(
+      Math.min(
+        Number(getPortfolioCoinAmount(fromCurrency)?.toFixed(4)),
+        Number((newValue as number).toFixed(4))
+      )
+    );
     if (coefficient && newValue) {
-      setToAmount(Number((coefficient * (newValue as number)).toFixed(4)));
+      setToAmount(
+        Math.min(
+          Number(
+            (getPortfolioCoinAmount(fromCurrency) * coefficient).toFixed(4)
+          ),
+          Number((coefficient * (newValue as number)).toFixed(4))
+        )
+      );
     } else if (newValue === 0) {
       setToAmount(0);
     } else if (newValue === null) {
@@ -82,11 +103,23 @@ export default function SellForm({
         setToAmount(null);
       }
     })();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
+    const formData = new FormData();
     console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
+
+    if (fromCurrency && toCurrency && fromAmount && toAmount) {
+      formData.append("type", "sell");
+      formData.append("fromItem", fromCurrency?.symbol);
+      formData.append("toItem", toCurrency);
+      formData.append("fromAmount", fromAmount.toString());
+      formData.append("toAmount", toAmount.toString());
+    }
+
+    createTransaction(formData);
   };
 
   return (
@@ -111,9 +144,9 @@ export default function SellForm({
             <p className=" mt-2">
               Balance:{" "}
               {!!fromCurrency && !!userPortfolio
-                ? userPortfolio?.coins?.find(
-                    (item) => item.symbol === fromCurrency.symbol
-                  )?.amount || 0
+                ? userPortfolio?.coins
+                    ?.find((item) => item.symbol === fromCurrency.symbol)
+                    ?.amount.toFixed(4) || 0
                 : "--"}
             </p>
           </div>
@@ -123,7 +156,6 @@ export default function SellForm({
             <span className="mb-2 "> Give</span>
 
             <TextField
-
               disabled={
                 !fromCurrency ||
                 !toCurrency ||
@@ -161,9 +193,25 @@ export default function SellForm({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 console.log(e.target.value);
                 if (e.target.value !== "" && coefficient) {
-                  setFromAmount(Number(Number(e.target.value).toFixed(4)));
+                  setFromAmount(
+                    Math.min(
+                      Number(Number(e.target.value).toFixed(4)),
+                      Number(getPortfolioCoinAmount(fromCurrency).toFixed(4))
+                    )
+                  );
                   setToAmount(
-                    Number((Number(e.target.value) * coefficient).toFixed(4))
+                    Number(
+                      Math.min(
+                        Number(
+                          (Number(e.target.value) * coefficient).toFixed(4)
+                        ),
+                        Number(
+                          (
+                            getPortfolioCoinAmount(fromCurrency) * coefficient
+                          ).toFixed(4)
+                        )
+                      )
+                    )
                   );
                 } else if (e.target.value === "0") {
                   setFromAmount(0);
@@ -200,11 +248,7 @@ export default function SellForm({
       />
       <div className="flex gap-20 py-2 justify-between w-full">
         <div className="flex items-center gap-2 w-full">
-          <div className="  h-[50px] w-[50px]">
-            {" "}
-
-          </div>
-
+          <div className="  h-[50px] w-[50px]"> </div>
         </div>
         <div className="w-full">
           <label className="flex flex-col w-full">
@@ -235,7 +279,6 @@ export default function SellForm({
                   color: "#fff",
                 },
                 "& .MuiInputBase-input": {
-
                   color: "#fff",
                 },
               }}
@@ -249,9 +292,21 @@ export default function SellForm({
               }
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.value !== "" && coefficient) {
-                  setToAmount(Number(Number(e.target.value).toFixed(4)));
+                  setToAmount(
+                    Math.min(
+                      Number(
+                        (
+                          getPortfolioCoinAmount(fromCurrency) * coefficient
+                        ).toFixed(4)
+                      ),
+                      Number(Number(e.target.value).toFixed(4))
+                    )
+                  );
                   setFromAmount(
-                    Number((Number(e.target.value) / coefficient).toFixed(4))
+                    Math.min(
+                      Number(getPortfolioCoinAmount(fromCurrency)?.toFixed(4)),
+                      Number((Number(e.target.value) / coefficient).toFixed(4))
+                    )
                   );
                 } else if (e.target.value === "0") {
                   setFromAmount(0);
@@ -274,8 +329,6 @@ export default function SellForm({
         {" "}
         Exchange
       </button>
-
-
     </form>
   );
 }

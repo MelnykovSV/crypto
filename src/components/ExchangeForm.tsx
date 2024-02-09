@@ -1,10 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getCoinPrice } from "@/app/actions";
+import { createTransaction, getCoinPrice } from "@/app/actions";
 import { CoinsAutocomplete } from ".";
 import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
-import { InputAdornment, TextField } from "@mui/material";
+import { TextField } from "@mui/material";
 import Slider from "@mui/material/Slider";
 
 interface ICoin {
@@ -25,6 +25,18 @@ export default function ExchangeForm({
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
+
+  console.log("rerender");
+
+  const getPortfolioCoinAmount = (coin: ICoin | null): number => {
+    if (coin) {
+      return (
+        userPortfolio.coins.find((item) => item.symbol === coin.symbol)
+          ?.amount || 0
+      );
+    }
+    return 0;
+  };
 
   const isDataValid = () => {
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
@@ -47,9 +59,21 @@ export default function ExchangeForm({
   };
 
   const sliderHandler = (_: Event, newValue: number | number[]) => {
-    setFromAmount(newValue as number);
+    setFromAmount(
+      Math.min(
+        Number(getPortfolioCoinAmount(fromCurrency).toFixed(4)),
+        Number((newValue as number).toFixed(4))
+      )
+    );
     if (coefficient && newValue) {
-      setToAmount(Number((coefficient * (newValue as number)).toFixed(4)));
+      setToAmount(
+        Math.min(
+          Number(
+            (getPortfolioCoinAmount(fromCurrency) * coefficient).toFixed(4)
+          ),
+          Number((coefficient * (newValue as number)).toFixed(4))
+        )
+      );
     } else if (newValue === 0) {
       setToAmount(0);
     } else if (newValue === null) {
@@ -84,11 +108,23 @@ export default function ExchangeForm({
         setToAmount(null);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
   const submitHandler = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
+    const formData = new FormData();
+    console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
+
+    if (fromCurrency && toCurrency && fromAmount && toAmount) {
+      formData.append("type", "exchange");
+      formData.append("fromItem", fromCurrency?.symbol);
+      formData.append("toItem", toCurrency?.symbol);
+      formData.append("fromAmount", fromAmount.toString());
+      formData.append("toAmount", toAmount.toString());
+    }
+    createTransaction(formData);
   };
 
   return (
@@ -113,9 +149,9 @@ export default function ExchangeForm({
             <p className=" mt-2">
               Balance:{" "}
               {!!fromCurrency && !!userPortfolio
-                ? userPortfolio?.coins?.find(
-                    (item) => item.symbol === fromCurrency.symbol
-                  )?.amount || 0
+                ? userPortfolio?.coins
+                    ?.find((item) => item.symbol === fromCurrency.symbol)
+                    ?.amount.toFixed(4) || 0
                 : "--"}
             </p>
           </div>
@@ -162,9 +198,25 @@ export default function ExchangeForm({
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 console.log(e.target.value);
                 if (e.target.value !== "" && coefficient) {
-                  setFromAmount(Number(Number(e.target.value).toFixed(4)));
+                  setFromAmount(
+                    Math.min(
+                      Number(Number(e.target.value).toFixed(4)),
+                      Number(getPortfolioCoinAmount(fromCurrency).toFixed(4))
+                    )
+                  );
                   setToAmount(
-                    Number((Number(e.target.value) * coefficient).toFixed(4))
+                    Number(
+                      Math.min(
+                        Number(
+                          (Number(e.target.value) * coefficient).toFixed(4)
+                        ),
+                        Number(
+                          (
+                            getPortfolioCoinAmount(fromCurrency) * coefficient
+                          ).toFixed(4)
+                        )
+                      )
+                    )
                   );
                 } else if (e.target.value === "0") {
                   setFromAmount(0);
@@ -220,9 +272,9 @@ export default function ExchangeForm({
             <p className=" mt-2">
               Balance:{" "}
               {!!toCurrency && !!userPortfolio
-                ? userPortfolio?.coins?.find(
-                    (item) => item.symbol === toCurrency.symbol
-                  )?.amount || 0
+                ? userPortfolio?.coins
+                    ?.find((item) => item.symbol === toCurrency.symbol)
+                    ?.amount.toFixed(4) || 0
                 : "--"}
             </p>
           </div>
@@ -265,9 +317,21 @@ export default function ExchangeForm({
               }
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 if (e.target.value !== "" && coefficient) {
-                  setToAmount(Number(Number(e.target.value).toFixed(4)));
+                  setToAmount(
+                    Math.min(
+                      Number(
+                        (
+                          getPortfolioCoinAmount(fromCurrency) * coefficient
+                        ).toFixed(4)
+                      ),
+                      Number(Number(e.target.value).toFixed(4))
+                    )
+                  );
                   setFromAmount(
-                    Number((Number(e.target.value) / coefficient).toFixed(4))
+                    Math.min(
+                      Number(getPortfolioCoinAmount(fromCurrency)?.toFixed(4)),
+                      Number((Number(e.target.value) / coefficient).toFixed(4))
+                    )
                   );
                 } else if (e.target.value === "0") {
                   setFromAmount(0);

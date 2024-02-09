@@ -14,11 +14,11 @@ const TransactionSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    referenceCurrency: {
-      type: String,
-      enum: ["usd"],
-      required: true,
-    },
+    // referenceCurrency: {
+    //   type: String,
+    //   enum: ["usd"],
+    //   required: true,
+    // },
 
     fromItem: {
       type: String,
@@ -30,11 +30,11 @@ const TransactionSchema = new mongoose.Schema(
       required: true,
       validate: [isPositive, "fromAmount must be strictly positive"],
     },
-    fromPricePerItem: {
-      type: Number,
-      required: true,
-      validate: [isPositive, "fromPricePerItem must be strictly positive"],
-    },
+    // fromPricePerItem: {
+    //   type: Number,
+    //   required: true,
+    //   validate: [isPositive, "fromPricePerItem must be strictly positive"],
+    // },
     toItem: {
       type: String,
       trim: true,
@@ -45,11 +45,11 @@ const TransactionSchema = new mongoose.Schema(
       required: true,
       validate: [isPositive, "toAmount must be strictly positive"],
     },
-    toPricePerItem: {
-      type: Number,
-      required: true,
-      validate: [isPositive, "toPricePerItem must be strictly positive"],
-    },
+    // toPricePerItem: {
+    //   type: Number,
+    //   required: true,
+    //   validate: [isPositive, "toPricePerItem must be strictly positive"],
+    // },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
