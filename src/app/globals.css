@@ -22,7 +22,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 12px !important;
 }
 
 ::-webkit-scrollbar-track {
@@ -32,9 +32,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #b102cd;
+  background-color: #b102cd !important;
   border: 3px solid #bdbdbd;
-  border-radius: 12px;
+  border-radius: 12px !important;
   width: 5px;
 }
 
@@ -133,4 +133,28 @@ input[type="number"] {
 .MuiAutocomplete-noOptions {
   background-color: #565976;
   color: #fff;
+}
+.apexcharts-legend-text {
+  padding-left: 40px !important;
+}
+.apexcharts-legend {
+  gap: 10px;
+}
+.apexcharts-legend-series {
+  display: flex;
+  align-items: center;
+}
+
+.truncate-2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
+
+.apexcharts-legend {
+  /* align-items: end !important; */
+  margin: 0 auto;
+  justify-content: start !important;
 }

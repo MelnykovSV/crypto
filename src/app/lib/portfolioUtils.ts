@@ -1,9 +1,15 @@
 import { IPortfolio, IPortfolioCoin, ITransaction } from "@/interfaces";
+import { newCoinsMap } from "@/newCoinsMap";
 
-export function calculateTotalPortfolioPrice(
+export function calculatePortfolioPrice(
   priceList: Record<string, { name: string; symbol: string; price: number }>,
   coins: IPortfolioCoin[]
 ) {
+  const pricesByCoin = coins.map((item) => ({
+    name: item.name,
+    symbol: item.symbol,
+    portfolioCoinPrice: item.amount * priceList[item.symbol].price,
+  }));
   return coins.reduce((acc, item) => {
     return acc + item.amount * priceList[item.symbol].price;
   }, 0);
@@ -17,6 +23,7 @@ export function createPriceList(res: any) {
         name: item[0].name,
         symbol: item[0].symbol,
         price: item[0].quote.USD.price,
+        percent_change_24h: item[0].quote.USD.percent_change_24h,
       },
     }),
     {}
@@ -61,10 +68,11 @@ export function processTransaction(
         {
           totalInvested,
           totalWithdrawn: updatedTotalWithdrawn,
-          totalPortfolioPrice: calculateTotalPortfolioPrice(
+          totalPortfolioPrice: calculatePortfolioPrice(
             priceList,
             filteredCoins
           ),
+          date: new Date(),
         },
       ];
 
@@ -100,17 +108,23 @@ export function processTransaction(
             {
               totalInvested: totalInvested + toPricePerItem * toAmount,
               totalWithdrawn,
-              totalPortfolioPrice: calculateTotalPortfolioPrice(
+              totalPortfolioPrice: calculatePortfolioPrice(
                 priceList,
                 updatedCoins
               ),
+              date: new Date(),
             },
           ],
         };
       } else {
         const updatedCoins = [
           ...coins,
-          { symbol: toItem, amount: toAmount, name: priceList[toItem].name },
+          {
+            symbol: toItem,
+            amount: toAmount,
+            coinGeckoId: newCoinsMap[priceList[toItem].name as keyof typeof newCoinsMap].id,
+            name: priceList[toItem].name,
+          },
         ];
 
         const toPricePerItem = priceList[toItem].price;
@@ -124,10 +138,11 @@ export function processTransaction(
             {
               totalInvested: totalInvested + toPricePerItem * toAmount,
               totalWithdrawn,
-              totalPortfolioPrice: calculateTotalPortfolioPrice(
+              totalPortfolioPrice: calculatePortfolioPrice(
                 priceList,
                 updatedCoins
               ),
+              date: new Date(),
             },
           ],
         };
@@ -179,17 +194,24 @@ export function processTransaction(
             {
               totalInvested,
               totalWithdrawn,
-              totalPortfolioPrice: calculateTotalPortfolioPrice(
+              totalPortfolioPrice: calculatePortfolioPrice(
                 priceList,
                 updatedCoinsToPart
               ),
+              date: new Date(),
+              // date: new Date(),
             },
           ],
         };
       } else {
         const updatedCoinsToPart = [
           ...filteredCoinsFromPart,
-          { symbol: toItem, amount: toAmount, name: priceList[toItem].name },
+          {
+            symbol: toItem,
+            amount: toAmount,
+            coinGeckoId: newCoinsMap[priceList[toItem].name as keyof typeof newCoinsMap].id,
+            name: priceList[toItem].name,
+          },
         ];
         return {
           coins: updatedCoinsToPart,
@@ -200,10 +222,12 @@ export function processTransaction(
             {
               totalInvested,
               totalWithdrawn,
-              totalPortfolioPrice: calculateTotalPortfolioPrice(
+              totalPortfolioPrice: calculatePortfolioPrice(
                 priceList,
                 updatedCoinsToPart
               ),
+              date: new Date(),
+              // date: new Date(),
             },
           ],
         };

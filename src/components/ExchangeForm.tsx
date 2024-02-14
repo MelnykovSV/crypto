@@ -16,8 +16,12 @@ interface ICoin {
 
 export default function ExchangeForm({
   userPortfolio,
+  updatePortfolioHandler,
+  modalCloseHandler,
 }: {
   userPortfolio: IPortfolio;
+  updatePortfolioHandler: () => void;
+  modalCloseHandler: () => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
@@ -111,7 +115,7 @@ export default function ExchangeForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
     const formData = new FormData();
@@ -124,7 +128,12 @@ export default function ExchangeForm({
       formData.append("fromAmount", fromAmount.toString());
       formData.append("toAmount", toAmount.toString());
     }
-    createTransaction(formData);
+
+    ////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+    await createTransaction(formData);
+    updatePortfolioHandler();
+    modalCloseHandler();
   };
 
   return (

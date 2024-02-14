@@ -1,9 +1,9 @@
 import formatCandleChartData from "./formatCandleChartData";
 import formatLineChartData from "./formatLineChartData";
 import getErrorMessage from "./getErrorMessage";
-import roundPrice from "./roundPrice";
+import roundValue from "./roundValue";
 import {
-  calculateTotalPortfolioPrice,
+  calculatePortfolioPrice,
   createPriceList,
   processTransaction,
 } from "./portfolioUtils";
@@ -14,8 +14,8 @@ export {
   formatCandleChartData,
   formatLineChartData,
   getErrorMessage,
-  roundPrice,
-  calculateTotalPortfolioPrice,
+  roundValue,
+  calculatePortfolioPrice,
   createPriceList,
   processTransaction,
   parseStrToJSON,

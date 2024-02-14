@@ -17,7 +17,11 @@ const CoinSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-
+    coinGeckoId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     amount: {
       type: Number,
       required: true,
@@ -44,8 +48,12 @@ const HistoryPointSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    date: {
+      type: Date,
+      default: new Date(),
+    },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false }
 );
 
 const PortfolioSchema = new mongoose.Schema(
@@ -66,9 +74,7 @@ const PortfolioSchema = new mongoose.Schema(
     },
     historyData: {
       type: [HistoryPointSchema],
-      default: [
-        { totalInvested: 0, totalWithdrawn: 0, totalPortfolioPrice: 0 },
-      ],
+      required: true,
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

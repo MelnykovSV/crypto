@@ -67,9 +67,10 @@ export interface IPortfolioCoin {
   amount: number;
   symbol: string;
   name: string;
+  logo: string;
 }
 export interface IPortfolioHistoryItem {
-  createdAt: string;
+  date: string;
   updatedAt: string;
   totalInvested: number;
   totalPortfolioPrice: number;
@@ -79,7 +80,12 @@ export interface IPortfolioHistoryItem {
 
 export type IPriceList = Record<
   string,
-  { name: string; symbol: string; price: number }
+  {
+    logo: any;
+    name: string;
+    symbol: string;
+    price: number;
+  }
 >;
 
 export interface IPortfolio {

@@ -20,6 +20,10 @@ import ExchangeForm from "./ExchangeForm";
 import CoinsAutocomplete from "./CoinsAutocomplete";
 import SellForm from "./SellForm";
 import BuyForm from "./BuyForm";
+import ProfitChart from "./ProfitChart";
+import PieChart from "./PieChart";
+import PortfolioListItem from "./PortfolioListItem";
+import PortfolioList from "./PortfolioList";
 
 export {
   CoinsTable,
@@ -43,5 +47,9 @@ export {
   ExchangeForm,
   CoinsAutocomplete,
   SellForm,
-  BuyForm
+  BuyForm,
+  ProfitChart,
+  PieChart,
+  PortfolioListItem,
+  PortfolioList,
 };

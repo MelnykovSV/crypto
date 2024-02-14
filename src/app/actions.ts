@@ -12,6 +12,7 @@ import { IPortfolioCoin } from "@/interfaces";
 import connectDB from "./lib/dbConnect";
 import { IPortfolio } from "@/interfaces";
 import { IPriceList } from "@/interfaces";
+import { AnimationDuration } from "recharts/types/util/types";
 
 const { coinMarketCupKey } = process.env;
 
@@ -39,14 +40,32 @@ export async function getUserPortfolio() {
 
     const portfolio = await Portfolio.findOne({ owner: user._id });
 
+    console.log("portfolio", portfolio);
+
     if (!portfolio) {
-      const portfolio = await Portfolio.create({ owner: user._id });
-      return JSON.stringify(portfolio);
+      const portfolio = await Portfolio.create({
+        owner: user._id,
+        historyData: [
+          {
+            totalInvested: 0,
+            totalWithdrawn: 0,
+            totalPortfolioPrice: 0,
+            date: new Date(),
+          },
+        ],
+      });
+      console.log("null portfolio", portfolio);
+      return JSON.stringify({ portfolio, priceList: {} });
+    }
+
+    if (!portfolio.coins.length) {
+      return JSON.stringify({ portfolio, priceList: {} });
     }
     const priceListQuery = [
       ...portfolio.coins.map((item: IPortfolioCoin) => item.symbol),
     ].join(",");
-    const res = await fetch(
+
+    const pricesPromise = fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${priceListQuery}`,
       {
         headers: {
@@ -54,6 +73,37 @@ export async function getUserPortfolio() {
         },
       }
     );
+
+    const logosPromise = fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+    const [res, res2] = await Promise.all([pricesPromise, logosPromise]);
+    if (!res.ok) {
+      const error = await res.json();
+      const errorMessage = error.status.error_message;
+      throw new Error(errorMessage);
+    }
+    if (!res2.ok) {
+      const error = await res2.json();
+      const errorMessage = error.status.error_message;
+      throw new Error(errorMessage);
+    }
+
+    const data2 = await res2.json();
+
+
+
+    const coinLogos = Object.values(data2.data).reduce(
+      (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
+      {}
+    ) as any;
+
+    console.log(coinLogos);
 
     if (!res.ok) {
       const error = await res.json();
@@ -63,8 +113,27 @@ export async function getUserPortfolio() {
 
     const coinPrices = await res.json();
 
+    console.log("coinPrices", coinPrices.data.BTC[0]);
+
     const priceList = createPriceList(coinPrices) as IPriceList;
-    return JSON.stringify({ portfolio, priceList });
+
+    const priceListWithLogos = Object.keys(priceList).reduce(
+      (acc: any, item: any) => {
+        return {
+          ...acc,
+          [item]: { ...priceList[item], logo: coinLogos[item] },
+        };
+      },
+      {}
+    );
+
+    // console.log("priceListWithLogos", priceListWithLogos);
+
+    return JSON.stringify({
+      portfolio,
+      priceList: priceListWithLogos,
+      // coinLogos,
+    });
   } catch (error) {
     return getErrorMessage(error);
   }
@@ -99,13 +168,21 @@ export async function createTransaction(formData: FormData) {
       throw new Error("No portfolio");
     }
 
+    console.log("portfolio!", portfolio);
+
+    // if (!portfolio.coins.length) {
+    //   return JSON.stringify({ portfolio, priceList: {} });
+    // }
+
     const priceListQuery = Array.from(
       new Set([
         ...portfolio.coins.map((item: IPortfolioCoin) => item.symbol),
-        fromItem,
-        toItem,
+        fromItem === "USD" ? "" : fromItem,
+        toItem === "USD" ? "" : toItem,
       ])
     ).join(",");
+
+    console.log("priceListQuery", priceListQuery);
 
     const res = await fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${priceListQuery}`,
@@ -126,6 +203,7 @@ export async function createTransaction(formData: FormData) {
 
     const priceList = createPriceList(coinPrices) as IPriceList;
 
+    console.log("priceList", priceList);
     const processedPortfolio = processTransaction(
       portfolio,
       newTransaction,

@@ -16,8 +16,12 @@ interface ICoin {
 
 export default function BuyForm({
   userPortfolio,
+  updatePortfolioHandler,
+  modalCloseHandler,
 }: {
   userPortfolio: IPortfolio;
+  updatePortfolioHandler: () => void;
+  modalCloseHandler: () => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<string>("USD");
@@ -74,7 +78,7 @@ export default function BuyForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
 
@@ -83,11 +87,14 @@ export default function BuyForm({
       formData.append("fromItem", fromCurrency);
       formData.append("toItem", toCurrency?.symbol);
       formData.append("toItemName", toCurrency?.name);
+      // formData.append("logo", toCurrency?.large);
       formData.append("fromAmount", fromAmount.toString());
       formData.append("toAmount", toAmount.toString());
     }
 
-    createTransaction(formData);
+    await createTransaction(formData);
+    updatePortfolioHandler();
+    modalCloseHandler();
   };
 
   return (

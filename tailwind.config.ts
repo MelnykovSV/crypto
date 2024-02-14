@@ -15,6 +15,7 @@ const config: Config = {
         mont: ["var(--font-montserrat)"],
       },
       screens: {
+        "large-mobile": "480px",
         tablet: "640px",
         // // => @media (min-width: 640px) { ... }
 
@@ -22,6 +23,7 @@ const config: Config = {
         // // => @media (min-width: 1024px) { ... }
         laptop: "1024px",
         desktop: "1440px",
+        "large-desktop": "1536px",
         // => @media (min-width: 1280px) { ... }
       },
       animation: {
@@ -45,7 +47,6 @@ const config: Config = {
             transform: "rotate(360deg)",
           },
         },
-      
       },
 
       colors: {
@@ -64,10 +65,12 @@ const config: Config = {
         "text/3": "#86909C",
         cyan: "#0FC6C2",
         "purple-grad": "rgba(24, 75, 255, 0.40)",
+        "transparent-gray": "rgba(176, 176, 176, 0.1)",
         success: "#0DBB7C",
         error: "#FF8282",
         accent: "#b102cd",
-        'accent-dark': "#933FFE"
+        "accent-light": "rgba(177, 2, 205, 0.4)",
+        "accent-dark": "#933FFE",
       },
       backgroundImage: {
         "gradient-conic":

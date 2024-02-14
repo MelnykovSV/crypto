@@ -17,8 +17,12 @@ interface ICoin {
 
 export default function SellForm({
   userPortfolio,
+  updatePortfolioHandler,
+  modalCloseHandler,
 }: {
   userPortfolio: IPortfolio;
+  updatePortfolioHandler: () => void;
+  modalCloseHandler: () => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
@@ -103,10 +107,10 @@ export default function SellForm({
         setToAmount(null);
       }
     })();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency, toCurrency]);
 
-  const submitHandler = (e: React.FormEvent) => {
+  const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
     console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
@@ -119,7 +123,9 @@ export default function SellForm({
       formData.append("toAmount", toAmount.toString());
     }
 
-    createTransaction(formData);
+    await createTransaction(formData);
+    updatePortfolioHandler();
+    modalCloseHandler();
   };
 
   return (
