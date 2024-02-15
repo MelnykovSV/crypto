@@ -11,3 +11,4 @@ export const pages = [
 ];
 
 export const coinsPerPage = 30;
+export const transactionsPerPage = 20;

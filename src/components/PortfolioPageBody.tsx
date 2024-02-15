@@ -94,9 +94,6 @@ export default function PortfolioPageBody({
     };
   }
 
-  console.log(portfolio);
-  console.log(priceList);
-
   const { lineChartData, pieChartData } = processPortfolioData(portfolio);
 
   const handleModalClose = () => {
@@ -271,7 +268,6 @@ export default function PortfolioPageBody({
               boxShadow: 24,
               p: 4,
             }}>
-
             <div className="flex gap-8 justify-center">
               <div className="flex flex-col items-center gap-2 w-[75px]">
                 <button

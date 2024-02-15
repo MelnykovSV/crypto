@@ -91,6 +91,7 @@ export function processTransaction(
               symbol: coin.symbol,
               name: coin.name,
               amount: coin.amount + toAmount,
+    
             };
           } else {
             return coin;

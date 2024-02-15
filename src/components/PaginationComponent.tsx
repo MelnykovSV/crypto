@@ -17,7 +17,7 @@ export default function PaginationComponent({
     event: React.ChangeEvent<unknown>,
     pageNumber: number
   ) => {
-    const params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams.toString());
     params.set("page", pageNumber.toString());
     replace(`${pathname}?${params.toString()}`);
   };

@@ -13,8 +13,18 @@ import connectDB from "./lib/dbConnect";
 import { IPortfolio } from "@/interfaces";
 import { IPriceList } from "@/interfaces";
 import { AnimationDuration } from "recharts/types/util/types";
+import { transactionsPerPage } from "@/constants";
 
 const { coinMarketCupKey } = process.env;
+
+interface IUserTransactionsQuerry {
+  type: "all" | "buy" | "sell" | "exchange";
+  substring: string | null;
+  date: any;
+  status: "all" | "success" | "fail";
+  sorting: 1 | -1;
+  page: number;
+}
 
 async function authenticate() {
   await connectDB();
@@ -95,8 +105,6 @@ export async function getUserPortfolio() {
     }
 
     const data2 = await res2.json();
-
-
 
     const coinLogos = Object.values(data2.data).reduce(
       (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
@@ -229,14 +237,46 @@ export async function createTransaction(formData: FormData) {
   }
 }
 
-export async function getUserTransactions(formData: FormData) {
+export async function getUserTransactions({
+  type,
+  substring,
+  date,
+  status,
+  sorting,
+  page,
+}: IUserTransactionsQuerry) {
   try {
     await connectDB();
     const user = await authenticate();
 
-    const userTransactions = await Transaction.find({ owner: user._id });
+    const statusMap = { success: true, fail: false };
 
-    return JSON.stringify(userTransactions);
+    const query = {
+      owner: user._id,
+      ...(date ? { createdAt: date } : {}),
+      ...(type === "all" ? {} : { type }),
+      ...(status === "all" ? {} : { isSuccessful: statusMap[status] }),
+      ...(substring
+        ? {
+            $or: [
+              { fromItem: { $regex: substring, $options: "i" } },
+              { toItem: { $regex: substring, $options: "i" } },
+            ],
+          }
+        : {}),
+    };
+
+    const totalDocuments = await Transaction.countDocuments(query);
+
+    const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
+
+    const userTransactions = await Transaction.find(query, null, {
+      sort: { createdAt: sorting },
+    })
+      .limit(transactionsPerPage)
+      .skip((page - 1) * transactionsPerPage);
+
+    return JSON.stringify({ totalPages, userTransactions });
   } catch (error) {
     return getErrorMessage(error);
   }

@@ -67,7 +67,7 @@ export interface IPortfolioCoin {
   amount: number;
   symbol: string;
   name: string;
-  logo: string;
+  // logo: string;
 }
 export interface IPortfolioHistoryItem {
   date: string;

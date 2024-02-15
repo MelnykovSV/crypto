@@ -12,14 +12,16 @@ export default async function PortfolioPage() {
 
   // console.log(coinsMap);
 
-  const { portfolio, priceList }: IPortfolioData = parseStrToJSON(data);
+  const portfolioData: IPortfolioData = parseStrToJSON(data);
+
+  const { portfolio, priceList } = portfolioData;
 
   console.log("portfolio", portfolio);
   console.log("priceList", priceList);
 
   return (
     <div>
-      {!!portfolio && (
+      {!!portfolioData && (
         <PortfolioPageBody
           initialPortfolio={portfolio}
           initialPriceList={priceList}
@@ -28,5 +30,3 @@ export default async function PortfolioPage() {
     </div>
   );
 }
-
-
