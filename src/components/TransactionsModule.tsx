@@ -1,79 +1,35 @@
-"use client";
-import React, { useState, useEffect } from "react";
+// "use client";
+import React from "react";
 // import { getUserTransactions } from "@/app/actions";
 // import { parseStrToJSON } from "@/app/lib";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useDebounceCallback } from "usehooks-ts";
+// import { useSearchParams, usePathname, useRouter } from "next/navigation";
+// import { useDebounceCallback } from "usehooks-ts";
+import { TransactionsSearch } from ".";
+import { TransactionsTable } from ".";
 
 export default function TransactionsModule({
   data: { totalPages: totalPagesNumber, userTransactions },
-  params: {
-    type: initialType,
-    // substring: initialSubstring,
-    date: initialDate,
-    status: initialStatus,
-    sorting: initialSorting,
-    page: initialPage,
-  },
+  params,
 }: any) {
-  const [date, setDate] = useState<Date | null>(initialDate);
-  // const [substring, setSubstring] = useState<string>(initialSubstring);
-  const [type, setType] = useState<"all" | "buy" | "sell" | "exchange">(
-    initialType
-  );
-  const [status, setStatus] = useState<"all" | "success" | "fail">(
-    initialStatus
-  );
-  const [sorting, setSorting] = useState<1 | -1>(initialSorting);
-  const [page, setPage] = useState<number>(initialPage);
-  const [transactions, setTransactions] = useState(userTransactions);
-  const [totalPages, setTotalPages] = useState<number>(totalPagesNumber);
+  // const [date, setDate] = useState<Date | null>(initialDate);
+  // // const [substring, setSubstring] = useState<string>(initialSubstring);
+  // const [type, setType] = useState<"all" | "buy" | "sell" | "exchange">(
+  //   initialType
+  // );
+  // const [status, setStatus] = useState<"all" | "success" | "fail">(
+  //   initialStatus
+  // );
+  // const [sorting, setSorting] = useState<1 | -1>(initialSorting);
+  // const [page, setPage] = useState<number>(initialPage);
+  // const [transactions, setTransactions] = useState(userTransactions);
+  // const [totalPages, setTotalPages] = useState<number>(totalPagesNumber);
 
-  console.log(transactions);
+  // console.log(transactions);
 
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
+  // const searchParams = useSearchParams();
+  // const pathname = usePathname();
 
-  const router = useRouter();
-
-  const routerHandler = (
-    e: React.ChangeEvent<unknown>,
-    { field, value }: { field: string; value: any }
-  ) => {
-    const params = new URLSearchParams(searchParams);
-    switch (field) {
-      case "type":
-      case "status":
-        if (value === "all") {
-          params.delete(field, value.toString());
-        } else {
-          params.set(field, value.toString());
-        }
-
-        break;
-
-      case "substring":
-      case "date":
-        if (!value) {
-          params.delete(field, value.toString());
-        } else {
-          params.set(field, value.toString());
-        }
-
-        break;
-
-      case "sorting":
-      case "page":
-        if (value === 1) {
-          params.delete(field, value.toString());
-        } else {
-          params.set(field, value.toString());
-        }
-        break;
-    }
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  // const router = useRouter();
 
   // useEffect(() => {
   //   (async () => {
@@ -92,25 +48,27 @@ export default function TransactionsModule({
   //   })();
   // }, [date, substring, type, status, sorting, page]);
 
-  const substringHandler = useDebounceCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      e.preventDefault();
-      console.log(e.target.value);
-      routerHandler(e, { field: "substring", value: e.target.value });
-      // setSubstring(e.target.value);
-    },
-    500
-  );
+  // const substringHandler = useDebounceCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     console.log(e.target.value);
+  //     routerHandler(e, { field: "substring", value: e.target.value });
+  //     // setSubstring(e.target.value);
+  //   },
+  //   500
+  // );
 
   return (
     <div>
-      <input
+      {/* <input
         type="text"
         name=""
         id=""
         defaultValue={searchParams.get("substring")?.toString()}
         onChange={substringHandler}
-      />
+      /> */}
+
+      <TransactionsSearch />
+      <TransactionsTable params={params} />
     </div>
   );
 }

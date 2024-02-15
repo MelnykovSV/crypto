@@ -25,6 +25,8 @@ import PieChart from "./PieChart";
 import PortfolioListItem from "./PortfolioListItem";
 import PortfolioList from "./PortfolioList";
 import TransactionsModule from "./TransactionsModule";
+import TransactionsSearch from "./TransactionsSearch";
+import TransactionsTable from "./TransactionsTable";
 
 export {
   CoinsTable,
@@ -54,4 +56,6 @@ export {
   PortfolioListItem,
   PortfolioList,
   TransactionsModule,
+  TransactionsSearch,
+  TransactionsTable,
 };
