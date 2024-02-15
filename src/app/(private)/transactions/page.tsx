@@ -24,6 +24,8 @@ export default async function TransactionsPage({
     sorting = 1,
     page = 1,
   } = searchParams;
+
+  console.log(substring);
   const res = await getUserTransactions({
     type,
     substring,
