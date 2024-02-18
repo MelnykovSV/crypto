@@ -1,14 +1,22 @@
-import { getUserTransactions } from "@/app/actions";
-import { TransactionsModule } from "@/components";
-import { parseStrToJSON } from "@/app/lib";
+import {
+  TransactionsSearch,
+  TransactionsTable,
+  TransactionTypeSelect,
+  TransactionStatusSelect,
+  TransactionsSortingSwitcher,
+  TransactionsDatePicker,
+  PaginationComponent,
+} from "@/components";
+
+import { getTransactionsPages } from "@/app/actions";
 
 interface ITransactionsPage {
   searchParams: {
     type: "all" | "buy" | "sell" | "exchange" | undefined;
     substring: string | undefined;
-    date: Date | null | undefined;
+    date: string | null | undefined;
     status: "all" | "success" | "fail" | undefined;
-    sorting: 1 | -1 | undefined;
+    sorting: "1" | "-1";
     page: number;
   };
 }
@@ -21,12 +29,11 @@ export default async function TransactionsPage({
     substring = "",
     date = null,
     status = "all",
-    sorting = 1,
+    sorting = "1",
     page = 1,
   } = searchParams;
 
-  console.log(substring);
-  const res = await getUserTransactions({
+  const totalPages = await getTransactionsPages({
     type,
     substring,
     date,
@@ -35,16 +42,24 @@ export default async function TransactionsPage({
     page,
   });
 
-  const transactionsData = parseStrToJSON(res);
-
   return (
-    <div>
-      <h1>Transactions page</h1>
-      {transactionsData ? (
-        <TransactionsModule
-          data={transactionsData}
-          params={{ type, substring, date, status, sorting, page }}
-        />
+    <div className="pb-[30px]">
+      <div className="flex gap-5 items-start justify-between px-5 mb-[20px]">
+        <TransactionsSearch />
+
+        <div className="flex gap-4">
+          {" "}
+          <TransactionTypeSelect />
+          <TransactionStatusSelect />
+          <TransactionsDatePicker />
+        </div>
+      </div>
+
+      <TransactionsTable
+        params={{ type, substring, date, status, sorting, page }}
+      />
+      {Number(totalPages) > 1 ? (
+        <PaginationComponent totalPages={Number(totalPages)} />
       ) : null}
     </div>
   );

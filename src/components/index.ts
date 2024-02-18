@@ -24,9 +24,12 @@ import ProfitChart from "./ProfitChart";
 import PieChart from "./PieChart";
 import PortfolioListItem from "./PortfolioListItem";
 import PortfolioList from "./PortfolioList";
-import TransactionsModule from "./TransactionsModule";
 import TransactionsSearch from "./TransactionsSearch";
 import TransactionsTable from "./TransactionsTable";
+import TransactionTypeSelect from "./TransactionTypeSelect";
+import TransactionStatusSelect from "./TransactionStatusSelect";
+import TransactionsSortingSwitcher from "./TransactionsSortingSwitcher";
+import TransactionsDatePicker from "./TransactionsDatePicker";
 
 export {
   CoinsTable,
@@ -55,7 +58,10 @@ export {
   PieChart,
   PortfolioListItem,
   PortfolioList,
-  TransactionsModule,
   TransactionsSearch,
   TransactionsTable,
+  TransactionTypeSelect,
+  TransactionStatusSelect,
+  TransactionsSortingSwitcher,
+  TransactionsDatePicker,
 };

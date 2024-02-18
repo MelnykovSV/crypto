@@ -2,68 +2,59 @@
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebounceCallback } from "usehooks-ts";
+import { TextField } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
+import searchIcon from "@/assets/search.svg";
+import Image from "next/image";
 
 export default function TransactionsSearch() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-
   const router = useRouter();
 
-  const routerHandler = (
-    e: React.ChangeEvent<unknown>,
-    { field, value }: { field: string; value: any }
-  ) => {
+  const substringHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const params = new URLSearchParams(searchParams);
-    switch (field) {
-      case "type":
-      case "status":
-        if (value === "all") {
-          params.delete(field, value.toString());
-        } else {
-          params.set(field, value.toString());
-        }
 
-        break;
-
-      case "substring":
-      case "date":
-        if (!value) {
-          params.delete(field, value.toString());
-        } else {
-          params.set(field, value.toString());
-        }
-
-        break;
-
-      case "sorting":
-      case "page":
-        if (value === 1) {
-          params.delete(field, value.toString());
-        } else {
-          params.set(field, value.toString());
-        }
-        break;
+    if (!e.target.value) {
+      params.delete("substring");
+    } else {
+      params.set("substring", e.target.value.toString());
     }
 
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  
-  const substringHandler = useDebounceCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(e.target.value);
-      routerHandler(e, { field: "substring", value: e.target.value });
-      // setSubstring(e.target.value);
-    },
-    500
-  );
+  const debouncedSubstringHandler = useDebounceCallback(substringHandler, 500);
   return (
-    <input
+    <TextField
       type="text"
-      name=""
-      id=""
+      className="mb-2  bg-[#16161E] rounded-[10px]"
+      placeholder="Search by coin symbol"
       defaultValue={searchParams.get("substring")?.toString()}
-      onChange={substringHandler}
+      onChange={debouncedSubstringHandler}
+      sx={{
+    
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderRadius: "10px",
+        },
+        "& .MuiInputBase-input": {
+          paddingLeft: "20px",
+          color: "#fff",
+        },
+      }}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Image
+              src={searchIcon}
+              alt="Search icon"
+              width={20}
+              height={20}
+              className="absolute left-[10px] top-1/2 -translate-y-1/2 pointer-events-none"
+            />
+          </InputAdornment>
+        ),
+      }}
     />
   );
 }

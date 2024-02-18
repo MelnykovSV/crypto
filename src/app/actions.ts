@@ -14,15 +14,16 @@ import { IPortfolio } from "@/interfaces";
 import { IPriceList } from "@/interfaces";
 import { AnimationDuration } from "recharts/types/util/types";
 import { transactionsPerPage } from "@/constants";
+import dayjs from "dayjs";
 
 const { coinMarketCupKey } = process.env;
 
 interface IUserTransactionsQuerry {
   type: "all" | "buy" | "sell" | "exchange";
   substring: string | null;
-  date: any;
+  date: string | null;
   status: "all" | "success" | "fail";
-  sorting: 1 | -1;
+  sorting: "1" | "-1";
   page: number;
 }
 
@@ -253,7 +254,14 @@ export async function getUserTransactions({
 
     const query = {
       owner: user._id,
-      ...(date ? { createdAt: date } : {}),
+      ...(date
+        ? {
+            createdAt: {
+              $gte: dayjs(date).startOf("day").toDate(),
+              $lte: dayjs(date).endOf("day").toDate(),
+            },
+          }
+        : {}),
       ...(type === "all" ? {} : { type }),
       ...(status === "all" ? {} : { isSuccessful: statusMap[status] }),
       ...(substring
@@ -271,12 +279,95 @@ export async function getUserTransactions({
     const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
 
     const userTransactions = await Transaction.find(query, null, {
-      sort: { createdAt: sorting },
+      sort: { createdAt: Number(sorting) },
     })
       .limit(transactionsPerPage)
       .skip((page - 1) * transactionsPerPage);
 
-    return JSON.stringify({ totalPages, userTransactions });
+    const priceListQuery = Array.from(
+      new Set(
+        userTransactions.reduce((acc, item) => {
+          if (item.fromItem.toLowerCase() === "usd") {
+            return [
+              ...acc,
+              item.toItem.toLowerCase() === "usd" ? null : item.toItem,
+            ];
+          } else if (item.toItem.toLowerCase() === "usd") {
+            return [
+              ...acc,
+              item.fromItem.toLowerCase() === "usd" ? null : item.fromItem,
+            ];
+          } else {
+            return [
+              ...acc,
+              item.fromItem.toLowerCase() === "usd" ? null : item.fromItem,
+              item.toItem.toLowerCase() === "usd" ? null : item.toItem,
+            ];
+          }
+        }, [])
+      )
+    ).join(",");
+
+    const logosRes = await fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+    const logosData = (await logosRes.json()) as any;
+
+    const coinLogos = Object.values(logosData.data).reduce(
+      (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
+      {}
+    ) as any;
+
+    return JSON.stringify({ totalPages, userTransactions, logos: coinLogos });
+  } catch (error) {
+    return getErrorMessage(error);
+  }
+}
+
+export async function getTransactionsPages({
+  type,
+  substring,
+  date,
+  status,
+  sorting,
+  page,
+}: IUserTransactionsQuerry) {
+  const user = await authenticate();
+
+  const statusMap = { success: true, fail: false };
+
+  const query = {
+    owner: user._id,
+    ...(date
+      ? {
+          createdAt: {
+            $gte: dayjs(date).startOf("day").toDate(),
+            $lte: dayjs(date).endOf("day").toDate(),
+          },
+        }
+      : {}),
+    ...(type === "all" ? {} : { type }),
+    ...(status === "all" ? {} : { isSuccessful: statusMap[status] }),
+    ...(substring
+      ? {
+          $or: [
+            { fromItem: { $regex: substring, $options: "i" } },
+            { toItem: { $regex: substring, $options: "i" } },
+          ],
+        }
+      : {}),
+  };
+
+  const totalDocuments = await Transaction.countDocuments(query);
+  const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
+
+  try {
+    return JSON.stringify(totalPages);
   } catch (error) {
     return getErrorMessage(error);
   }

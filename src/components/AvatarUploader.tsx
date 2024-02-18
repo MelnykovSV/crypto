@@ -22,7 +22,17 @@ export default function AvatarUploader() {
     }
   };
 
+
+
+
   const changeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+
+
+
+
+
     const file = e.target.files?.[0];
 
     if (file) {
