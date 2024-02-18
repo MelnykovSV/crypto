@@ -308,6 +308,8 @@ export async function getUserTransactions({
       )
     ).join(",");
 
+
+
     const logosRes = await fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
       {

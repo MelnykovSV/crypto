@@ -10,8 +10,7 @@ export default async function TransactionsTable({ params }: any) {
   const res = await getUserTransactions(params);
 
   const data = JSON.parse(res);
-  console.log(data.userTransactions);
-  console.log(data.logos);
+
 
   return (
     <table className="w-full mb-[20px]">
@@ -89,7 +88,10 @@ export default async function TransactionsTable({ params }: any) {
                 {dayjs(createdAt).format("MMM DD, YYYY, hh:mm")}
               </td>
               <td className="text-center py-2">
-                <div className="flex justify-between items-center py-2 px-4 w-[130px] rounded-full bg-success mx-auto">
+                <div
+                  className={
+                    `flex justify-between items-center py-2 px-4 w-[130px] rounded-full  mx-auto  ${isSuccessful ? "bg-success" : "bg-error"}`
+                  }>
                   <GoDotFill /> {isSuccessful ? "Accepted" : "Rejected"}
                 </div>
               </td>

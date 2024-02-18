@@ -6,6 +6,7 @@ import { TextField } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import searchIcon from "@/assets/search.svg";
 import Image from "next/image";
+import { IoSearch } from "react-icons/io5";
 
 export default function TransactionsSearch() {
   const searchParams = useSearchParams();
@@ -33,7 +34,6 @@ export default function TransactionsSearch() {
       defaultValue={searchParams.get("substring")?.toString()}
       onChange={debouncedSubstringHandler}
       sx={{
-    
         "& .MuiOutlinedInput-notchedOutline": {
           borderRadius: "10px",
         },
@@ -45,13 +45,7 @@ export default function TransactionsSearch() {
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <Image
-              src={searchIcon}
-              alt="Search icon"
-              width={20}
-              height={20}
-              className="absolute left-[10px] top-1/2 -translate-y-1/2 pointer-events-none"
-            />
+            <IoSearch size={"30px"} color="#fff" />
           </InputAdornment>
         ),
       }}
