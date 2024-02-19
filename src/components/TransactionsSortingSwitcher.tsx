@@ -34,7 +34,7 @@ export default function TransactionsSortingSwitcher() {
           sortingHandler(e, 1);
         }}>
         <FaArrowUp
-          size={"10px"}
+          className={"w-5 h-5 small-desktop:w-[10px] small-desktop:h-[10px]"}
           color={params.get("sorting") !== "-1" ? "#b102cd" : "white"}
         />
       </button>
@@ -44,7 +44,7 @@ export default function TransactionsSortingSwitcher() {
           sortingHandler(e, -1);
         }}>
         <FaArrowDown
-          size={"10px"}
+          className={"w-5 h-5 small-desktop:w-[10px] small-desktop:h-[10px]"}
           color={params.get("sorting") === "-1" ? "#b102cd" : "white"}
         />
       </button>

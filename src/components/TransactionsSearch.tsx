@@ -4,8 +4,6 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { useDebounceCallback } from "usehooks-ts";
 import { TextField } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import searchIcon from "@/assets/search.svg";
-import Image from "next/image";
 import { IoSearch } from "react-icons/io5";
 
 export default function TransactionsSearch() {
@@ -34,11 +32,15 @@ export default function TransactionsSearch() {
       defaultValue={searchParams.get("substring")?.toString()}
       onChange={debouncedSubstringHandler}
       sx={{
+        width: "260px",
+        "@media screen and (min-width: 1024px)": {
+          width: "320px",
+        },
         "& .MuiOutlinedInput-notchedOutline": {
           borderRadius: "10px",
         },
         "& .MuiInputBase-input": {
-          paddingLeft: "20px",
+          paddingLeft: "5px",
           color: "#fff",
         },
       }}

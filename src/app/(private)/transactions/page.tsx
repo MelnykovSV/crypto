@@ -1,3 +1,4 @@
+import { getTransactionsPages } from "@/app/actions";
 import {
   TransactionsSearch,
   TransactionsTable,
@@ -8,8 +9,6 @@ import {
   PaginationComponent,
 } from "@/components";
 
-import { getTransactionsPages } from "@/app/actions";
-
 interface ITransactionsPage {
   searchParams: {
     type: "all" | "buy" | "sell" | "exchange" | undefined;
@@ -17,7 +16,7 @@ interface ITransactionsPage {
     date: string | null | undefined;
     status: "all" | "success" | "fail" | undefined;
     sorting: "1" | "-1";
-    page: number;
+    page: string;
   };
 }
 
@@ -30,7 +29,7 @@ export default async function TransactionsPage({
     date = null,
     status = "all",
     sorting = "1",
-    page = 1,
+    page = "1",
   } = searchParams;
 
   const totalPages = await getTransactionsPages({
@@ -42,13 +41,27 @@ export default async function TransactionsPage({
     page,
   });
 
+  if (totalPages instanceof Object && totalPages.error) {
+    return (
+      <div>
+        <h2>ERROR</h2>
+        {totalPages.error}
+      </div>
+    );
+  }
+
   return (
     <div className="pb-[30px]">
-      <div className="flex gap-5 items-start justify-between px-5 mb-[20px]">
-        <TransactionsSearch />
+      <div className="flex flex-col flex-wrap laptop:flex-row gap-x-5 gap-y-1 items-start justify-between px-3 laptop:px-5 mb-[20px]">
+        <div className="flex flex-wrap gap-x-10 justify-between">
+          <TransactionsSearch />
 
-        <div className="flex gap-4">
-          {" "}
+          <div className="small-desktop:hidden flex gap-2 items-center">
+            Sort by date <TransactionsSortingSwitcher />
+          </div>
+        </div>
+
+        <div className="flex gap-2 flex-wrap laptop:gap-4 laptop:flex-row">
           <TransactionTypeSelect />
           <TransactionStatusSelect />
           <TransactionsDatePicker />
@@ -58,7 +71,7 @@ export default async function TransactionsPage({
       <TransactionsTable
         params={{ type, substring, date, status, sorting, page }}
       />
-      {Number(totalPages) > 1 ? (
+      {totalPages && Number(totalPages) && Number(totalPages) > 1 ? (
         <PaginationComponent totalPages={Number(totalPages)} />
       ) : null}
     </div>

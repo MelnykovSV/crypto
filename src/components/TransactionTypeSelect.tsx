@@ -2,7 +2,6 @@
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import React from "react";
-
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
@@ -43,9 +42,6 @@ export default function TransactionTypeSelect() {
             "& .MuiMenuItem-root": {
               color: "#fff",
 
-              "&.Mui-selected": {
-                backgroundColor: "rgba(177, 2, 205, 0.4)",
-              },
               "&.Mui-selected:hover": {
                 backgroundColor: "#b102cd",
               },

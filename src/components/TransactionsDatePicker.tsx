@@ -10,17 +10,28 @@ export default function TransactionsDatePicker() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const dateHandler = (newValue: string) => {
+  const dateHandler = (newValue: dayjs.Dayjs | null) => {
+    if (newValue !== null && !dayjs(newValue).isValid()) {
+      console.log(newValue);
+      return;
+    }
     const params = new URLSearchParams(searchParams);
 
-    params.set("date", newValue);
+    if (newValue === null) {
+      params.delete("date");
+      router.push(`${pathname}?${params.toString()}`);
+      return;
+    }
 
+    params.set("date", newValue.format("YYYY-MM-DD"));
     router.push(`${pathname}?${params.toString()}`);
   };
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        defaultValue={dayjs(searchParams.get("date")?.toString())}
+        defaultValue={
+          searchParams.get("date") ? dayjs(searchParams.get("date")) : null
+        }
         sx={{
           color: "#fff",
           backgroundColor: "#16161E",
@@ -50,38 +61,42 @@ export default function TransactionsDatePicker() {
           },
         }}
         slotProps={{
+          actionBar: {
+            actions: ["clear"],
+            sx: {
+              bgColor: "red",
+            },
+          },
           layout: {
             sx: {
+              border: "1px solid",
+              backgroundColor: "#b102cd",
+              backgroundImage:
+                "linear-gradient(225deg, #18C8FF 14.89%, #933FFE 85.85%)",
+              color: "#fff",
+              ".MuiDialogActions-root": {
+                ".MuiButtonBase-root": {
+                  color: "#fff",
+                },
+              },
               ".MuiDateCalendar-root": {
-                color: "#fff",
-
-                borderWidth: 1,
-                borderColor: "green",
-                border: "1px solid",
-                backgroundImage:
-                  "linear-gradient(225deg, #18C8FF 14.89%, #933FFE 85.85%)",
-
                 ".MuiDayCalendar-weekDayLabel": {
                   color: "#fff",
                 },
                 ".MuiPickersDay-root": {
                   color: "#fff",
-
                   "&.Mui-selected": {
-                    color: "#fff",
                     backgroundColor: "#b102cd",
+                  },
+                  "&.MuiPickersDay-today": {
+                    borderColor: "#b102cd",
                   },
                 },
               },
             },
           },
         }}
-        onChange={(newValue) => {
-          //   console.log("change");
-          if (newValue) {
-            dateHandler(newValue.format("YYYY-MM-DD"));
-          }
-        }}
+        onChange={dateHandler}
       />
     </LocalizationProvider>
   );

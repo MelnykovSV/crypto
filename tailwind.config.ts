@@ -22,6 +22,7 @@ const config: Config = {
         // 'laptop': '1024px',
         // // => @media (min-width: 1024px) { ... }
         laptop: "1024px",
+        "small-desktop": "1280px",
         desktop: "1440px",
         "large-desktop": "1536px",
         // => @media (min-width: 1280px) { ... }
@@ -69,6 +70,7 @@ const config: Config = {
         success: "#0DBB7C",
         error: "#FF8282",
         accent: "#b102cd",
+        "accent-blue": "#1f8ebe",
         "accent-light": "rgba(177, 2, 205, 0.4)",
         "accent-dark": "#933FFE",
       },

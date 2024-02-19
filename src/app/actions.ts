@@ -24,7 +24,7 @@ interface IUserTransactionsQuerry {
   date: string | null;
   status: "all" | "success" | "fail";
   sorting: "1" | "-1";
-  page: number;
+  page: string;
 }
 
 async function authenticate() {
@@ -276,13 +276,21 @@ export async function getUserTransactions({
 
     const totalDocuments = await Transaction.countDocuments(query);
 
+    if (!totalDocuments) {
+      return { error: "No transactions found" };
+    }
+
     const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
 
     const userTransactions = await Transaction.find(query, null, {
       sort: { createdAt: Number(sorting) },
     })
       .limit(transactionsPerPage)
-      .skip((page - 1) * transactionsPerPage);
+      .skip((Number(page) - 1) * transactionsPerPage);
+
+    if (!userTransactions.length) {
+      return { error: "No transactions found" };
+    }
 
     const priceListQuery = Array.from(
       new Set(
@@ -308,8 +316,6 @@ export async function getUserTransactions({
       )
     ).join(",");
 
-
-
     const logosRes = await fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
       {
@@ -318,16 +324,30 @@ export async function getUserTransactions({
         },
       }
     );
-    const logosData = (await logosRes.json()) as any;
+    const logosData = (await logosRes.json()) as {
+      data: Record<string, { symbol: string; logo: string }[]>;
+    };
 
-    const coinLogos = Object.values(logosData.data).reduce(
-      (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
-      {}
-    ) as any;
+    console.log("logosData", logosData);
 
-    return JSON.stringify({ totalPages, userTransactions, logos: coinLogos });
+    const coinLogos =
+      logosData && logosData.data && logosData.data instanceof Object
+        ? Object.values(logosData.data).reduce(
+            (acc, item) => ({
+              ...acc,
+              [item[0].symbol]: item[0].logo,
+            }),
+            {}
+          )
+        : {};
+
+    return {
+      totalPages,
+      userTransactions,
+      logos: coinLogos as Record<string, string>,
+    };
   } catch (error) {
-    return getErrorMessage(error);
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -336,8 +356,6 @@ export async function getTransactionsPages({
   substring,
   date,
   status,
-  sorting,
-  page,
 }: IUserTransactionsQuerry) {
   const user = await authenticate();
 
@@ -365,13 +383,12 @@ export async function getTransactionsPages({
       : {}),
   };
 
-  const totalDocuments = await Transaction.countDocuments(query);
-  const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
-
   try {
-    return JSON.stringify(totalPages);
+    const totalDocuments = await Transaction.countDocuments(query);
+    const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
+    return totalPages;
   } catch (error) {
-    return getErrorMessage(error);
+    return { error: getErrorMessage(error) };
   }
 }
 

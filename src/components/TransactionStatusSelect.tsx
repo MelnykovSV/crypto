@@ -41,10 +41,6 @@ export default function TransactionStatusSelect() {
             backgroundColor: "#16161E",
             "& .MuiMenuItem-root": {
               color: "#fff",
-
-              "&.Mui-selected": {
-                backgroundColor: "rgba(177, 2, 205, 0.4)",
-              },
               "&.Mui-selected:hover": {
                 backgroundColor: "#b102cd",
               },
