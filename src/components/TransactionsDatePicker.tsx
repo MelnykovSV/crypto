@@ -12,18 +12,19 @@ export default function TransactionsDatePicker() {
 
   const dateHandler = (newValue: dayjs.Dayjs | null) => {
     if (newValue !== null && !dayjs(newValue).isValid()) {
-      console.log(newValue);
       return;
     }
     const params = new URLSearchParams(searchParams);
 
     if (newValue === null) {
       params.delete("date");
+      params.delete("page");
       router.push(`${pathname}?${params.toString()}`);
       return;
     }
 
     params.set("date", newValue.format("YYYY-MM-DD"));
+    params.delete("page");
     router.push(`${pathname}?${params.toString()}`);
   };
   return (

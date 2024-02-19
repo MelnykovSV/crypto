@@ -328,8 +328,6 @@ export async function getUserTransactions({
       data: Record<string, { symbol: string; logo: string }[]>;
     };
 
-    console.log("logosData", logosData);
-
     const coinLogos =
       logosData && logosData.data && logosData.data instanceof Object
         ? Object.values(logosData.data).reduce(

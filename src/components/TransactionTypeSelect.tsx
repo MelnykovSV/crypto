@@ -14,8 +14,10 @@ export default function TransactionTypeSelect() {
     const params = new URLSearchParams(searchParams);
     if (e.target.value === "all") {
       params.delete("type");
+      params.delete("page");
     } else {
       params.set("type", e.target.value.toString());
+      params.delete("page");
     }
 
     router.push(`${pathname}?${params.toString()}`);

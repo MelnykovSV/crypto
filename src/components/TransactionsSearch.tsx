@@ -16,8 +16,10 @@ export default function TransactionsSearch() {
 
     if (!e.target.value) {
       params.delete("substring");
+      params.delete("page");
     } else {
       params.set("substring", e.target.value.toString());
+      params.delete("page");
     }
 
     router.push(`${pathname}?${params.toString()}`);

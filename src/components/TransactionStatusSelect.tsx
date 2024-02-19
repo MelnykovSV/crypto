@@ -14,8 +14,10 @@ export default function TransactionStatusSelect() {
     const params = new URLSearchParams(searchParams);
     if (e.target.value === "all") {
       params.delete("status");
+      params.delete("page");
     } else {
       params.set("status", e.target.value.toString());
+      params.delete("page");
     }
 
     router.push(`${pathname}?${params.toString()}`);
