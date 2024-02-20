@@ -16,7 +16,6 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
   const [isChartLoading, setIsChartLoading] = useState(true);
 
 
-  console.log(series)
 
   const lineOptions: ApexOptions = {
     tooltip: {
@@ -299,7 +298,7 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
       return (
         //Container with fixed height needed
         <div className=" text-zinc-950">
-          <button></button>
+          {/* <button></button> */}
 
           <div className="app h-[420px] overflow-hidden relative">
             {

@@ -64,7 +64,6 @@ export default function UserForm() {
   }, [setValue, session]);
 
   const onSubmit = async (data: UserFormValues) => {
-    console.log(data);
     const requestBody = {
       ...data,
       birthday: data.birthday ? data.birthday.toISOString() : null,

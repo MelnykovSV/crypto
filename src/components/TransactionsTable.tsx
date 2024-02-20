@@ -9,20 +9,18 @@ import { GoDotFill } from "react-icons/go";
 import { FaArrowDownLong, FaArrowRightLong } from "react-icons/fa6";
 
 interface ITransactionsTableProps {
-  params: {
-    type: "all" | "buy" | "sell" | "exchange";
-    substring: string;
-    date: string | null;
-    status: "all" | "success" | "fail";
-    sorting: "1" | "-1";
-    page: string;
+  data: {
+    totalPages: number;
+    userTransactions: any[];
+    logos: Record<string, string>;
+    error?: undefined;
   };
 }
 
 export default async function TransactionsTable({
-  params,
+  data,
 }: ITransactionsTableProps) {
-  const data = await getUserTransactions(params);
+  // const data = await getUserTransactions(params);
 
   if (!data || !data.userTransactions) {
     return (

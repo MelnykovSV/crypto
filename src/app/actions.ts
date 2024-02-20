@@ -15,6 +15,7 @@ import { IPriceList } from "@/interfaces";
 import { AnimationDuration } from "recharts/types/util/types";
 import { transactionsPerPage } from "@/constants";
 import dayjs from "dayjs";
+import { coinsPerPage } from "@/constants";
 
 const { coinMarketCupKey } = process.env;
 
@@ -414,3 +415,92 @@ export async function getCoinPrice(
     return getErrorMessage(error);
   }
 }
+
+export const getTotalCoinsPages = async () => {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
+      { cache: "force-cache" }
+    );
+    const data = await res.json();
+
+    return Math.ceil(data.length / coinsPerPage);
+  } catch (error) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    } else {
+      return { error: getErrorMessage(error) };
+    }
+  }
+};
+
+export const getCurrenciesData = async (page: number) => {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/coins/markets?order=market_cap_desc&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=${coinsPerPage}&precision=3`,
+      { cache: "force-cache" }
+    );
+    const data = await res.json();
+
+    if (data.status && data.status.error_code === 429) {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    }
+
+    console.log("data", data);
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    } else {
+      return { error: getErrorMessage(error) };
+    }
+  }
+};
+
+export const getSingleCoinData = async (coin: string) => {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=${coinsPerPage}&precision=3`
+    );
+    const data = await res.json();
+    if (data.status && data.status.error_code === 429) {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    } else {
+      return { error: getErrorMessage(error) };
+    }
+  }
+};
+
+export const getCoinMarketChartData = async (
+  coin: string,
+  vs_currency: string,
+  days: number | "max",
+  precision: number = 6
+) => {
+  try {
+    const res = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFj`
+    );
+
+    const data = await res.json();
+
+    if (data.status && data.status.error_code === 429) {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    }
+
+    return data.prices;
+  } catch (error) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      return { error: getErrorMessage("To many requests. Try again later.") };
+    } else {
+      return { error: getErrorMessage(error) };
+    }
+  }
+};

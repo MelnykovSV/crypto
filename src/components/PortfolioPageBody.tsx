@@ -23,18 +23,14 @@ import { roundValue } from "@/app/lib";
 export default function PortfolioPageBody({
   initialPortfolio,
   initialPriceList,
-}: // initialCoinLogos,
+}: 
 {
   initialPortfolio: IPortfolio;
   initialPriceList: IPriceList;
-  // initialCoinLogos: Record<string, string>;
+
 }) {
   const [portfolio, setPortfolio] = useState(initialPortfolio);
   const [priceList, setPriceList] = useState(initialPriceList);
-  // const [coinLogos, setCoinLogos] = useState(initialCoinLogos);
-
-  // console.log(coinLogos);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formType, setFormType] = useState("buy");
 
@@ -42,27 +38,9 @@ export default function PortfolioPageBody({
     const res = await getUserPortfolio();
     setPortfolio(JSON.parse(res).portfolio);
     setPriceList(JSON.parse(res).priceList);
-    // setCoinLogos(JSON.parse(res).coinLogos);
   };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const result = await getCurrenciesMap();
-  //     console.log(result);
-  //   })();
-  // }, []);
 
-  // const newCoinsMap = coinsArray.reduce((acc: any, item: any) => {
-  //   return {
-  //     ...acc,
-  //     [item.name]: {
-  //       ...item,
-  //       name: item.name,
-  //     },
-  //   };
-  // }, {});
-
-  // console.log(newCoinsMap);
 
   const modalCloseHandler = () => {
     setIsModalOpen(false);

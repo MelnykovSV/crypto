@@ -1,4 +1,4 @@
-import { getTransactionsPages } from "@/app/actions";
+import { getTransactionsPages, getUserTransactions } from "@/app/actions";
 import {
   TransactionsSearch,
   TransactionsTable,
@@ -32,7 +32,7 @@ export default async function TransactionsPage({
     page = "1",
   } = searchParams;
 
-  const totalPages = await getTransactionsPages({
+  const data = await getUserTransactions({
     type,
     substring,
     date,
@@ -41,39 +41,22 @@ export default async function TransactionsPage({
     page,
   });
 
-  if (totalPages instanceof Object && totalPages.error) {
+  if (data instanceof Object && "error" in data) {
     return (
       <div>
         <h2>ERROR</h2>
-        {totalPages.error}
+        {data.error}
       </div>
     );
   }
-
   return (
-    <div className="pb-[30px]">
-      <div className="flex flex-col flex-wrap laptop:flex-row gap-x-5 gap-y-1 items-start justify-between px-3 laptop:px-5 mb-[20px]">
-        <div className="flex flex-wrap gap-x-10 justify-between">
-          <TransactionsSearch />
-
-          <div className="small-desktop:hidden flex gap-2 items-center">
-            Sort by date <TransactionsSortingSwitcher />
-          </div>
-        </div>
-
-        <div className="flex gap-2 flex-wrap laptop:gap-4 laptop:flex-row">
-          <TransactionTypeSelect />
-          <TransactionStatusSelect />
-          <TransactionsDatePicker />
-        </div>
-      </div>
-
-      <TransactionsTable
-        params={{ type, substring, date, status, sorting, page }}
-      />
-      {totalPages && Number(totalPages) && Number(totalPages) > 1 ? (
-        <PaginationComponent totalPages={Number(totalPages)} />
+    <>
+      <TransactionsTable data={data} />
+      {data.totalPages &&
+      Number(data.totalPages) &&
+      Number(data.totalPages) > 1 ? (
+        <PaginationComponent totalPages={data.totalPages} />
       ) : null}
-    </div>
+    </>
   );
 }

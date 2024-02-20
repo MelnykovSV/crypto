@@ -1,6 +1,9 @@
+"use client";
+
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import { DNA } from "react-loader-spinner";
+import { useState } from "react";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface IPieChartProps {
@@ -13,13 +16,19 @@ interface IPieChartProps {
 }
 
 export default function PieChart({ data }: IPieChartProps) {
-  console.log(data);
+  const [isChartLoading, setIsChartLoading] = useState(true);
+
   const labels = data.map((item) => `${item.name} (${item.symbol})`);
   const values = data.map((item) => item.portfolioCoinPrice);
   var options: ApexOptions = {
     chart: {
       width: 300,
       type: "pie",
+      events: {
+        mounted: function (chartContext, options) {
+          setIsChartLoading(false);
+        },
+      },
     },
     legend: {
       show: true,
@@ -108,13 +117,28 @@ export default function PieChart({ data }: IPieChartProps) {
       <h2 className="font-bold text-3xl pl-[20px] mb-8">
         Portfolio allocation
       </h2>
-      <ApexChart
-        options={options}
-        series={values}
-        type="pie"
-        height={600}
-        width={"100%"}
-      />
+
+      <div className=" relative h-full">
+        <ApexChart
+          options={options}
+          series={values}
+          type="pie"
+          height={600}
+          width={"100%"}
+        />
+        {isChartLoading && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100]">
+            <DNA
+              visible={true}
+              height="80"
+              width="80"
+              ariaLabel="dna-loading"
+              wrapperStyle={{}}
+              wrapperClass="dna-wrapper"
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

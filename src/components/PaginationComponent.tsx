@@ -11,7 +11,7 @@ export default function PaginationComponent({
 }: IPaginationComponentProps) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const { push } = useRouter();
 
   const paginationHandler = (
     event: React.ChangeEvent<unknown>,
@@ -19,13 +19,13 @@ export default function PaginationComponent({
   ) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", pageNumber.toString());
-    replace(`${pathname}?${params.toString()}`);
+    push(`${pathname}?${params.toString()}`);
   };
 
   return (
     <Pagination
       count={totalPages}
-      page={Number(searchParams.get("page"))||1}
+      page={Number(searchParams.get("page")) || 1}
       onChange={paginationHandler}
       color="secondary"
       shape="rounded"

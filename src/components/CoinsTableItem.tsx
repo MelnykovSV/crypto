@@ -1,6 +1,6 @@
-"use client";
+// "use client";
 
-import { StarCheckbox } from "@/UI";
+
 import { Sparkline } from "@/UI";
 import { ICoinTableData } from "@/interfaces";
 import { ImageComponent } from "@/UI";
@@ -18,15 +18,12 @@ export default function CoinsTableItem({
   price_change_percentage_7d_in_currency,
   market_cap,
   market_cap_change_24h,
-  favorite,
   sparkline_in_7d,
 }: ICoinTableData) {
   return (
     <tr className=" transition-colors hover:bg-accent/30 ">
-      <td className=" w-7 pl-2">
-        <StarCheckbox checkStatus={favorite} />
-      </td>
-      <td className="w-16">{market_cap_rank || "--"}.</td>
+
+      <td className="w-16 pl-2">{market_cap_rank || "--"}.</td>
       <td className=" w-80">
         <Link href={`coins/${id}`} className="flex gap-3 items-center">
           <ImageComponent

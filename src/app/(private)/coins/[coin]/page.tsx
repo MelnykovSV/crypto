@@ -1,12 +1,12 @@
 import CoinChartModule from "@/components/CoinChartModule";
 import { ToastContainer } from "react-toastify";
-import { getCoinMarketChartData, getSingleCoinData } from "@/api";
 import Image from "next/image";
 import TriangleArrowDownIcon from "@/assets/triangle-arrow-down.svg";
 import TriangleArrowUpIcon from "@/assets/triangle-arrow-up.svg";
 import twitterIcon from "@/assets/twitter.svg";
 import facebookIcon from "@/assets/facebook.svg";
 import githubIcon from "@/assets/github.svg";
+import { getSingleCoinData, getCoinMarketChartData } from "@/app/actions";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,6 +22,24 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
   const initialChartData = await getCoinMarketChartData(coin, "usd", 1);
 
   const coinData = await getSingleCoinData(coin);
+
+  if (initialChartData instanceof Object && "error" in initialChartData) {
+    return (
+      <div>
+        <h2>ERROR</h2>
+        {initialChartData.error}
+      </div>
+    );
+  }
+
+  if (coinData instanceof Object && "error" in coinData) {
+    return (
+      <div>
+        <h2>ERROR</h2>
+        {coinData.error}
+      </div>
+    );
+  }
 
   return (
     <div className=" pr-5">

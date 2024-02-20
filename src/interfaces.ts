@@ -49,7 +49,7 @@ export interface ICoinTableData
     | "market_cap_change_24h"
     | "sparkline_in_7d"
   > {
-  favorite: boolean;
+  // favorite: boolean;
 }
 
 export interface CustomSession extends DefaultSession {

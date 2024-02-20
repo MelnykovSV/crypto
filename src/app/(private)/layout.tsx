@@ -2,7 +2,6 @@ import { MobileMenuContainer, AsideMenu, UserPreview } from "@/components";
 
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-// import { authOptions } from "../api/auth/[...nextauth]/route";
 import { authOptions } from "../../../options";
 
 export default async function Layout({ children }: any) {
@@ -16,7 +15,7 @@ export default async function Layout({ children }: any) {
     <>
       {session && session.user ? (
         <>
-          <main className=" flex p-4 h-screen bg-black-5 md:px-10">
+          <main className=" flex px-4 pt-4 h-screen bg-black-5 md:px-10">
             <AsideMenu />
 
             <div className="private-layout w-full  items-stretch  relative z-10">
