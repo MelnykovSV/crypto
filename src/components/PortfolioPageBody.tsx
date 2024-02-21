@@ -23,12 +23,11 @@ import { roundValue } from "@/app/lib";
 export default function PortfolioPageBody({
   initialPortfolio,
   initialPriceList,
-}: 
-{
+}: {
   initialPortfolio: IPortfolio;
   initialPriceList: IPriceList;
-
 }) {
+  const [isModalLoading, setIsModalLoading] = useState(false);
   const [portfolio, setPortfolio] = useState(initialPortfolio);
   const [priceList, setPriceList] = useState(initialPriceList);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,10 +39,14 @@ export default function PortfolioPageBody({
     setPriceList(JSON.parse(res).priceList);
   };
 
-
-
   const modalCloseHandler = () => {
-    setIsModalOpen(false);
+    if (!isModalLoading) {
+      setIsModalOpen(false);
+    }
+  };
+
+  const modalLoadingHandler = (value: boolean) => {
+    setIsModalLoading(value);
   };
   function processPortfolioData(portfolio: IPortfolio) {
     const currentPortfolioPrice = calculatePortfolioPrice(
@@ -74,9 +77,9 @@ export default function PortfolioPageBody({
 
   const { lineChartData, pieChartData } = processPortfolioData(portfolio);
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
+  // const handleModalClose = () => {
+  //   setIsModalOpen(false);
+  // };
 
   return (
     <div className="pb-20">
@@ -223,7 +226,7 @@ export default function PortfolioPageBody({
 
       <Modal
         open={isModalOpen}
-        onClose={handleModalClose}
+        onClose={modalCloseHandler}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         closeAfterTransition
@@ -327,6 +330,7 @@ export default function PortfolioPageBody({
                 userPortfolio={portfolio}
                 updatePortfolioHandler={updatePortfolioHandler}
                 modalCloseHandler={modalCloseHandler}
+                modalLoadingHandler={modalLoadingHandler}
               />
             ) : null}
             {formType === "sell" ? (
@@ -334,6 +338,7 @@ export default function PortfolioPageBody({
                 userPortfolio={portfolio}
                 updatePortfolioHandler={updatePortfolioHandler}
                 modalCloseHandler={modalCloseHandler}
+                modalLoadingHandler={modalLoadingHandler}
               />
             ) : null}
             {formType === "exchange" ? (
@@ -341,6 +346,7 @@ export default function PortfolioPageBody({
                 userPortfolio={portfolio}
                 updatePortfolioHandler={updatePortfolioHandler}
                 modalCloseHandler={modalCloseHandler}
+                modalLoadingHandler={modalLoadingHandler}
               />
             ) : null}
           </Box>

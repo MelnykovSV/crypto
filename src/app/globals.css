@@ -160,5 +160,36 @@ input[type="number"] {
 }
 
 .loader-container {
-  height: calc(100vh - 84px);
+  height: calc(100vh - 96px);
 }
+
+.transactions-loader-container {
+  height: 400px;
+}
+
+@media screen and (min-width: 640px) {
+  .transactions-loader-container {
+    height: calc(100vh - 266px);
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .transactions-loader-container {
+    height: calc(100vh - 226px);
+  }
+}
+
+
+
+.coins-loader-container {
+  height: calc(100vh - 266px);
+}
+
+
+@media screen and (min-width: 1280px) {
+  .coins-loader-container {
+    height: calc(100vh - 160px);
+  }
+}
+
+

@@ -29,7 +29,7 @@ export default function TransactionsSearch() {
   return (
     <TextField
       type="text"
-      className="mb-2  bg-[#16161E] rounded-[10px]"
+      className="  bg-[#16161E] rounded-[10px]"
       placeholder="Search by coin symbol"
       defaultValue={searchParams.get("substring")?.toString()}
       onChange={debouncedSubstringHandler}

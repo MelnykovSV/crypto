@@ -12,8 +12,8 @@ import {
 export default function Layout({ children, params }: any) {
   return (
     <div className="pb-[30px]">
-      <div className="flex flex-col flex-wrap laptop:flex-row gap-x-5 gap-y-1 items-start justify-between px-3 laptop:px-5 mb-[20px]">
-        <div className="flex flex-wrap gap-x-10 justify-between">
+      <div className="flex flex-col flex-wrap small-desktop:flex-row gap-x-5 gap-y-2 items-start justify-between px-[10px] laptop:px-5 mb-[20px]">
+        <div className="flex flex-wrap gap-x-10 gap-y-2 justify-between">
           <TransactionsSearch />
 
           <div className="small-desktop:hidden flex gap-2 items-center">

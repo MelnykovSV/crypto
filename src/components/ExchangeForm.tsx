@@ -18,10 +18,12 @@ export default function ExchangeForm({
   userPortfolio,
   updatePortfolioHandler,
   modalCloseHandler,
+  modalLoadingHandler,
 }: {
   userPortfolio: IPortfolio;
   updatePortfolioHandler: () => void;
   modalCloseHandler: () => void;
+  modalLoadingHandler: (value: boolean) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
@@ -29,8 +31,6 @@ export default function ExchangeForm({
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
-
-  console.log("rerender");
 
   const getPortfolioCoinAmount = (coin: ICoin | null): number => {
     if (coin) {
@@ -117,9 +117,9 @@ export default function ExchangeForm({
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
+    setIsLoading(true);
+    modalLoadingHandler(true);
     const formData = new FormData();
-    console.log({ fromCurrency, toCurrency, fromAmount, toAmount });
 
     if (fromCurrency && toCurrency && fromAmount && toAmount) {
       formData.append("type", "exchange");
@@ -129,9 +129,9 @@ export default function ExchangeForm({
       formData.append("toAmount", toAmount.toString());
     }
 
-    ////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     await createTransaction(formData);
+    setIsLoading(false);
+    modalLoadingHandler(false);
     updatePortfolioHandler();
     modalCloseHandler();
   };
@@ -205,7 +205,6 @@ export default function ExchangeForm({
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
               }
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                console.log(e.target.value);
                 if (e.target.value !== "" && coefficient) {
                   setFromAmount(
                     Math.min(

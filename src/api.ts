@@ -64,35 +64,35 @@ const { coinMarketCupKey } = process.env;
 //   }
 // };
 
-// export const getCurrenciesMap = async () => {
-//   try {
-//     const res = await fetch(
-//       "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
-//       { cache: "force-cache" }
-//     );
-//     const data = await res.json();
+export const getCurrenciesMap = async () => {
+  try {
+    const res = await fetch(
+      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
+      { cache: "force-cache" }
+    );
+    const data = await res.json();
 
-//     const map = data.reduce((acc: any, item: any) => {
-//       return {
-//         ...acc,
-//         [item.symbol.toUpperCase()]: {
-//           ...item,
-//           symbol: item.symbol.toUpperCase(),
-//         },
-//       };
-//     }, {});
+    const map = data.reduce((acc: any, item: any) => {
+      return {
+        ...acc,
+        [item.symbol.toUpperCase()]: {
+          ...item,
+          symbol: item.symbol.toUpperCase(),
+        },
+      };
+    }, {});
 
-//     return map;
-//   } catch (error) {
-//     if (error instanceof Error && error.message === "Failed to fetch") {
-//       toast.error("To many requests. Try again later.");
-//     } else if (error instanceof Error) {
-//       toast.error(error.message);
-//     } else {
-//       toast.error("Unknown error");
-//     }
-//   }
-// };
+    return map;
+  } catch (error) {
+    if (error instanceof Error && error.message === "Failed to fetch") {
+      toast.error("To many requests. Try again later.");
+    } else if (error instanceof Error) {
+      toast.error(error.message);
+    } else {
+      toast.error("Unknown error");
+    }
+  }
+};
 
 export const searchCoins = async (query: string) => {
   try {

@@ -52,8 +52,6 @@ export async function getUserPortfolio() {
 
     const portfolio = await Portfolio.findOne({ owner: user._id });
 
-    console.log("portfolio", portfolio);
-
     if (!portfolio) {
       const portfolio = await Portfolio.create({
         owner: user._id,
@@ -66,7 +64,6 @@ export async function getUserPortfolio() {
           },
         ],
       });
-      console.log("null portfolio", portfolio);
       return JSON.stringify({ portfolio, priceList: {} });
     }
 
@@ -113,8 +110,6 @@ export async function getUserPortfolio() {
       {}
     ) as any;
 
-    console.log(coinLogos);
-
     if (!res.ok) {
       const error = await res.json();
       const errorMessage = error.status.error_message;
@@ -122,8 +117,6 @@ export async function getUserPortfolio() {
     }
 
     const coinPrices = await res.json();
-
-    console.log("coinPrices", coinPrices.data.BTC[0]);
 
     const priceList = createPriceList(coinPrices) as IPriceList;
 
@@ -136,8 +129,6 @@ export async function getUserPortfolio() {
       },
       {}
     );
-
-    // console.log("priceListWithLogos", priceListWithLogos);
 
     return JSON.stringify({
       portfolio,
@@ -174,15 +165,11 @@ export async function createTransaction(formData: FormData) {
 
     const portfolio = await Portfolio.findOne({ owner: user._id });
 
+    console.log("portfolio", portfolio);
+
     if (!portfolio) {
       throw new Error("No portfolio");
     }
-
-    console.log("portfolio!", portfolio);
-
-    // if (!portfolio.coins.length) {
-    //   return JSON.stringify({ portfolio, priceList: {} });
-    // }
 
     const priceListQuery = Array.from(
       new Set([
@@ -211,14 +198,40 @@ export async function createTransaction(formData: FormData) {
 
     const coinPrices = await res.json();
 
+    console.log("coinPrices", coinPrices);
+
     const priceList = createPriceList(coinPrices) as IPriceList;
 
     console.log("priceList", priceList);
+
+    const coinsListRes = await fetch(
+      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
+      { cache: "force-cache" }
+    );
+    const data = await coinsListRes.json();
+
+    console.log("coinsListRes  done");
+    console.log(data.length);
+
+    const coinsMap = {} as any;
+    data.forEach((item: any) => {
+      coinsMap[item.symbol.toLowerCase()] = {
+        ...item,
+        symbol: item.symbol.toUpperCase(),
+      };
+    });
+
+    console.log("coinsMap  done");
+    console.log(Object.keys(coinsMap).length);
+
     const processedPortfolio = processTransaction(
       portfolio,
       newTransaction,
-      priceList
+      priceList,
+      coinsMap
     );
+
+    console.log("processedPortfolio", processedPortfolio);
 
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { owner: user._id },
@@ -445,8 +458,6 @@ export const getCurrenciesData = async (page: number) => {
     if (data.status && data.status.error_code === 429) {
       return { error: getErrorMessage("To many requests. Try again later.") };
     }
-
-    console.log("data", data);
 
     return data;
   } catch (error) {

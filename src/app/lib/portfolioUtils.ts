@@ -1,5 +1,5 @@
 import { IPortfolio, IPortfolioCoin, ITransaction } from "@/interfaces";
-import { newCoinsMap } from "@/newCoinsMap";
+// import { coinsMap } from "@/coinsMap";
 
 export function calculatePortfolioPrice(
   priceList: Record<string, { name: string; symbol: string; price: number }>,
@@ -35,7 +35,8 @@ export function createPriceList(res: any) {
 export function processTransaction(
   { coins, totalInvested, totalWithdrawn, historyData }: IPortfolio,
   { type, fromItem, fromAmount, toItem, toAmount }: ITransaction,
-  priceList: Record<string, { name: string; symbol: string; price: number }>
+  priceList: Record<string, { name: string; symbol: string; price: number }>,
+  coinsMap: any
 ) {
   switch (type) {
     case "sell":
@@ -91,7 +92,6 @@ export function processTransaction(
               symbol: coin.symbol,
               name: coin.name,
               amount: coin.amount + toAmount,
-    
             };
           } else {
             return coin;
@@ -118,12 +118,18 @@ export function processTransaction(
           ],
         };
       } else {
+        console.log("toItem", toItem);
+        console.log(priceList[toItem]);
+        // console.log(
+        //   coinsMap[priceList[toItem].name as keyof typeof coinsMap].id
+        // );
         const updatedCoins = [
           ...coins,
           {
             symbol: toItem,
             amount: toAmount,
-            coinGeckoId: newCoinsMap[priceList[toItem].name as keyof typeof newCoinsMap].id,
+            coinGeckoId:
+              coinsMap[priceList[toItem].name as keyof typeof coinsMap].id,
             name: priceList[toItem].name,
           },
         ];
@@ -210,7 +216,8 @@ export function processTransaction(
           {
             symbol: toItem,
             amount: toAmount,
-            coinGeckoId: newCoinsMap[priceList[toItem].name as keyof typeof newCoinsMap].id,
+            coinGeckoId:
+              coinsMap[priceList[toItem].name as keyof typeof coinsMap].id,
             name: priceList[toItem].name,
           },
         ];

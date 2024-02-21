@@ -18,10 +18,12 @@ export default function BuyForm({
   userPortfolio,
   updatePortfolioHandler,
   modalCloseHandler,
+  modalLoadingHandler,
 }: {
   userPortfolio: IPortfolio;
   updatePortfolioHandler: () => void;
   modalCloseHandler: () => void;
+  modalLoadingHandler: (value: boolean) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<string>("USD");
@@ -31,7 +33,6 @@ export default function BuyForm({
   const [coefficient, setCoefficient] = useState<number | null>(null);
   const firstUpdate = useRef(true);
 
-  console.log("form rerender");
 
   const isDataValid = () => {
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
@@ -80,6 +81,8 @@ export default function BuyForm({
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    modalLoadingHandler(true);
     const formData = new FormData();
 
     if (toCurrency && fromAmount && toAmount) {
@@ -93,6 +96,8 @@ export default function BuyForm({
     }
 
     await createTransaction(formData);
+    setIsLoading(false);
+    modalLoadingHandler(false);
     updatePortfolioHandler();
     modalCloseHandler();
   };
@@ -142,7 +147,6 @@ export default function BuyForm({
                 ["e", "E", "+", "-"].includes(e.key) && e.preventDefault()
               }
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                console.log(e.target.value);
                 if (e.target.value !== "" && coefficient) {
                   setFromAmount(Number(Number(e.target.value).toFixed(4)));
                   setToAmount(
