@@ -67,7 +67,10 @@ export interface IPortfolioCoin {
   amount: number;
   symbol: string;
   name: string;
-  // logo: string;
+  coinGeckoId: string,
+  coinMarketCapId: string,
+  logo:string,
+
 }
 export interface IPortfolioHistoryItem {
   date: string;
@@ -102,10 +105,18 @@ export interface IPortfolioData {
 
 export interface ITransaction {
   type: "sell" | "buy" | "exchange";
-  fromItem: string;
+  fromItemName: string;
+  fromItemSymbol: string;
+  fromItemCoinMarketCapId: string;
+  fromItemCoinGeckoId: string;
+  fromItemLogo: string;
   fromAmount: number;
   fromPricePerItem: number;
-  toItem: string;
+  toItemName: string;
+  toItemSymbol: string;
+  toItemCoinMarketCapId: string;
+  toItemCoinGeckoId: string;
+  toItemLogo: string;
   toAmount: number;
   toPricePerItem: number;
 }

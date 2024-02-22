@@ -22,6 +22,8 @@ export default async function TransactionsTable({
 }: ITransactionsTableProps) {
   // const data = await getUserTransactions(params);
 
+  console.log('userTransactions',data.userTransactions);
+
   if (!data || !data.userTransactions) {
     return (
       <div>
@@ -55,16 +57,18 @@ export default async function TransactionsTable({
               _id,
               isSuccessful,
               type,
-              fromItem,
+              fromItemSymbol,
+              fromItemLogo,
               fromAmount,
-              toItem,
+              toItemSymbol,
+              toItemLogo,
               toAmount,
               createdAt,
             }) => (
               <tr key={_id}>
                 <td className="py-2">
                   <div className="flex gap-1 items-center justify-center">
-                    {fromItem.toLowerCase() === "usd" ? (
+                    {fromItemSymbol.toLowerCase() === "usd" ? (
                       <Image
                         src={dollarIcon}
                         alt="dollar image"
@@ -73,13 +77,17 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={fromItem in data.logos ? data.logos[fromItem] : ""}
-                        alt={`${fromItem} image`}
+                        src={
+                          fromItemLogo
+                            ? fromItemLogo
+                            : ""
+                        }
+                        alt={`${fromItemSymbol} image`}
                         width={30}
                         height={30}
                       />
                     )}
-                    <p className=" break-words max-w-16">{fromItem}</p>
+                    <p className=" break-words max-w-16">{fromItemSymbol}</p>
                   </div>
                 </td>
                 <td className="text-center py-2 break-words max-w-[160px]">
@@ -87,7 +95,7 @@ export default async function TransactionsTable({
                 </td>
                 <td className="py-2">
                   <div className="flex gap-1 items-center justify-center">
-                    {toItem.toLowerCase() === "usd" ? (
+                    {toItemSymbol.toLowerCase() === "usd" ? (
                       <Image
                         src={dollarIcon}
                         alt="dollar image"
@@ -96,13 +104,17 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={toItem in data.logos ? data.logos[toItem] : ""}
-                        alt={`${toItem} image`}
+                        src={
+                          toItemLogo
+                            ? toItemLogo
+                            : ""
+                        }
+                        alt={`${toItemSymbol} image`}
                         width={30}
                         height={30}
                       />
                     )}
-                    <p className=" break-words max-w-16">{toItem}</p>
+                    <p className=" break-words max-w-16">{toItemSymbol}</p>
                   </div>
                 </td>
                 <td className="text-center py-2 break-words max-w-[160px]">
@@ -142,9 +154,11 @@ export default async function TransactionsTable({
             _id,
             isSuccessful,
             type,
-            fromItem,
+            fromItemSymbol,
+            fromItemLogo,
             fromAmount,
-            toItem,
+            toItemSymbol,
+            toItemLogo,
             toAmount,
             createdAt,
           }) => (
@@ -154,7 +168,7 @@ export default async function TransactionsTable({
               <div className="flex flex-col items-center tablet:flex-row tablet:justify-center tablet:gap-5">
                 <div className=" flex gap-5 items-center">
                   <div className="flex gap-3 items-center justify-center ">
-                    {fromItem.toLowerCase() === "usd" ? (
+                    {fromItemSymbol.toLowerCase() === "usd" ? (
                       <Image
                         src={dollarIcon}
                         alt="dollar image"
@@ -163,14 +177,14 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={fromItem in data.logos ? data.logos[fromItem] : ""}
-                        alt={`${fromItem} image`}
+                        src={fromItemLogo ? fromItemLogo : ""}
+                        alt={`${fromItemSymbol} image`}
                         width={30}
                         height={30}
                       />
                     )}
                     <p className="break-words max-w-16 tablet:max-w-15 laptop:max-w-20">
-                      {fromItem}
+                      {fromItemSymbol}
                     </p>
                   </div>
                   <p className="text-center  break-words max-w-[135px] large-mobile:max-w-[200px] tablet:max-w-[125px] laptop:max-w-[200px]">
@@ -188,7 +202,7 @@ export default async function TransactionsTable({
 
                 <div className=" flex gap-5 items-center">
                   <div className="flex gap-3 items-center justify-center">
-                    {toItem.toLowerCase() === "usd" ? (
+                    {toItemSymbol.toLowerCase() === "usd" ? (
                       <Image
                         src={dollarIcon}
                         alt="dollar image"
@@ -197,15 +211,19 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={toItem in data.logos ? data.logos[toItem] : ""}
-                        alt={`${toItem} image`}
+                        src={
+                          toItemSymbol in data.logos
+                            ? data.logos[toItemSymbol]
+                            : ""
+                        }
+                        alt={`${toItemSymbol} image`}
                         width={30}
                         height={30}
                       />
                     )}
 
                     <p className="break-words max-w-16 tablet:max-w-15 laptop:max-w-20">
-                      {toItem}
+                      {toItemSymbol}
                     </p>
                   </div>
                   <p className="text-center break-words max-w-[135px] large-mobile:max-w-[200px] tablet:max-w-[125px] laptop:max-w-[200px] ">

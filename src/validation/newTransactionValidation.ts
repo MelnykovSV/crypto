@@ -3,11 +3,14 @@ import { userNameRegexp, emailRegexp, phoneRegExp } from "../../regexp";
 
 export const newTransactionFormValidation = Yup.object({
   type: Yup.string().required().oneOf(["sell", "buy", "exchange"]),
-  // referenceCurrency: Yup.string().required().oneOf(["usd"]),
-  fromItem: Yup.string().required(),
+  fromItemName: Yup.string().required(),
+  fromItemSymbol: Yup.string().required(),
+  fromItemLogo: Yup.string(),
+  fromItemCoinGeckoId: Yup.string().required(),
   fromAmount: Yup.number().positive().required(),
-  // fromPricePerItem: Yup.number().positive().required(),
-  toItem: Yup.string().required(),
+  toItemName: Yup.string().required(),
+  toItemSymbol: Yup.string().required(),
+  toItemLogo: Yup.string(),
+  toItemCoinGeckoId: Yup.string().required(),
   toAmount: Yup.number().positive().required(),
-  // toPricePerItem: Yup.number().positive().required(),
 });

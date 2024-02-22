@@ -10,8 +10,25 @@ import Slider from "@mui/material/Slider";
 interface ICoin {
   name: string;
   symbol: string;
-  large: string;
+  logo: string;
   market_cap_rank: number;
+  coinGeckoId: string;
+}
+
+interface ITransactionData {
+  type: "buy" | "sell" | "exchange";
+  fromItemName: string;
+  fromItemSymbol: string;
+  fromItemLogo: string;
+  fromItemCoinGeckoId: string;
+  fromItemCoinMarketCapId: string;
+  fromAmount: number;
+  toItemName: string;
+  toItemSymbol: string;
+  toItemLogo: string;
+  toItemCoinGeckoId: string;
+  toItemCoinMarketCapId: string;
+  toAmount: number;
 }
 
 export default function ExchangeForm({
@@ -31,6 +48,12 @@ export default function ExchangeForm({
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
+  const [fromItemCoinMarketCapId, setFromItemCoinMarketCapId] = useState<
+    string | null
+  >("none");
+  const [toItemCoinMarketCapId, setToItemCoinMarketCapId] = useState<
+    string | null
+  >("none");
 
   const getPortfolioCoinAmount = (coin: ICoin | null): number => {
     if (coin) {
@@ -88,13 +111,45 @@ export default function ExchangeForm({
   useEffect(() => {
     (async () => {
       if (fromCurrency && toCurrency) {
-        const res = await getCoinPrice(fromCurrency.symbol, toCurrency.symbol);
-
-        const coefficient = res.data[fromCurrency.symbol][0].quote[
+        const res = await getCoinPrice(
+          `${fromCurrency.symbol},${toCurrency.symbol}`,
           toCurrency.symbol
-        ].price as number;
+        );
+
+        // const coefficient = res.data[fromCurrency.symbol][0].quote[
+        //   toCurrency.symbol
+        // ].price as number;
+
+        console.log(res.data);
+
+        const foundFromCurrency =
+          res.data[fromCurrency.symbol].find(
+            (item: any) =>
+              item.name.toLowerCase() === fromCurrency.name.toLowerCase()
+          ) ||
+          res.data[fromCurrency.symbol].find(
+            (item: any) => item.slug === fromCurrency.coinGeckoId
+          ) ||
+          res.data[fromCurrency.symbol][0];
+
+        const foundToCurrency =
+          res.data[toCurrency.symbol].find(
+            (item: any) =>
+              item.name.toLowerCase() === toCurrency.name.toLowerCase()
+          ) ||
+          res.data[toCurrency.symbol].find(
+            (item: any) => item.slug === toCurrency.coinGeckoId
+          ) ||
+          res.data[toCurrency.symbol][0];
+
+        const coefficient = foundFromCurrency.quote[toCurrency.symbol].price;
+
+        console.log(foundFromCurrency);
 
         setCoefficient(coefficient);
+
+        setToItemCoinMarketCapId(foundToCurrency.id.toString());
+        setFromItemCoinMarketCapId(foundFromCurrency.id.toString());
 
         if (fromAmount && toAmount) {
           setToAmount(
@@ -119,17 +174,35 @@ export default function ExchangeForm({
     e.preventDefault();
     setIsLoading(true);
     modalLoadingHandler(true);
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    if (fromCurrency && toCurrency && fromAmount && toAmount) {
-      formData.append("type", "exchange");
-      formData.append("fromItem", fromCurrency?.symbol);
-      formData.append("toItem", toCurrency?.symbol);
-      formData.append("fromAmount", fromAmount.toString());
-      formData.append("toAmount", toAmount.toString());
-    }
+    // if (fromCurrency && toCurrency && fromAmount && toAmount) {
+    //   formData.append("type", "exchange");
+    //   formData.append("fromItem", fromCurrency?.symbol);
+    //   formData.append("toItem", toCurrency?.symbol);
+    //   formData.append("fromAmount", fromAmount.toString());
+    //   formData.append("toAmount", toAmount.toString());
+    // }
 
-    await createTransaction(formData);
+    const transactionData = {
+      type: "exchange",
+      toItemName: toCurrency?.name,
+      toItemSymbol: toCurrency?.symbol,
+      toItemLogo: toCurrency?.logo,
+      toItemCoinGeckoId: toCurrency?.coinGeckoId,
+      toItemCoinMarketCapId,
+      toAmount,
+      fromItemName: fromCurrency?.name,
+      fromItemSymbol: fromCurrency?.symbol,
+      fromItemLogo: fromCurrency?.logo,
+      fromItemCoinGeckoId: fromCurrency?.coinGeckoId,
+      fromItemCoinMarketCapId,
+      fromAmount,
+    } as ITransactionData;
+
+    console.log(transactionData);
+
+    await createTransaction(transactionData);
     setIsLoading(false);
     modalLoadingHandler(false);
     updatePortfolioHandler();
@@ -143,7 +216,7 @@ export default function ExchangeForm({
           <div className="  h-[50px] w-[50px]">
             {!!fromCurrency && (
               <ImageComponent
-                src={fromCurrency.large}
+                src={fromCurrency.logo}
                 alt={`${fromCurrency.name} icon`}
                 width={50}
                 height={50}
@@ -265,7 +338,7 @@ export default function ExchangeForm({
             {" "}
             {!!toCurrency && (
               <ImageComponent
-                src={toCurrency.large}
+                src={toCurrency.logo}
                 alt={`${toCurrency.name} icon`}
                 width={50}
                 height={50}

@@ -11,8 +11,25 @@ import { createTransaction } from "@/app/actions";
 interface ICoin {
   name: string;
   symbol: string;
-  large: string;
+  logo: string;
   market_cap_rank: number;
+  coinGeckoId: string;
+}
+
+interface ITransactionData {
+  type: "buy" | "sell" | "exchange";
+  fromItemName: string;
+  fromItemSymbol: string;
+  fromItemLogo: string;
+  fromItemCoinGeckoId: string;
+  fromItemCoinMarketCapId: string;
+  fromAmount: number;
+  toItemName: string;
+  toItemSymbol: string;
+  toItemLogo: string;
+  toItemCoinGeckoId: string;
+  toItemCoinMarketCapId: string;
+  toAmount: number;
 }
 
 export default function SellForm({
@@ -32,12 +49,19 @@ export default function SellForm({
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
+  const [fromItemCoinMarketCapId, setFromItemCoinMarketCapId] = useState<
+    string | null
+  >("none");
+  const [toItemCoinMarketCapId, setToItemCoinMarketCapId] = useState<
+    string | null
+  >("none");
 
   const getPortfolioCoinAmount = (coin: ICoin | null): number => {
     if (coin) {
       return (
-        userPortfolio.coins.find((item) => item.symbol === coin.symbol)
-          ?.amount || 0
+        userPortfolio.coins.find(
+          (item) => item.coinGeckoId === coin.coinGeckoId
+        )?.amount || 0
       );
     }
     return 0;
@@ -49,7 +73,7 @@ export default function SellForm({
     }
 
     const isFromCurrencyinPortfolio = userPortfolio?.coins?.find(
-      (item) => item.symbol === fromCurrency.symbol
+      (item) => item.coinGeckoId === fromCurrency.coinGeckoId
     )?.amount;
 
     return isFromCurrencyinPortfolio;
@@ -87,11 +111,28 @@ export default function SellForm({
       if (fromCurrency && toCurrency) {
         const res = await getCoinPrice(fromCurrency.symbol);
 
+        // const coefficient = res.data[fromCurrency.symbol][0].quote[toCurrency]
+        //   .price as number;
 
-        const coefficient = res.data[fromCurrency.symbol][0].quote[toCurrency]
-          .price as number;
+
+
+        ////нужно ли это тут вообще? (для валюты, которая уже должна быть в портфолио)
+        const foundCurrency =
+          res.data[fromCurrency.symbol].find(
+            (item: any) =>
+              item.name.toLowerCase() === fromCurrency.name.toLowerCase()
+          ) ||
+          res.data[fromCurrency.symbol].find(
+            (item: any) => item.slug === fromCurrency.coinGeckoId
+          ) ||
+          res.data[fromCurrency.symbol][0];
+
+        const coefficient = foundCurrency.quote[toCurrency].price;
 
         setCoefficient(coefficient);
+
+        setFromItemCoinMarketCapId(foundCurrency.id.toString());
+
         if (fromAmount && toAmount) {
           setToAmount(
             Number((coefficient * (fromAmount as number)).toFixed(4))
@@ -115,17 +156,27 @@ export default function SellForm({
     e.preventDefault();
     setIsLoading(true);
     modalLoadingHandler(true);
-    const formData = new FormData();
 
-    if (fromCurrency && toCurrency && fromAmount && toAmount) {
-      formData.append("type", "sell");
-      formData.append("fromItem", fromCurrency?.symbol);
-      formData.append("toItem", toCurrency);
-      formData.append("fromAmount", fromAmount.toString());
-      formData.append("toAmount", toAmount.toString());
-    }
 
-    await createTransaction(formData);
+    const transactionData = {
+      type: "sell",
+      toItemName: "dollar",
+      toItemSymbol: "USD",
+      toItemLogo: "none",
+      toItemCoinGeckoId: "none",
+      toItemCoinMarketCapId,
+      toAmount,
+      fromItemName: fromCurrency?.name,
+      fromItemSymbol: fromCurrency?.symbol,
+      fromItemLogo: fromCurrency?.logo,
+      fromItemCoinGeckoId: fromCurrency?.coinGeckoId,
+      fromItemCoinMarketCapId,
+      fromAmount,
+    } as ITransactionData;
+
+    console.log(transactionData);
+
+    await createTransaction(transactionData);
     setIsLoading(false);
     modalLoadingHandler(false);
     updatePortfolioHandler();
@@ -139,7 +190,7 @@ export default function SellForm({
           <div className="  h-[50px] w-[50px]">
             {!!fromCurrency && (
               <ImageComponent
-                src={fromCurrency.large}
+                src={fromCurrency.logo}
                 alt={`${fromCurrency.name} icon`}
                 width={50}
                 height={50}

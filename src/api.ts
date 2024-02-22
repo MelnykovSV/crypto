@@ -101,6 +101,8 @@ export const searchCoins = async (query: string) => {
     );
     const data = await res.json();
 
+    console.log(data)
+
     return data.coins;
   } catch (error) {
     if (error instanceof Error && error.message === "Failed to fetch") {

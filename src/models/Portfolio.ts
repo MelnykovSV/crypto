@@ -22,6 +22,16 @@ const CoinSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    coinMarketCapId: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    logo: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     amount: {
       type: Number,
       required: true,

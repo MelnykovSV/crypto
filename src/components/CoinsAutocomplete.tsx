@@ -10,16 +10,23 @@ import {
   useDebounceValue,
 } from "usehooks-ts";
 import { useEffect, useRef, useState } from "react";
-
-interface ICoin {
+interface ICoinGeckoCoin {
   name: string;
   symbol: string;
   large: string;
   market_cap_rank: number;
+  id: string;
+}
+interface ICoin {
+  name: string;
+  symbol: string;
+  logo: string;
+  market_cap_rank: number;
+  coinGeckoId: string;
 }
 
 interface ICoinsAutocompleteProps {
-  selectCoinHandler: (value: ICoin | null) => void;
+  selectCoinHandler: (value: ICoin) => void;
   label: string;
 }
 
@@ -28,10 +35,10 @@ export default function CoinsAutocomplete({
   label,
 }: ICoinsAutocompleteProps) {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<readonly ICoin[]>([]);
-  const [value, setValue] = useState(() =>
-    options.length > 0 ? options[0] : null
-  );
+  const [options, setOptions] = useState<readonly ICoinGeckoCoin[]>([]);
+  // const [value, setValue] = useState(() =>
+  //   options.length > 0 ? options[0] : null
+  // );
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -83,16 +90,36 @@ export default function CoinsAutocomplete({
       }
       options={options}
       loading={loading}
-      value={value}
+      // value={value}
       onChange={(
         event: React.ChangeEvent<EventTarget>,
-        newValue: ICoin | null
+        newValue: ICoinGeckoCoin | null
       ) => {
-        setValue(newValue || null);
+        // setValue(newValue || null);
 
-        console.log("newValue");
-        console.log(newValue);
-        selectCoinHandler(newValue || null);
+        if (newValue) {
+          console.log("newValue");
+          console.log(newValue);
+
+          console.log(options);
+
+          const {
+            id: coinGeckoId,
+            large: logo,
+            market_cap_rank,
+            name,
+            symbol,
+          } = newValue;
+
+          console.log({ coinGeckoId, logo, market_cap_rank, name, symbol });
+          selectCoinHandler({
+            coinGeckoId,
+            logo,
+            market_cap_rank,
+            name,
+            symbol,
+          });
+        }
       }}
       inputValue={inputValue}
       onInputChange={async (

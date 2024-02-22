@@ -7,11 +7,36 @@ import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import { createTransaction } from "@/app/actions";
 
+// interface ICoinMarketCapCoin {
+//   name: string;
+//   symbol: string;
+//   large: string;
+//   market_cap_rank: number;
+//   id: string;
+// }
+
 interface ICoin {
   name: string;
   symbol: string;
-  large: string;
+  logo: string;
   market_cap_rank: number;
+  coinGeckoId: string;
+}
+
+interface ITransactionData {
+  type: "buy" | "sell" | "exchange";
+  fromItemName: string;
+  fromItemSymbol: string;
+  fromItemLogo: string;
+  fromItemCoinGeckoId: string;
+  fromItemCoinMarketCapId: string;
+  fromAmount: number;
+  toItemName: string;
+  toItemSymbol: string;
+  toItemLogo: string;
+  toItemCoinGeckoId: string;
+  toItemCoinMarketCapId: string;
+  toAmount: number;
 }
 
 export default function BuyForm({
@@ -31,8 +56,13 @@ export default function BuyForm({
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
+  const [fromItemCoinMarketCapId, setFromItemCoinMarketCapId] = useState<
+    string | null
+  >("none");
+  const [toItemCoinMarketCapId, setToItemCoinMarketCapId] = useState<
+    string | null
+  >("none");
   const firstUpdate = useRef(true);
-
 
   const isDataValid = () => {
     if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
@@ -42,7 +72,7 @@ export default function BuyForm({
     return true;
   };
 
-  const toCoinHandler = (value: ICoin | null) => {
+  const toCoinHandler = (value: ICoin) => {
     setToCurrency(value);
   };
 
@@ -55,10 +85,30 @@ export default function BuyForm({
       if (fromCurrency && toCurrency) {
         const res = await getCoinPrice(toCurrency.symbol);
 
-        const coefficient = res.data[toCurrency.symbol][0].quote[fromCurrency]
-          .price as number;
+        console.log(res);
+
+        // const coefficient = res.data[toCurrency.symbol][0].quote[fromCurrency]
+        //   .price as number;
+
+        const foundCurrency =
+          res.data[toCurrency.symbol].find(
+            (item: any) =>
+              item.name.toLowerCase() === toCurrency.name.toLowerCase()
+          ) ||
+          res.data[toCurrency.symbol].find(
+            (item: any) => item.slug === toCurrency.coinGeckoId
+          ) ||
+          res.data[toCurrency.symbol][0];
+
+        const coefficient = foundCurrency.quote[fromCurrency].price;
+
+        // const coefficient = res.data[toCurrency.symbol].find(
+        //   (item: any) => item.name.toLowerCase === toCurrency.name.toLowerCase
+        // ).quote[fromCurrency].price as number;
 
         setCoefficient(coefficient);
+
+        setToItemCoinMarketCapId(foundCurrency.id.toString());
 
         if (fromAmount && toAmount) {
           setFromAmount(
@@ -83,19 +133,36 @@ export default function BuyForm({
     e.preventDefault();
     setIsLoading(true);
     modalLoadingHandler(true);
-    const formData = new FormData();
+    // const formData = new FormData();
 
-    if (toCurrency && fromAmount && toAmount) {
-      formData.append("type", "buy");
-      formData.append("fromItem", fromCurrency);
-      formData.append("toItem", toCurrency?.symbol);
-      formData.append("toItemName", toCurrency?.name);
-      // formData.append("logo", toCurrency?.large);
-      formData.append("fromAmount", fromAmount.toString());
-      formData.append("toAmount", toAmount.toString());
-    }
+    // if (toCurrency && fromAmount && toAmount) {
+    //   formData.append("type", "buy");
+    //   formData.append("fromItem", fromCurrency);
+    //   formData.append("toItem", toCurrency?.symbol);
+    //   formData.append("toItemName", toCurrency?.name);
+    //   // formData.append("logo", toCurrency?.large);
+    //   formData.append("fromAmount", fromAmount.toString());
+    //   formData.append("toAmount", toAmount.toString());
+    // }
 
-    await createTransaction(formData);
+    const transactionData = {
+      type: "buy",
+      fromItemName: "dollar",
+      fromItemSymbol: "USD",
+      fromItemLogo: "none",
+      fromItemCoinGeckoId: "none",
+      fromItemCoinMarketCapId,
+      fromAmount,
+      toItemName: toCurrency?.name,
+      toItemSymbol: toCurrency?.symbol,
+      toItemLogo: toCurrency?.logo,
+      toItemCoinGeckoId: toCurrency?.coinGeckoId,
+      toItemCoinMarketCapId,
+      toAmount,
+    } as ITransactionData;
+
+    console.log(transactionData);
+    await createTransaction(transactionData);
     setIsLoading(false);
     modalLoadingHandler(false);
     updatePortfolioHandler();
@@ -171,7 +238,7 @@ export default function BuyForm({
             {" "}
             {!!toCurrency && (
               <ImageComponent
-                src={toCurrency.large}
+                src={toCurrency.logo}
                 alt={`${toCurrency.name} icon`}
                 width={50}
                 height={50}

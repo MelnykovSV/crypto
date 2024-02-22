@@ -27,13 +27,7 @@ export default function PortfolioList({
               className="grid grid-cols-[40px_1fr_60px_1fr] large-mobile:grid-cols-[40px_1fr_90px_1fr] items-center py-3 hover:bg-accent-light transition-colors duration-200 ">
               <div className="pl-2">
                 <ImageComponent
-                  src={
-                    priceList[item.symbol].logo.startsWith(
-                      "https://s2.coinmarketcap.com/static/img"
-                    )
-                      ? priceList[item.symbol].logo
-                      : "/--"
-                  }
+                  src={item.logo ? item.logo : "/--"}
                   alt={`${priceList[item.symbol].name} coin image`}
                   width={35}
                   height={35}

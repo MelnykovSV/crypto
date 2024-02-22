@@ -27,7 +27,21 @@ interface IUserTransactionsQuerry {
   sorting: "1" | "-1";
   page: string;
 }
-
+interface ITransactionData {
+  type: "buy" | "sell" | "exchange";
+  fromItemName: string;
+  fromItemSymbol: string;
+  fromItemLogo: string;
+  fromItemCoinGeckoId: string;
+  fromItemCoinMarketCapId: string;
+  fromAmount: number;
+  toItemName: string;
+  toItemSymbol: string;
+  toItemLogo: string;
+  toItemCoinGeckoId: string;
+  toItemCoinMarketCapId: string;
+  toAmount: number;
+}
 async function authenticate() {
   await connectDB();
   const session = (await getServerSession(authOptions)) as CustomSession;
@@ -50,6 +64,8 @@ export async function getUserPortfolio() {
     await connectDB();
     const user = await authenticate();
 
+    console.log("user", user);
+
     const portfolio = await Portfolio.findOne({ owner: user._id });
 
     if (!portfolio) {
@@ -67,15 +83,19 @@ export async function getUserPortfolio() {
       return JSON.stringify({ portfolio, priceList: {} });
     }
 
+    console.log("portfolio", portfolio);
+
     if (!portfolio.coins.length) {
       return JSON.stringify({ portfolio, priceList: {} });
     }
     const priceListQuery = [
-      ...portfolio.coins.map((item: IPortfolioCoin) => item.symbol),
+      ...portfolio.coins.map((item: IPortfolioCoin) => item.coinMarketCapId),
     ].join(",");
 
+    console.log("PRICE_QUERY", priceListQuery);
+
     const pricesPromise = fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${priceListQuery}`,
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${priceListQuery}`,
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
@@ -83,32 +103,32 @@ export async function getUserPortfolio() {
       }
     );
 
-    const logosPromise = fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
-      {
-        headers: {
-          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-        },
-      }
-    );
-    const [res, res2] = await Promise.all([pricesPromise, logosPromise]);
+    // const logosPromise = fetch(
+    //   `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
+    //   {
+    //     headers: {
+    //       "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+    //     },
+    //   }
+    // );
+    const [res] = await Promise.all([pricesPromise]);
     if (!res.ok) {
       const error = await res.json();
       const errorMessage = error.status.error_message;
       throw new Error(errorMessage);
     }
-    if (!res2.ok) {
-      const error = await res2.json();
-      const errorMessage = error.status.error_message;
-      throw new Error(errorMessage);
-    }
+    // if (!res2.ok) {
+    //   const error = await res2.json();
+    //   const errorMessage = error.status.error_message;
+    //   throw new Error(errorMessage);
+    // }
 
-    const data2 = await res2.json();
+    // const data2 = await res2.json();
 
-    const coinLogos = Object.values(data2.data).reduce(
-      (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
-      {}
-    ) as any;
+    // const coinLogos = Object.values(data2.data).reduce(
+    //   (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
+    //   {}
+    // ) as any;
 
     if (!res.ok) {
       const error = await res.json();
@@ -120,48 +140,90 @@ export async function getUserPortfolio() {
 
     const priceList = createPriceList(coinPrices) as IPriceList;
 
-    const priceListWithLogos = Object.keys(priceList).reduce(
-      (acc: any, item: any) => {
-        return {
-          ...acc,
-          [item]: { ...priceList[item], logo: coinLogos[item] },
-        };
-      },
-      {}
-    );
+    // const priceListWithLogos = Object.keys(priceList).reduce(
+    //   (acc: any, item: any) => {
+    //     return {
+    //       ...acc,
+    //       [item]: { ...priceList[item], logo: coinLogos[item] },
+    //     };
+    //   },
+    //   {}
+    // );
+
+    console.log("final data", {
+      portfolio,
+      priceList,
+    });
 
     return JSON.stringify({
       portfolio,
-      priceList: priceListWithLogos,
-      // coinLogos,
+      priceList,
     });
   } catch (error) {
-    return getErrorMessage(error);
+    return { error: getErrorMessage(error) };
   }
 }
 
-export async function createTransaction(formData: FormData) {
+export async function createTransaction(transactionData: ITransactionData) {
+  console.log("formData", transactionData);
+
   try {
     await connectDB();
     const user = await authenticate();
 
-    const rawFormData = Object.fromEntries(formData.entries()) as Record<
-      string,
-      string | number
-    >;
+    // const rawFormData = Object.fromEntries(formData.entries()) as Record<
+    //   string,
+    //   string | number
+    // >;
 
-    const errors = await validate(newTransactionFormValidation, rawFormData);
+    const errors = await validate(
+      newTransactionFormValidation,
+      transactionData
+    );
 
     if (errors) {
       throw new Error(errors.join(","));
     }
 
-    const { fromItem, toItem } = rawFormData;
+    const {
+      type,
+      fromItemName,
+      fromItemSymbol,
+      fromItemLogo,
+      fromItemCoinGeckoId,
+      fromItemCoinMarketCapId,
+      fromAmount,
+      toItemName,
+      toItemSymbol,
+      toItemCoinGeckoId,
+      toItemCoinMarketCapId,
+      toItemLogo,
+      toAmount,
+    } = transactionData;
+
+    console.log("validation ok");
+    console.log({
+      type,
+      fromItemName,
+      fromItemSymbol,
+      fromItemLogo,
+      fromItemCoinGeckoId,
+      fromItemCoinMarketCapId,
+      fromAmount,
+      toItemName,
+      toItemSymbol,
+      toItemLogo,
+      toItemCoinGeckoId,
+      toItemCoinMarketCapId,
+      toAmount,
+    });
 
     const newTransaction = await Transaction.create({
-      ...rawFormData,
+      ...transactionData,
       owner: user._id,
     });
+
+    console.log("created transaction", newTransaction);
 
     const portfolio = await Portfolio.findOne({ owner: user._id });
 
@@ -173,16 +235,18 @@ export async function createTransaction(formData: FormData) {
 
     const priceListQuery = Array.from(
       new Set([
-        ...portfolio.coins.map((item: IPortfolioCoin) => item.symbol),
-        fromItem === "USD" ? "" : fromItem,
-        toItem === "USD" ? "" : toItem,
+        ...portfolio.coins.map((item: IPortfolioCoin) => item.coinMarketCapId),
+        ...(fromItemCoinMarketCapId === "none"
+          ? []
+          : [fromItemCoinMarketCapId]),
+        ...(toItemCoinMarketCapId === "none" ? [] : [toItemCoinMarketCapId]),
       ])
     ).join(",");
 
     console.log("priceListQuery", priceListQuery);
 
     const res = await fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${priceListQuery}`,
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${priceListQuery}`,
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
@@ -204,31 +268,33 @@ export async function createTransaction(formData: FormData) {
 
     console.log("priceList", priceList);
 
-    const coinsListRes = await fetch(
-      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
-      { cache: "force-cache" }
-    );
-    const data = await coinsListRes.json();
+    // const coinsListRes = await fetch(
+    //   "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
+    //   { cache: "force-cache" }
+    // );
+    // const data = await coinsListRes.json();
 
-    console.log("coinsListRes  done");
-    console.log(data.length);
+    // console.log("coinsListRes  done");
+    // console.log(data.length);
 
-    const coinsMap = {} as any;
-    data.forEach((item: any) => {
-      coinsMap[item.symbol.toLowerCase()] = {
-        ...item,
-        symbol: item.symbol.toUpperCase(),
-      };
-    });
+    // const coinsMap = {} as any;
+    // data.forEach((item: any) => {
+    //   coinsMap[item.symbol.toLowerCase()] = {
+    //     ...item,
+    //     symbol: item.symbol.toUpperCase(),
+    //   };
+    // });
 
-    console.log("coinsMap  done");
-    console.log(Object.keys(coinsMap).length);
+    // console.log("coinsMap  done");
+    // console.log(Object.keys(coinsMap).length);
+
+    console.log("newTransaction", newTransaction);
 
     const processedPortfolio = processTransaction(
       portfolio,
       newTransaction,
-      priceList,
-      coinsMap
+      priceList
+      // coinsMap
     );
 
     console.log("processedPortfolio", processedPortfolio);
@@ -247,8 +313,8 @@ export async function createTransaction(formData: FormData) {
 
     return JSON.stringify({ portfolio: updatedPortfolio, priceList });
   } catch (error) {
-    console.log(getErrorMessage(error));
-    return getErrorMessage(error);
+    // console.log(getErrorMessage(error));
+    return { error: getErrorMessage(error) };
   }
 }
 
@@ -309,21 +375,21 @@ export async function getUserTransactions({
     const priceListQuery = Array.from(
       new Set(
         userTransactions.reduce((acc, item) => {
-          if (item.fromItem.toLowerCase() === "usd") {
+          if (item.fromItemSymbol.toLowerCase() === "usd") {
             return [
               ...acc,
-              item.toItem.toLowerCase() === "usd" ? null : item.toItem,
+              item.toItemSymbol.toLowerCase() === "usd" ? null : item.toItem,
             ];
-          } else if (item.toItem.toLowerCase() === "usd") {
+          } else if (item.toItemSymbol.toLowerCase() === "usd") {
             return [
               ...acc,
-              item.fromItem.toLowerCase() === "usd" ? null : item.fromItem,
+              item.fromItemSymbol.toLowerCase() === "usd" ? null : item.fromItem,
             ];
           } else {
             return [
               ...acc,
-              item.fromItem.toLowerCase() === "usd" ? null : item.fromItem,
-              item.toItem.toLowerCase() === "usd" ? null : item.toItem,
+              item.fromItemSymbol.toLowerCase() === "usd" ? null : item.fromItem,
+              item.toItemSymbol.toLowerCase() === "usd" ? null : item.toItem,
             ];
           }
         }, [])
