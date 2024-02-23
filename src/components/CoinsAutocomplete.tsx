@@ -5,9 +5,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { searchCoins } from "@/api";
 import {
-  useDebounceCallback,
   useDebounce,
-  useDebounceValue,
 } from "usehooks-ts";
 import { useEffect, useRef, useState } from "react";
 
@@ -46,14 +44,12 @@ export default function CoinsAutocomplete({
 
   useEffect(() => {
     (async () => {
-      console.log(firstUpdate.current);
       if (firstUpdate.current) {
         firstUpdate.current = false;
         return;
       }
       setLoading(true);
       const data = await searchCoins(debouncedQuery);
-      console.log(data);
       setOptions(data);
       setLoading(false);
     })();
@@ -94,10 +90,6 @@ export default function CoinsAutocomplete({
         // setValue(newValue || null);
 
         if (newValue) {
-          console.log("newValue");
-          console.log(newValue);
-
-          console.log(options);
 
           const {
             id: coinGeckoId,
@@ -107,7 +99,6 @@ export default function CoinsAutocomplete({
             symbol,
           } = newValue;
 
-          console.log({ coinGeckoId, logo, market_cap_rank, name, symbol });
           selectCoinHandler({
             coinGeckoId,
             logo,
@@ -124,8 +115,6 @@ export default function CoinsAutocomplete({
         reason
       ) => {
         setInputValue(newInputValue);
-
-        console.log(newInputValue);
 
         if (reason === "input" && newInputValue.length > 1) {
           setQuery(newInputValue);

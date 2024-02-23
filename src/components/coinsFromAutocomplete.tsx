@@ -4,30 +4,11 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { parseStrToJSON } from "@/app/lib";
-import { searchCoins } from "@/api";
 import { toast } from "react-toastify";
 import { getPortfolioCoins } from "@/app/actions";
-import {
-  useDebounceCallback,
-  useDebounce,
-  useDebounceValue,
-} from "usehooks-ts";
-import { useEffect, useRef, useState } from "react";
-import { IPortfolioCoin, ITransactionData } from "@/interfaces";
-interface ICoinGeckoCoin {
-  name: string;
-  symbol: string;
-  large: string;
-  market_cap_rank: number;
-  id: string;
-}
-// interface ICoin {
-//   name: string;
-//   symbol: string;
-//   logo: string;
-//   market_cap_rank: number;
-//   coinGeckoId: string;
-// }
+import { useDebounce } from "usehooks-ts";
+import { useEffect, useState } from "react";
+import { IPortfolioCoin } from "@/interfaces";
 
 interface ICoinsAutocompleteProps {
   selectCoinHandler: (value: IPortfolioCoin) => void;
@@ -46,16 +27,8 @@ export default function CoinsFromAutocomplete({
   const [loading, setLoading] = useState(false);
   const debouncedQuery = useDebounce<string>(query, 500);
 
-  console.log("loading", loading);
-
-  const firstUpdate = useRef(true);
-
   useEffect(() => {
     (async () => {
-      if (firstUpdate.current) {
-        firstUpdate.current = false;
-        return;
-      }
       setLoading(true);
       const res = await getPortfolioCoins();
 
@@ -94,14 +67,11 @@ export default function CoinsFromAutocomplete({
       getOptionLabel={(option) => `${option.name} (${option.symbol})`}
       options={options}
       loading={loading}
-      // value={value}
       onChange={(
         event: React.ChangeEvent<EventTarget>,
         newValue: IPortfolioCoin | null
       ) => {
-
         if (newValue) {
-          console.log(newValue);
           selectCoinHandler(newValue);
         }
       }}
@@ -112,8 +82,6 @@ export default function CoinsFromAutocomplete({
         reason
       ) => {
         setInputValue(newInputValue);
-
-        console.log(newInputValue);
 
         if (reason === "input" && newInputValue.length > 1) {
           setQuery(newInputValue);
