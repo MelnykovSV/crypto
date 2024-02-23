@@ -6,38 +6,8 @@ import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import { createTransaction } from "@/app/actions";
-
-// interface ICoinMarketCapCoin {
-//   name: string;
-//   symbol: string;
-//   large: string;
-//   market_cap_rank: number;
-//   id: string;
-// }
-
-interface ICoin {
-  name: string;
-  symbol: string;
-  logo: string;
-  market_cap_rank: number;
-  coinGeckoId: string;
-}
-
-interface ITransactionData {
-  type: "buy" | "sell" | "exchange";
-  fromItemName: string;
-  fromItemSymbol: string;
-  fromItemLogo: string;
-  fromItemCoinGeckoId: string;
-  fromItemCoinMarketCapId: string;
-  fromAmount: number;
-  toItemName: string;
-  toItemSymbol: string;
-  toItemLogo: string;
-  toItemCoinGeckoId: string;
-  toItemCoinMarketCapId: string;
-  toAmount: number;
-}
+import { ICoin, ITransactionData } from "@/interfaces";
+import { toast } from "react-toastify";
 
 export default function BuyForm({
   userPortfolio,
@@ -51,21 +21,17 @@ export default function BuyForm({
   modalLoadingHandler: (value: boolean) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [fromCurrency, setFromCurrency] = useState<string>("USD");
   const [toCurrency, setToCurrency] = useState<ICoin | null>(null);
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
-  const [coefficient, setCoefficient] = useState<number | null>(null);
-  const [fromItemCoinMarketCapId, setFromItemCoinMarketCapId] = useState<
-    string | null
-  >("none");
   const [toItemCoinMarketCapId, setToItemCoinMarketCapId] = useState<
     string | null
   >("none");
+  const [coefficient, setCoefficient] = useState<number | null>(null);
   const firstUpdate = useRef(true);
 
   const isDataValid = () => {
-    if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
+    if (!toCurrency || !fromAmount || !toAmount) {
       return false;
     }
 
@@ -82,32 +48,26 @@ export default function BuyForm({
         firstUpdate.current = false;
         return;
       }
-      if (fromCurrency && toCurrency) {
+      if (toCurrency) {
         const res = await getCoinPrice(toCurrency.symbol);
 
-        console.log(res);
-
-        // const coefficient = res.data[toCurrency.symbol][0].quote[fromCurrency]
-        //   .price as number;
+        if (res instanceof Object && "error" in res) {
+          toast.error(res.error);
+          return;
+        }
 
         const foundCurrency =
           res.data[toCurrency.symbol].find(
-            (item: any) =>
-              item.name.toLowerCase() === toCurrency.name.toLowerCase()
+            (item) => item.name.toLowerCase() === toCurrency.name.toLowerCase()
           ) ||
           res.data[toCurrency.symbol].find(
-            (item: any) => item.slug === toCurrency.coinGeckoId
+            (item) => item.slug === toCurrency.coinGeckoId
           ) ||
           res.data[toCurrency.symbol][0];
 
-        const coefficient = foundCurrency.quote[fromCurrency].price;
-
-        // const coefficient = res.data[toCurrency.symbol].find(
-        //   (item: any) => item.name.toLowerCase === toCurrency.name.toLowerCase
-        // ).quote[fromCurrency].price as number;
+        const coefficient = foundCurrency.quote.USD.price;
 
         setCoefficient(coefficient);
-
         setToItemCoinMarketCapId(foundCurrency.id.toString());
 
         if (fromAmount && toAmount) {
@@ -127,23 +87,15 @@ export default function BuyForm({
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromCurrency, toCurrency]);
+  }, [toCurrency]);
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!toCurrency) {
+      return;
+    }
     setIsLoading(true);
     modalLoadingHandler(true);
-    // const formData = new FormData();
-
-    // if (toCurrency && fromAmount && toAmount) {
-    //   formData.append("type", "buy");
-    //   formData.append("fromItem", fromCurrency);
-    //   formData.append("toItem", toCurrency?.symbol);
-    //   formData.append("toItemName", toCurrency?.name);
-    //   // formData.append("logo", toCurrency?.large);
-    //   formData.append("fromAmount", fromAmount.toString());
-    //   formData.append("toAmount", toAmount.toString());
-    // }
 
     const transactionData = {
       type: "buy",
@@ -151,17 +103,16 @@ export default function BuyForm({
       fromItemSymbol: "USD",
       fromItemLogo: "none",
       fromItemCoinGeckoId: "none",
-      fromItemCoinMarketCapId,
+      fromItemCoinMarketCapId: "none",
       fromAmount,
-      toItemName: toCurrency?.name,
-      toItemSymbol: toCurrency?.symbol,
-      toItemLogo: toCurrency?.logo,
-      toItemCoinGeckoId: toCurrency?.coinGeckoId,
+      toItemName: toCurrency.name,
+      toItemSymbol: toCurrency.symbol,
+      toItemLogo: toCurrency.logo,
+      toItemCoinGeckoId: toCurrency.coinGeckoId,
       toItemCoinMarketCapId,
       toAmount,
     } as ITransactionData;
 
-    console.log(transactionData);
     await createTransaction(transactionData);
     setIsLoading(false);
     modalLoadingHandler(false);
@@ -186,7 +137,7 @@ export default function BuyForm({
                   <InputAdornment position="start">$</InputAdornment>
                 ),
               }}
-              disabled={!fromCurrency || !toCurrency}
+              disabled={!toCurrency}
               sx={{
                 overflow: "hidden",
                 borderRadius: "10px",
@@ -235,7 +186,6 @@ export default function BuyForm({
       <div className="flex gap-20 py-2 justify-between w-full">
         <div className="flex items-center gap-2 w-full">
           <div className="  h-[50px] w-[50px]">
-            {" "}
             {!!toCurrency && (
               <ImageComponent
                 src={toCurrency.logo}
@@ -264,7 +214,7 @@ export default function BuyForm({
           <label className="flex flex-col w-full">
             <span className="mb-2"> Recieve</span>
             <TextField
-              disabled={!fromCurrency || !toCurrency}
+              disabled={!toCurrency}
               sx={{
                 overflow: "hidden",
                 borderRadius: "10px",
@@ -314,7 +264,6 @@ export default function BuyForm({
         className={` ${isLoading ? "loading  blocked" : ""} ${
           isDataValid() ? "" : "disabled"
         } relative z-10 block text-base w-fit min-w-32 bg-auth-accent-gradient  rounded-[10px] before:rounded-[10px] py-[17px] px-[18px] leading-none  mx-auto before:content-[''] before:absolute before:left-0  before:top-0  before:transition-opacity before:duration-300 before:ease-linear before:w-full  before:h-full before:-z-10 before:bg-accent-gradient before:opacity-0 before:bg-cover before:animate-hue-rotate hover:before:opacity-100`}>
-        {" "}
         Exchange
       </button>
     </form>

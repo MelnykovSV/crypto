@@ -383,12 +383,16 @@ export async function getUserTransactions({
           } else if (item.toItemSymbol.toLowerCase() === "usd") {
             return [
               ...acc,
-              item.fromItemSymbol.toLowerCase() === "usd" ? null : item.fromItem,
+              item.fromItemSymbol.toLowerCase() === "usd"
+                ? null
+                : item.fromItem,
             ];
           } else {
             return [
               ...acc,
-              item.fromItemSymbol.toLowerCase() === "usd" ? null : item.fromItem,
+              item.fromItemSymbol.toLowerCase() === "usd"
+                ? null
+                : item.fromItem,
               item.toItemSymbol.toLowerCase() === "usd" ? null : item.toItem,
             ];
           }
@@ -486,12 +490,22 @@ export async function getCoinPrice(
       }
     );
 
-    const data = await res.json();
+    const data = (await res.json()) as {
+      data: Record<
+        string,
+        {
+          id: number;
+          name: string;
+          slug: string;
+          quote: Record<string, { price: number }>;
+        }[]
+      >;
+    };
 
     return data;
   } catch (error) {
     console.log(error);
-    return getErrorMessage(error);
+    return { error: getErrorMessage(error) };
   }
 }
 

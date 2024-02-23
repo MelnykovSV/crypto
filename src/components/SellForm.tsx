@@ -7,30 +7,8 @@ import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import Slider from "@mui/material/Slider";
 import { createTransaction } from "@/app/actions";
-
-interface ICoin {
-  name: string;
-  symbol: string;
-  logo: string;
-  market_cap_rank: number;
-  coinGeckoId: string;
-}
-
-interface ITransactionData {
-  type: "buy" | "sell" | "exchange";
-  fromItemName: string;
-  fromItemSymbol: string;
-  fromItemLogo: string;
-  fromItemCoinGeckoId: string;
-  fromItemCoinMarketCapId: string;
-  fromAmount: number;
-  toItemName: string;
-  toItemSymbol: string;
-  toItemLogo: string;
-  toItemCoinGeckoId: string;
-  toItemCoinMarketCapId: string;
-  toAmount: number;
-}
+import { ICoin, ITransactionData } from "@/interfaces";
+import { toast } from "react-toastify";
 
 export default function SellForm({
   userPortfolio,
@@ -45,14 +23,10 @@ export default function SellForm({
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
-  const toCurrency = "USD";
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
   const [fromItemCoinMarketCapId, setFromItemCoinMarketCapId] = useState<
-    string | null
-  >("none");
-  const [toItemCoinMarketCapId, setToItemCoinMarketCapId] = useState<
     string | null
   >("none");
 
@@ -68,7 +42,7 @@ export default function SellForm({
   };
 
   const isDataValid = () => {
-    if (!fromCurrency || !toCurrency || !fromAmount || !toAmount) {
+    if (!fromCurrency || !fromAmount || !toAmount) {
       return false;
     }
 
@@ -108,13 +82,13 @@ export default function SellForm({
 
   useEffect(() => {
     (async () => {
-      if (fromCurrency && toCurrency) {
+      if (fromCurrency) {
         const res = await getCoinPrice(fromCurrency.symbol);
 
-        // const coefficient = res.data[fromCurrency.symbol][0].quote[toCurrency]
-        //   .price as number;
-
-
+        if (res instanceof Object && "error" in res) {
+          toast.error(res.error);
+          return;
+        }
 
         ////нужно ли это тут вообще? (для валюты, которая уже должна быть в портфолио)
         const foundCurrency =
@@ -127,7 +101,7 @@ export default function SellForm({
           ) ||
           res.data[fromCurrency.symbol][0];
 
-        const coefficient = foundCurrency.quote[toCurrency].price;
+        const coefficient = foundCurrency.quote.USD.price;
 
         setCoefficient(coefficient);
 
@@ -150,13 +124,12 @@ export default function SellForm({
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromCurrency, toCurrency]);
+  }, [fromCurrency]);
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     modalLoadingHandler(true);
-
 
     const transactionData = {
       type: "sell",
@@ -164,7 +137,7 @@ export default function SellForm({
       toItemSymbol: "USD",
       toItemLogo: "none",
       toItemCoinGeckoId: "none",
-      toItemCoinMarketCapId,
+      toItemCoinMarketCapId: "none",
       toAmount,
       fromItemName: fromCurrency?.name,
       fromItemSymbol: fromCurrency?.symbol,
@@ -219,7 +192,6 @@ export default function SellForm({
             <TextField
               disabled={
                 !fromCurrency ||
-                !toCurrency ||
                 !userPortfolio?.coins?.find(
                   (item) => item.symbol === fromCurrency.symbol
                 )?.amount
@@ -292,7 +264,6 @@ export default function SellForm({
         min={0}
         disabled={
           !fromCurrency ||
-          !toCurrency ||
           !userPortfolio?.coins?.find(
             (item) => item.symbol === fromCurrency.symbol
           )?.amount
@@ -321,7 +292,6 @@ export default function SellForm({
               }}
               disabled={
                 !fromCurrency ||
-                !toCurrency ||
                 !userPortfolio?.coins?.find(
                   (item) => item.symbol === fromCurrency.symbol
                 )?.amount

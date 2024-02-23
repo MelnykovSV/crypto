@@ -120,3 +120,28 @@ export interface ITransaction {
   toAmount: number;
   toPricePerItem: number;
 }
+
+
+export interface ICoin {
+  name: string;
+  symbol: string;
+  logo: string;
+  market_cap_rank: number;
+  coinGeckoId: string;
+}
+
+export interface ITransactionData {
+  type: "buy" | "sell" | "exchange";
+  fromItemName: string;
+  fromItemSymbol: string;
+  fromItemLogo: string;
+  fromItemCoinGeckoId: string;
+  fromItemCoinMarketCapId: string;
+  fromAmount: number;
+  toItemName: string;
+  toItemSymbol: string;
+  toItemLogo: string;
+  toItemCoinGeckoId: string;
+  toItemCoinMarketCapId: string;
+  toAmount: number;
+}
