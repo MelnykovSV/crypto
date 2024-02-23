@@ -49,26 +49,17 @@ export default function BuyForm({
         return;
       }
       if (toCurrency) {
-        const res = await getCoinPrice(toCurrency.symbol);
+        const res = await getCoinPrice(toCurrency);
 
         if (res instanceof Object && "error" in res) {
           toast.error(res.error);
           return;
         }
 
-        const foundCurrency =
-          res.data[toCurrency.symbol].find(
-            (item) => item.name.toLowerCase() === toCurrency.name.toLowerCase()
-          ) ||
-          res.data[toCurrency.symbol].find(
-            (item) => item.slug === toCurrency.coinGeckoId
-          ) ||
-          res.data[toCurrency.symbol][0];
-
-        const coefficient = foundCurrency.quote.USD.price;
-
+        const { coefficient, toCurrencyCoinMarketCapId } = res;
+        
         setCoefficient(coefficient);
-        setToItemCoinMarketCapId(foundCurrency.id.toString());
+        setToItemCoinMarketCapId(toCurrencyCoinMarketCapId.toString());
 
         if (fromAmount && toAmount) {
           setFromAmount(

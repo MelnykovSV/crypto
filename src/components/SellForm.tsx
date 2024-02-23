@@ -1,13 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getCoinPrice } from "@/app/actions";
-import { CoinsAutocomplete } from ".";
+import { getCoinPriceById } from "@/app/actions";
+import { CoinsFromAutocomplete } from ".";
 import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import Slider from "@mui/material/Slider";
 import { createTransaction } from "@/app/actions";
-import { ICoin, ITransactionData } from "@/interfaces";
+import { IPortfolioCoin, ITransactionData } from "@/interfaces";
 import { toast } from "react-toastify";
 
 export default function SellForm({
@@ -22,45 +22,27 @@ export default function SellForm({
   modalLoadingHandler: (value: boolean) => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [fromCurrency, setFromCurrency] = useState<ICoin | null>(null);
+  const [fromCurrency, setFromCurrency] = useState<IPortfolioCoin | null>(null);
   const [fromAmount, setFromAmount] = useState<number | null>(null);
   const [toAmount, setToAmount] = useState<number | null>(null);
   const [coefficient, setCoefficient] = useState<number | null>(null);
-  const [fromItemCoinMarketCapId, setFromItemCoinMarketCapId] = useState<
-    string | null
-  >("none");
-
-  const getPortfolioCoinAmount = (coin: ICoin | null): number => {
-    if (coin) {
-      return (
-        userPortfolio.coins.find(
-          (item) => item.coinGeckoId === coin.coinGeckoId
-        )?.amount || 0
-      );
-    }
-    return 0;
-  };
 
   const isDataValid = () => {
     if (!fromCurrency || !fromAmount || !toAmount) {
       return false;
     }
 
-    const isFromCurrencyinPortfolio = userPortfolio?.coins?.find(
-      (item) => item.coinGeckoId === fromCurrency.coinGeckoId
-    )?.amount;
-
-    return isFromCurrencyinPortfolio;
+    return true;
   };
 
-  const fromCoinHandler = (value: ICoin | null) => {
+  const fromCoinHandler = (value: IPortfolioCoin | null) => {
     setFromCurrency(value);
   };
 
   const sliderHandler = (_: Event, newValue: number | number[]) => {
     setFromAmount(
       Math.min(
-        Number(getPortfolioCoinAmount(fromCurrency)?.toFixed(4)),
+        Number((fromCurrency ? fromCurrency.amount : 0).toFixed(4)),
         Number((newValue as number).toFixed(4))
       )
     );
@@ -68,7 +50,7 @@ export default function SellForm({
       setToAmount(
         Math.min(
           Number(
-            (getPortfolioCoinAmount(fromCurrency) * coefficient).toFixed(4)
+            ((fromCurrency ? fromCurrency.amount : 0) * coefficient).toFixed(4)
           ),
           Number((coefficient * (newValue as number)).toFixed(4))
         )
@@ -83,29 +65,18 @@ export default function SellForm({
   useEffect(() => {
     (async () => {
       if (fromCurrency) {
-        const res = await getCoinPrice(fromCurrency.symbol);
+        const res = await getCoinPriceById(fromCurrency);
 
         if (res instanceof Object && "error" in res) {
           toast.error(res.error);
           return;
         }
 
-        ////нужно ли это тут вообще? (для валюты, которая уже должна быть в портфолио)
-        const foundCurrency =
-          res.data[fromCurrency.symbol].find(
-            (item: any) =>
-              item.name.toLowerCase() === fromCurrency.name.toLowerCase()
-          ) ||
-          res.data[fromCurrency.symbol].find(
-            (item: any) => item.slug === fromCurrency.coinGeckoId
-          ) ||
-          res.data[fromCurrency.symbol][0];
+        const {coefficient} = res
 
-        const coefficient = foundCurrency.quote.USD.price;
+
 
         setCoefficient(coefficient);
-
-        setFromItemCoinMarketCapId(foundCurrency.id.toString());
 
         if (fromAmount && toAmount) {
           setToAmount(
@@ -123,11 +94,15 @@ export default function SellForm({
         setToAmount(null);
       }
     })();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fromCurrency]);
 
   const submitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!fromCurrency) {
+      return;
+    }
     setIsLoading(true);
     modalLoadingHandler(true);
 
@@ -139,15 +114,13 @@ export default function SellForm({
       toItemCoinGeckoId: "none",
       toItemCoinMarketCapId: "none",
       toAmount,
-      fromItemName: fromCurrency?.name,
-      fromItemSymbol: fromCurrency?.symbol,
-      fromItemLogo: fromCurrency?.logo,
-      fromItemCoinGeckoId: fromCurrency?.coinGeckoId,
-      fromItemCoinMarketCapId,
+      fromItemName: fromCurrency.name,
+      fromItemSymbol: fromCurrency.symbol,
+      fromItemLogo: fromCurrency.logo,
+      fromItemCoinGeckoId: fromCurrency.coinGeckoId,
+      fromItemCoinMarketCapId: fromCurrency.coinMarketCapId,
       fromAmount,
     } as ITransactionData;
-
-    console.log(transactionData);
 
     await createTransaction(transactionData);
     setIsLoading(false);
@@ -174,14 +147,12 @@ export default function SellForm({
             <p className=" mb-2 h-[24px] ">
               {!!fromCurrency && fromCurrency.symbol}
             </p>
-            <CoinsAutocomplete selectCoinHandler={fromCoinHandler} label="" />
+            <CoinsFromAutocomplete
+              selectCoinHandler={fromCoinHandler}
+              label=""
+            />
             <p className=" mt-2">
-              Balance:{" "}
-              {!!fromCurrency && !!userPortfolio
-                ? userPortfolio?.coins
-                    ?.find((item) => item.symbol === fromCurrency.symbol)
-                    ?.amount.toFixed(4) || 0
-                : "--"}
+              Balance: {fromCurrency ? fromCurrency.amount : "--"}
             </p>
           </div>
         </div>
@@ -228,7 +199,9 @@ export default function SellForm({
                   setFromAmount(
                     Math.min(
                       Number(Number(e.target.value).toFixed(4)),
-                      Number(getPortfolioCoinAmount(fromCurrency).toFixed(4))
+                      Number(
+                        (fromCurrency ? fromCurrency.amount : 0).toFixed(4)
+                      )
                     )
                   );
                   setToAmount(
@@ -239,7 +212,8 @@ export default function SellForm({
                         ),
                         Number(
                           (
-                            getPortfolioCoinAmount(fromCurrency) * coefficient
+                            (fromCurrency ? fromCurrency.amount : 0) *
+                            coefficient
                           ).toFixed(4)
                         )
                       )
@@ -326,7 +300,7 @@ export default function SellForm({
                     Math.min(
                       Number(
                         (
-                          getPortfolioCoinAmount(fromCurrency) * coefficient
+                          (fromCurrency ? fromCurrency.amount : 0) * coefficient
                         ).toFixed(4)
                       ),
                       Number(Number(e.target.value).toFixed(4))
@@ -334,7 +308,9 @@ export default function SellForm({
                   );
                   setFromAmount(
                     Math.min(
-                      Number(getPortfolioCoinAmount(fromCurrency)?.toFixed(4)),
+                      Number(
+                        (fromCurrency ? fromCurrency.amount : 0).toFixed(4)
+                      ),
                       Number((Number(e.target.value) / coefficient).toFixed(4))
                     )
                   );

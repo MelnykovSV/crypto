@@ -6,7 +6,6 @@ import { authOptions } from "../../../options";
 
 export default async function Layout({ children }: any) {
   const session = await getServerSession(authOptions);
-  console.log("server session", session);
   if (!session) {
     redirect("/");
   }

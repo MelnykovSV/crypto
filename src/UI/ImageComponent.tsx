@@ -19,7 +19,6 @@ export default function ImageComponent({
   placeholder,
   ...props
 }: IImageComponentProps) {
-  console.log({ src, alt, width, height, placeholder });
   const [imageSrc, setImageSrc] = useState(src);
   return (
     <Image

@@ -8,10 +8,10 @@ import { getErrorMessage } from "./lib";
 import { validate } from "@/validation/validation";
 import { newTransactionFormValidation } from "@/validation/newTransactionValidation";
 import { createPriceList, processTransaction } from "./lib";
-import { IPortfolioCoin } from "@/interfaces";
+import { IPortfolioCoin, ICoin } from "@/interfaces";
 import connectDB from "./lib/dbConnect";
 import { IPortfolio } from "@/interfaces";
-import { IPriceList } from "@/interfaces";
+import { IPriceList, ICoinMarketCapCoin } from "@/interfaces";
 import { AnimationDuration } from "recharts/types/util/types";
 import { transactionsPerPage } from "@/constants";
 import dayjs from "dayjs";
@@ -64,8 +64,6 @@ export async function getUserPortfolio() {
     await connectDB();
     const user = await authenticate();
 
-    console.log("user", user);
-
     const portfolio = await Portfolio.findOne({ owner: user._id });
 
     if (!portfolio) {
@@ -83,8 +81,6 @@ export async function getUserPortfolio() {
       return JSON.stringify({ portfolio, priceList: {} });
     }
 
-    console.log("portfolio", portfolio);
-
     if (!portfolio.coins.length) {
       return JSON.stringify({ portfolio, priceList: {} });
     }
@@ -92,9 +88,7 @@ export async function getUserPortfolio() {
       ...portfolio.coins.map((item: IPortfolioCoin) => item.coinMarketCapId),
     ].join(",");
 
-    console.log("PRICE_QUERY", priceListQuery);
-
-    const pricesPromise = fetch(
+    const res = await fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${priceListQuery}`,
       {
         headers: {
@@ -102,33 +96,6 @@ export async function getUserPortfolio() {
         },
       }
     );
-
-    // const logosPromise = fetch(
-    //   `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
-    //   {
-    //     headers: {
-    //       "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-    //     },
-    //   }
-    // );
-    const [res] = await Promise.all([pricesPromise]);
-    if (!res.ok) {
-      const error = await res.json();
-      const errorMessage = error.status.error_message;
-      throw new Error(errorMessage);
-    }
-    // if (!res2.ok) {
-    //   const error = await res2.json();
-    //   const errorMessage = error.status.error_message;
-    //   throw new Error(errorMessage);
-    // }
-
-    // const data2 = await res2.json();
-
-    // const coinLogos = Object.values(data2.data).reduce(
-    //   (acc: any, item: any) => ({ ...acc, [item[0].symbol]: item[0].logo }),
-    //   {}
-    // ) as any;
 
     if (!res.ok) {
       const error = await res.json();
@@ -140,21 +107,6 @@ export async function getUserPortfolio() {
 
     const priceList = createPriceList(coinPrices) as IPriceList;
 
-    // const priceListWithLogos = Object.keys(priceList).reduce(
-    //   (acc: any, item: any) => {
-    //     return {
-    //       ...acc,
-    //       [item]: { ...priceList[item], logo: coinLogos[item] },
-    //     };
-    //   },
-    //   {}
-    // );
-
-    console.log("final data", {
-      portfolio,
-      priceList,
-    });
-
     return JSON.stringify({
       portfolio,
       priceList,
@@ -164,17 +116,27 @@ export async function getUserPortfolio() {
   }
 }
 
-export async function createTransaction(transactionData: ITransactionData) {
-  console.log("formData", transactionData);
-
+export async function getPortfolioCoins() {
   try {
     await connectDB();
     const user = await authenticate();
 
-    // const rawFormData = Object.fromEntries(formData.entries()) as Record<
-    //   string,
-    //   string | number
-    // >;
+    const portfolio = await Portfolio.findOne({ owner: user._id });
+
+    if (!portfolio) {
+      throw new Error("No portfolio");
+    }
+
+    return JSON.stringify(portfolio.coins);
+  } catch (error) {
+    return { error: getErrorMessage(error) };
+  }
+}
+
+export async function createTransaction(transactionData: ITransactionData) {
+  try {
+    await connectDB();
+    const user = await authenticate();
 
     const errors = await validate(
       newTransactionFormValidation,
@@ -201,33 +163,12 @@ export async function createTransaction(transactionData: ITransactionData) {
       toAmount,
     } = transactionData;
 
-    console.log("validation ok");
-    console.log({
-      type,
-      fromItemName,
-      fromItemSymbol,
-      fromItemLogo,
-      fromItemCoinGeckoId,
-      fromItemCoinMarketCapId,
-      fromAmount,
-      toItemName,
-      toItemSymbol,
-      toItemLogo,
-      toItemCoinGeckoId,
-      toItemCoinMarketCapId,
-      toAmount,
-    });
-
     const newTransaction = await Transaction.create({
       ...transactionData,
       owner: user._id,
     });
 
-    console.log("created transaction", newTransaction);
-
     const portfolio = await Portfolio.findOne({ owner: user._id });
-
-    console.log("portfolio", portfolio);
 
     if (!portfolio) {
       throw new Error("No portfolio");
@@ -242,8 +183,6 @@ export async function createTransaction(transactionData: ITransactionData) {
         ...(toItemCoinMarketCapId === "none" ? [] : [toItemCoinMarketCapId]),
       ])
     ).join(",");
-
-    console.log("priceListQuery", priceListQuery);
 
     const res = await fetch(
       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${priceListQuery}`,
@@ -262,42 +201,13 @@ export async function createTransaction(transactionData: ITransactionData) {
 
     const coinPrices = await res.json();
 
-    console.log("coinPrices", coinPrices);
-
     const priceList = createPriceList(coinPrices) as IPriceList;
-
-    console.log("priceList", priceList);
-
-    // const coinsListRes = await fetch(
-    //   "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
-    //   { cache: "force-cache" }
-    // );
-    // const data = await coinsListRes.json();
-
-    // console.log("coinsListRes  done");
-    // console.log(data.length);
-
-    // const coinsMap = {} as any;
-    // data.forEach((item: any) => {
-    //   coinsMap[item.symbol.toLowerCase()] = {
-    //     ...item,
-    //     symbol: item.symbol.toUpperCase(),
-    //   };
-    // });
-
-    // console.log("coinsMap  done");
-    // console.log(Object.keys(coinsMap).length);
-
-    console.log("newTransaction", newTransaction);
 
     const processedPortfolio = processTransaction(
       portfolio,
       newTransaction,
       priceList
-      // coinsMap
     );
-
-    console.log("processedPortfolio", processedPortfolio);
 
     const updatedPortfolio = await Portfolio.findOneAndUpdate(
       { owner: user._id },
@@ -313,7 +223,7 @@ export async function createTransaction(transactionData: ITransactionData) {
 
     return JSON.stringify({ portfolio: updatedPortfolio, priceList });
   } catch (error) {
-    // console.log(getErrorMessage(error));
+    console.log(getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 }
@@ -347,8 +257,8 @@ export async function getUserTransactions({
       ...(substring
         ? {
             $or: [
-              { fromItem: { $regex: substring, $options: "i" } },
-              { toItem: { $regex: substring, $options: "i" } },
+              { fromItemSymbol: { $regex: substring, $options: "i" } },
+              { toItemSymbol: { $regex: substring, $options: "i" } },
             ],
           }
         : {}),
@@ -357,7 +267,10 @@ export async function getUserTransactions({
     const totalDocuments = await Transaction.countDocuments(query);
 
     if (!totalDocuments) {
-      return { error: "No transactions found" };
+      return {
+        totalPages: 0,
+        userTransactions: [],
+      };
     }
 
     const totalPages = Math.ceil(totalDocuments / transactionsPerPage);
@@ -368,65 +281,9 @@ export async function getUserTransactions({
       .limit(transactionsPerPage)
       .skip((Number(page) - 1) * transactionsPerPage);
 
-    if (!userTransactions.length) {
-      return { error: "No transactions found" };
-    }
-
-    const priceListQuery = Array.from(
-      new Set(
-        userTransactions.reduce((acc, item) => {
-          if (item.fromItemSymbol.toLowerCase() === "usd") {
-            return [
-              ...acc,
-              item.toItemSymbol.toLowerCase() === "usd" ? null : item.toItem,
-            ];
-          } else if (item.toItemSymbol.toLowerCase() === "usd") {
-            return [
-              ...acc,
-              item.fromItemSymbol.toLowerCase() === "usd"
-                ? null
-                : item.fromItem,
-            ];
-          } else {
-            return [
-              ...acc,
-              item.fromItemSymbol.toLowerCase() === "usd"
-                ? null
-                : item.fromItem,
-              item.toItemSymbol.toLowerCase() === "usd" ? null : item.toItem,
-            ];
-          }
-        }, [])
-      )
-    ).join(",");
-
-    const logosRes = await fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/info?symbol=${priceListQuery}`,
-      {
-        headers: {
-          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-        },
-      }
-    );
-    const logosData = (await logosRes.json()) as {
-      data: Record<string, { symbol: string; logo: string }[]>;
-    };
-
-    const coinLogos =
-      logosData && logosData.data && logosData.data instanceof Object
-        ? Object.values(logosData.data).reduce(
-            (acc, item) => ({
-              ...acc,
-              [item[0].symbol]: item[0].logo,
-            }),
-            {}
-          )
-        : {};
-
     return {
       totalPages,
       userTransactions,
-      logos: coinLogos as Record<string, string>,
     };
   } catch (error) {
     return { error: getErrorMessage(error) };
@@ -475,14 +332,99 @@ export async function getTransactionsPages({
 }
 
 export async function getCoinPrice(
-  symbol: string,
+  toCurrency: ICoin,
   convert?: string | undefined
 ) {
   try {
     const res = await fetch(
-      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}${
-        convert ? `&convert=${convert}` : ""
-      }`,
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${
+        toCurrency.symbol
+      }${convert ? `&convert=${convert}` : ""}`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    const foundCurrency =
+      data.data[toCurrency.symbol].find(
+        (item: ICoinMarketCapCoin) =>
+          item.name.toLowerCase() === toCurrency.name.toLowerCase()
+      ) ||
+      data.data[toCurrency.symbol].find(
+        (item: ICoinMarketCapCoin) => item.slug === toCurrency.coinGeckoId
+      ) ||
+      data.data[toCurrency.symbol][0];
+
+    const coefficient = foundCurrency.quote.USD.price;
+
+    return { coefficient, toCurrencyCoinMarketCapId: foundCurrency.id };
+  } catch (error) {
+    console.log(getErrorMessage(error));
+    return { error: getErrorMessage(error) };
+  }
+}
+
+export async function getCoinPriceForExchange(
+  fromCurrency: IPortfolioCoin,
+  toCurrency: ICoin
+) {
+  try {
+    const toCurrencyResponse = await fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${toCurrency.symbol}`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+
+    const toCurrencyData = await toCurrencyResponse.json();
+
+    const foundToCurrency =
+      toCurrencyData.data[toCurrency.symbol].find(
+        (item: ICoinMarketCapCoin) =>
+          item.name.toLowerCase() === toCurrency.name.toLowerCase()
+      ) ||
+      toCurrencyData.data[toCurrency.symbol].find(
+        (item: ICoinMarketCapCoin) => item.slug === toCurrency.coinGeckoId
+      ) ||
+      toCurrencyData.data[toCurrency.symbol][0];
+
+    const fromCurrencyResponse = await fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${fromCurrency.coinMarketCapId}&convert_id=${foundToCurrency.id}`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+        },
+      }
+    );
+
+    const fromCurrencyData = await fromCurrencyResponse.json();
+
+    const coefficient =
+      fromCurrencyData.data[fromCurrency.coinMarketCapId].quote[
+        foundToCurrency.id
+      ].price;
+
+    return { coefficient, toCurrencyCoinMarketCapId: foundToCurrency.id };
+  } catch (error) {
+    console.log(getErrorMessage(error));
+    return { error: getErrorMessage(error) };
+  }
+}
+export async function getCoinPriceById(
+  fromCurrency: IPortfolioCoin,
+  convert?: string | undefined
+) {
+  try {
+    const res = await fetch(
+      `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=${
+        fromCurrency.coinMarketCapId
+      }${convert ? `&convert=${convert}` : ""}`,
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
@@ -498,13 +440,15 @@ export async function getCoinPrice(
           name: string;
           slug: string;
           quote: Record<string, { price: number }>;
-        }[]
+        }
       >;
     };
 
-    return data;
+    const coefficient = data.data[fromCurrency.coinMarketCapId].quote.USD.price;
+
+    return { coefficient };
   } catch (error) {
-    console.log(error);
+    console.log(getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 }

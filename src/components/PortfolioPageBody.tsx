@@ -35,7 +35,6 @@ export default function PortfolioPageBody({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formType, setFormType] = useState("buy");
 
-  console.log(portfolio);
 
   const updatePortfolioHandler = async () => {
     const res = await getUserPortfolio();
@@ -44,8 +43,6 @@ export default function PortfolioPageBody({
       toast.error(res.error);
       return;
     }
-
-    console.log(res);
     setPortfolio(JSON.parse(res).portfolio);
     setPriceList(JSON.parse(res).priceList);
   };
@@ -87,8 +84,6 @@ export default function PortfolioPageBody({
   }
 
   const { lineChartData, pieChartData } = processPortfolioData(portfolio);
-
-  console.log({ lineChartData, pieChartData });
   return (
     <>
       <div className="pb-20">

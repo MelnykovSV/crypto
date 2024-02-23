@@ -30,6 +30,7 @@ import TransactionTypeSelect from "./TransactionTypeSelect";
 import TransactionStatusSelect from "./TransactionStatusSelect";
 import TransactionsSortingSwitcher from "./TransactionsSortingSwitcher";
 import TransactionsDatePicker from "./TransactionsDatePicker";
+import CoinsFromAutocomplete from "./coinsFromAutocomplete";
 
 export {
   CoinsTable,
@@ -64,4 +65,5 @@ export {
   TransactionStatusSelect,
   TransactionsSortingSwitcher,
   TransactionsDatePicker,
+  CoinsFromAutocomplete,
 };

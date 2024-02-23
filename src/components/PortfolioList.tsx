@@ -65,8 +65,6 @@ export default function PortfolioList({
               <p className="truncate pl-2 text-xs large-mobile:text-base">
                 $ {roundValue(priceList[item.symbol].price)}
               </p>
-              {/* <p>{roundPrice(item.amount)}</p>
-          <p>{roundPrice(item.amount * priceList[item.symbol].price)}</p> */}
             </Link>
           </li>
         ))}

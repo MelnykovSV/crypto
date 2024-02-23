@@ -67,10 +67,9 @@ export interface IPortfolioCoin {
   amount: number;
   symbol: string;
   name: string;
-  coinGeckoId: string,
-  coinMarketCapId: string,
-  logo:string,
-
+  coinGeckoId: string;
+  coinMarketCapId: string;
+  logo: string;
 }
 export interface IPortfolioHistoryItem {
   date: string;
@@ -103,25 +102,6 @@ export interface IPortfolioData {
   priceList: IPriceList;
 }
 
-export interface ITransaction {
-  type: "sell" | "buy" | "exchange";
-  fromItemName: string;
-  fromItemSymbol: string;
-  fromItemCoinMarketCapId: string;
-  fromItemCoinGeckoId: string;
-  fromItemLogo: string;
-  fromAmount: number;
-  fromPricePerItem: number;
-  toItemName: string;
-  toItemSymbol: string;
-  toItemCoinMarketCapId: string;
-  toItemCoinGeckoId: string;
-  toItemLogo: string;
-  toAmount: number;
-  toPricePerItem: number;
-}
-
-
 export interface ICoin {
   name: string;
   symbol: string;
@@ -144,4 +124,23 @@ export interface ITransactionData {
   toItemCoinGeckoId: string;
   toItemCoinMarketCapId: string;
   toAmount: number;
+  _id?: string;
+  isSuccessful?: boolean;
+  createdAt?: Date;
+}
+
+export interface ICoinMarketCapCoin {
+  name: string;
+  slug: string;
+}
+
+export interface IPriceListData {
+  data: Record<
+    string,
+    {
+      name: string;
+      symbol: string;
+      quote: Record<string, { price: number; percent_change_24h: number }>;
+    }
+  >;
 }

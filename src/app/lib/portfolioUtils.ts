@@ -1,27 +1,23 @@
-import { IPortfolio, IPortfolioCoin, ITransaction } from "@/interfaces";
-// import { coinsMap } from "@/coinsMap";
+import {
+  IPortfolio,
+  IPortfolioCoin,
+  // ITransaction,
+  IPriceListData,
+  ITransactionData
+} from "@/interfaces";
 
 export function calculatePortfolioPrice(
   priceList: Record<string, { name: string; symbol: string; price: number }>,
   coins: IPortfolioCoin[]
 ) {
-  console.log("THIS");
-  // const pricesByCoin = coins.map((item) => ({
-  //   name: item.name,
-  //   symbol: item.symbol,
-  //   portfolioCoinPrice: item.amount * priceList[item.symbol].price,
-  // }));
-
-  console.log('priceList', priceList);
-  console.log('coins', coins);
   return coins.reduce((acc, item) => {
     return acc + item.amount * priceList[item.symbol.toUpperCase()].price;
   }, 0);
 }
 
-export function createPriceList(res: any) {
+export function createPriceList(res: IPriceListData) {
   const result = Object.values(res.data).reduce(
-    (acc: any, item: any) => ({
+    (acc, item) => ({
       ...acc,
       [item.symbol.toUpperCase()]: {
         name: item.name,
@@ -53,9 +49,8 @@ export function processTransaction(
     toItemCoinMarketCapId,
     toItemLogo,
     toItemName,
-  }: ITransaction,
+  }: ITransactionData,
   priceList: Record<string, { name: string; symbol: string; price: number }>
-  // coinsMap: any
 ) {
   switch (type) {
     case "sell":
@@ -80,13 +75,9 @@ export function processTransaction(
           return coin;
         }
       });
-
-      console.log("updatedCoins", updatedCoins);
-
       const fromPricePerItem = priceList[fromItemSymbol].price;
       const filteredCoins = updatedCoins.filter((coin) => coin.amount !== 0);
 
-      console.log("filteredCoins", filteredCoins);
       const updatedTotalWithdrawn =
         totalWithdrawn + fromPricePerItem * fromAmount;
 
@@ -147,11 +138,6 @@ export function processTransaction(
           ],
         };
       } else {
-        // console.log("toItem", toItem);
-        // console.log(priceList[toItem]);
-        // console.log(
-        //   coinsMap[priceList[toItem].name as keyof typeof coinsMap].id
-        // );
         const updatedCoins = [
           ...coins,
           {
@@ -191,7 +177,6 @@ export function processTransaction(
       }
       const updatedCoinsFromPart = coins.map((coin) => {
         if (coin.coinGeckoId === fromItemCoinGeckoId) {
-          console.log("coinGeckoId", coin.coinGeckoId);
           if (coin.amount < fromAmount) {
             throw new Error("Not enough coins for this transaction");
           }
@@ -207,8 +192,6 @@ export function processTransaction(
           return coin;
         }
       });
-
-      console.log("updatedCoinsFromPart", updatedCoinsFromPart);
 
       const filteredCoinsFromPart = updatedCoinsFromPart.filter(
         (coin) => coin.amount !== 0
@@ -234,8 +217,6 @@ export function processTransaction(
           }
         });
 
-        console.log("updatedCoinsToPart1", updatedCoinsToPart);
-
         return {
           coins: updatedCoinsToPart,
           totalInvested,
@@ -250,7 +231,6 @@ export function processTransaction(
                 updatedCoinsToPart
               ),
               date: new Date(),
-              // date: new Date(),
             },
           ],
         };
@@ -267,31 +247,6 @@ export function processTransaction(
           },
         ];
 
-        console.log("updatedCoinsToPart2", updatedCoinsToPart);
-        console.log("After processing1");
-        console.log(
-          "totalPortfolioPrice",
-          calculatePortfolioPrice(priceList, updatedCoinsToPart)
-        );
-        console.log("After processing2");
-        console.log("result", {
-          coins: updatedCoinsToPart,
-          totalInvested,
-          totalWithdrawn,
-          historyData: [
-            ...historyData,
-            {
-              totalInvested,
-              totalWithdrawn,
-              totalPortfolioPrice: calculatePortfolioPrice(
-                priceList,
-                updatedCoinsToPart
-              ),
-              date: new Date(),
-              // date: new Date(),
-            },
-          ],
-        });
         return {
           coins: updatedCoinsToPart,
           totalInvested,
@@ -306,7 +261,6 @@ export function processTransaction(
                 updatedCoinsToPart
               ),
               date: new Date(),
-              // date: new Date(),
             },
           ],
         };

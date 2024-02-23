@@ -1,15 +1,16 @@
-// import { Search, Breadcrumbs } from "@/components";
 import {
   TransactionsSearch,
-  TransactionsTable,
   TransactionTypeSelect,
   TransactionStatusSelect,
   TransactionsSortingSwitcher,
   TransactionsDatePicker,
-  PaginationComponent,
 } from "@/components";
+import { ReactElement } from "react";
+interface LayoutProps {
+  children: ReactElement;
+}
 
-export default function Layout({ children, params }: any) {
+export default function Layout({ children }: LayoutProps) {
   return (
     <div className="pb-[30px]">
       <div className="flex flex-col flex-wrap small-desktop:flex-row gap-x-5 gap-y-2 items-start justify-between px-[10px] laptop:px-5 mb-[20px]">

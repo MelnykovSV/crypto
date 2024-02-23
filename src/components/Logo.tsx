@@ -25,7 +25,6 @@ export default function Logo({ size = "small", ...props }: LogoProps) {
       </div>
     );
   } else {
-    console.log(false);
     return (
       <div className="flex gap-2 justify-start items-center   ">
         <Image

@@ -1,4 +1,3 @@
-import { getUserTransactions } from "@/app/actions";
 import { ImageComponent } from "@/UI";
 import dollarIcon from "@/assets/dollar.svg";
 import Image from "next/image";
@@ -6,24 +5,20 @@ import { roundValue } from "@/app/lib";
 import dayjs from "dayjs";
 import { TransactionsSortingSwitcher } from ".";
 import { GoDotFill } from "react-icons/go";
+import { ITransactionData } from "@/interfaces";
 import { FaArrowDownLong, FaArrowRightLong } from "react-icons/fa6";
 
 interface ITransactionsTableProps {
   data: {
     totalPages: number;
-    userTransactions: any[];
-    logos: Record<string, string>;
-    error?: undefined;
+    userTransactions: ITransactionData[];
+    error?: string;
   };
 }
 
 export default async function TransactionsTable({
   data,
 }: ITransactionsTableProps) {
-  // const data = await getUserTransactions(params);
-
-  console.log('userTransactions',data.userTransactions);
-
   if (!data || !data.userTransactions) {
     return (
       <div>
@@ -77,11 +72,7 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={
-                          fromItemLogo
-                            ? fromItemLogo
-                            : ""
-                        }
+                        src={fromItemLogo ? fromItemLogo : ""}
                         alt={`${fromItemSymbol} image`}
                         width={30}
                         height={30}
@@ -104,11 +95,7 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={
-                          toItemLogo
-                            ? toItemLogo
-                            : ""
-                        }
+                        src={toItemLogo ? toItemLogo : ""}
                         alt={`${toItemSymbol} image`}
                         width={30}
                         height={30}
@@ -211,11 +198,7 @@ export default async function TransactionsTable({
                       />
                     ) : (
                       <ImageComponent
-                        src={
-                          toItemSymbol in data.logos
-                            ? data.logos[toItemSymbol]
-                            : ""
-                        }
+                        src={toItemLogo ? toItemLogo : ""}
                         alt={`${toItemSymbol} image`}
                         width={30}
                         height={30}

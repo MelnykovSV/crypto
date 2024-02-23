@@ -2,7 +2,6 @@ import { coinsPerPage } from "./constants";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "./app/lib";
 
-
 const { coinMarketCupKey } = process.env;
 
 // export const getCurrenciesData = async (page: number) => {
@@ -101,7 +100,7 @@ export const searchCoins = async (query: string) => {
     );
     const data = await res.json();
 
-    console.log(data)
+    console.log(data);
 
     return data.coins;
   } catch (error) {
@@ -114,6 +113,7 @@ export const searchCoins = async (query: string) => {
     }
   }
 };
+
 
 export const getCoinMarketChartData = async (
   coin: string,

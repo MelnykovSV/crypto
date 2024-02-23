@@ -1,11 +1,6 @@
-import { getTransactionsPages, getUserTransactions } from "@/app/actions";
+import { getUserTransactions } from "@/app/actions";
 import {
-  TransactionsSearch,
   TransactionsTable,
-  TransactionTypeSelect,
-  TransactionStatusSelect,
-  TransactionsSortingSwitcher,
-  TransactionsDatePicker,
   PaginationComponent,
 } from "@/components";
 
