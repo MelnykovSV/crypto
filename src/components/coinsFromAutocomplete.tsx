@@ -38,9 +38,10 @@ export default function CoinsFromAutocomplete({
 
       if (firstUpdate.current) {
         firstUpdate.current = false;
-      } else {
-        setLoading(true);
-      }
+      } 
+      // else {
+      //   setLoading(true);
+      // }
 
       const res = await getPortfolioCoins();
 
@@ -50,7 +51,7 @@ export default function CoinsFromAutocomplete({
       }
 
       setOptions(parseStrToJSON(res));
-      setLoading(false);
+      // setLoading(false);
     })();
   }, [debouncedQuery]);
 
