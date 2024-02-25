@@ -4,9 +4,7 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import { searchCoins } from "@/api";
-import {
-  useDebounce,
-} from "usehooks-ts";
+import { useDebounce } from "usehooks-ts";
 import { useEffect, useRef, useState } from "react";
 
 interface ICoinGeckoCoin {
@@ -77,20 +75,15 @@ export default function CoinsAutocomplete({
         setOpen(false);
       }}
       isOptionEqualToValue={(option, value) => option.name === value.name}
-      getOptionLabel={(option) =>
-        `${option.name} (${option.symbol}) #${option.market_cap_rank}`
-      }
+      getOptionLabel={(option) => `${option.name} (${option.symbol})`}
       options={options}
       loading={loading}
-      // value={value}
       onChange={(
         event: React.ChangeEvent<EventTarget>,
         newValue: ICoinGeckoCoin | null
       ) => {
-        // setValue(newValue || null);
 
         if (newValue) {
-
           const {
             id: coinGeckoId,
             large: logo,

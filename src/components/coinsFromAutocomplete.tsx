@@ -7,7 +7,7 @@ import { parseStrToJSON } from "@/app/lib";
 import { toast } from "react-toastify";
 import { getPortfolioCoins } from "@/app/actions";
 import { useDebounce } from "usehooks-ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { IPortfolioCoin } from "@/interfaces";
 
 interface ICoinsAutocompleteProps {
@@ -27,9 +27,21 @@ export default function CoinsFromAutocomplete({
   const [loading, setLoading] = useState(false);
   const debouncedQuery = useDebounce<string>(query, 500);
 
+  const firstUpdate = useRef(true);
+
   useEffect(() => {
     (async () => {
-      setLoading(true);
+      // if (!firstUpdate.current) {
+      //   firstUpdate.current = false;
+      //   return;
+      // }
+
+      if (firstUpdate.current) {
+        firstUpdate.current = false;
+      } else {
+        setLoading(true);
+      }
+
       const res = await getPortfolioCoins();
 
       if (res instanceof Object && "error" in res) {

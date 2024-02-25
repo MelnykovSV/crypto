@@ -57,7 +57,8 @@ export default function BuyForm({
         }
 
         const { coefficient, toCurrencyCoinMarketCapId } = res;
-        
+
+
         setCoefficient(coefficient);
         setToItemCoinMarketCapId(toCurrencyCoinMarketCapId.toString());
 

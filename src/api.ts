@@ -100,8 +100,6 @@ export const searchCoins = async (query: string) => {
     );
     const data = await res.json();
 
-    console.log(data);
-
     return data.coins;
   } catch (error) {
     if (error instanceof Error && error.message === "Failed to fetch") {
@@ -113,7 +111,6 @@ export const searchCoins = async (query: string) => {
     }
   }
 };
-
 
 export const getCoinMarketChartData = async (
   coin: string,
@@ -152,8 +149,8 @@ export const getCoinOHLCData = async (
     );
 
     if (!res.ok) {
-      // Log the status code and throw an error
-      console.error("HTTP status code:", res.status);
+
+
       throw new Error("Network response was not ok");
     }
     const data = await res.json();
@@ -170,49 +167,3 @@ export const getCoinOHLCData = async (
   }
 };
 
-// export const getSingleCoinData = async (coin: string) => {
-//   try {
-//     const res = await fetch(
-//       `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=${coinsPerPage}&precision=3`
-//     );
-//     const data = await res.json();
-
-//     return data;
-//   } catch (error) {
-//     if (error instanceof Error && error.message === "Failed to fetch") {
-//       toast.error("To many requests. Try again later.");
-//     } else if (error instanceof Error) {
-//       toast.error(error.message);
-//     } else {
-//       toast.error("Unknown error");
-//     }
-//   }
-// };
-
-// export const getCoinPrice = async (
-//   symbol: string,
-//   convert?: string | undefined
-// ) => {
-//   try {
-//     const res = await fetch(
-//       `https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?symbol=${symbol}${
-//         convert ? `&convert=${convert}` : ""
-//       }`,
-//       {
-//         headers: {
-//           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-//         },
-//       }
-//     );
-
-//     console.log(res);
-
-//     const data = await res.json();
-
-//     return data;
-//   } catch (error) {
-//     console.log(error);
-//     const message = getErrorMessage(error);
-//     toast.error(message);
-//   }
-// };

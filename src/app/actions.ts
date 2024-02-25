@@ -93,6 +93,7 @@ export async function getUserPortfolio() {
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+          cache: "no-store",
         },
       }
     );
@@ -189,6 +190,7 @@ export async function createTransaction(transactionData: ITransactionData) {
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+          cache: "no-store",
         },
       }
     );
@@ -344,6 +346,7 @@ export async function getCoinPrice(
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
         },
+        cache: "no-store",
       }
     );
 
@@ -379,6 +382,7 @@ export async function getCoinPriceForExchange(
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
         },
+        cache: "no-store",
       }
     );
 
@@ -428,6 +432,7 @@ export async function getCoinPriceById(
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
+          cache: "no-store",
         },
       }
     );

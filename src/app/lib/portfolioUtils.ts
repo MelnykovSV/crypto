@@ -3,8 +3,10 @@ import {
   IPortfolioCoin,
   // ITransaction,
   IPriceListData,
-  ITransactionData
+  ITransactionData,
 } from "@/interfaces";
+
+import { roundValue } from ".";
 
 export function calculatePortfolioPrice(
   priceList: Record<string, { name: string; symbol: string; price: number }>,
@@ -66,7 +68,7 @@ export function processTransaction(
           return {
             symbol: coin.symbol,
             name: coin.name,
-            amount: coin.amount - fromAmount,
+            amount: Number(roundValue(coin.amount - fromAmount)),
             logo: coin.logo,
             coinGeckoId: coin.coinGeckoId,
             coinMarketCapId: coin.coinMarketCapId,
@@ -108,7 +110,7 @@ export function processTransaction(
             return {
               symbol: coin.symbol,
               name: coin.name,
-              amount: coin.amount + toAmount,
+              amount: Number(roundValue(coin.amount + toAmount)),
               logo: coin.logo,
               coinGeckoId: coin.coinGeckoId,
               coinMarketCapId: coin.coinMarketCapId,
@@ -142,7 +144,7 @@ export function processTransaction(
           ...coins,
           {
             symbol: toItemSymbol,
-            amount: toAmount,
+            amount: Number(roundValue(toAmount)),
             coinGeckoId: toItemCoinGeckoId,
             coinMarketCapId: toItemCoinMarketCapId,
             logo: toItemLogo,
@@ -183,7 +185,7 @@ export function processTransaction(
           return {
             symbol: coin.symbol,
             name: coin.name,
-            amount: coin.amount - fromAmount,
+            amount: Number(roundValue(coin.amount - fromAmount)),
             logo: coin.logo,
             coinGeckoId: coin.coinGeckoId,
             coinMarketCapId: coin.coinMarketCapId,
@@ -207,7 +209,7 @@ export function processTransaction(
             return {
               symbol: coin.symbol,
               name: coin.name,
-              amount: coin.amount + toAmount,
+              amount: Number(roundValue(coin.amount + toAmount)),
               logo: coin.logo,
               coinGeckoId: coin.coinGeckoId,
               coinMarketCapId: coin.coinMarketCapId,
@@ -239,7 +241,7 @@ export function processTransaction(
           ...filteredCoinsFromPart,
           {
             symbol: toItemSymbol,
-            amount: toAmount,
+            amount: Number(roundValue(toAmount)),
             coinGeckoId: toItemCoinGeckoId,
             coinMarketCapId: toItemCoinMarketCapId,
             name: toItemName,
