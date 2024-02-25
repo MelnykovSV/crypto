@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import placeholderImage from "./../assets/image_placeholder.svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IImageComponentProps {
   src: string;
@@ -20,6 +20,10 @@ export default function ImageComponent({
   ...props
 }: IImageComponentProps) {
   const [imageSrc, setImageSrc] = useState(src);
+  useEffect(() => {
+    setImageSrc(src);
+  }, [src]);
+
   return (
     <Image
       src={imageSrc.startsWith("https://") ? imageSrc : placeholderImage}

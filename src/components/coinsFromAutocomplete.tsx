@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { IPortfolioCoin } from "@/interfaces";
 
 interface ICoinsAutocompleteProps {
-  selectCoinHandler: (value: IPortfolioCoin) => void;
+  selectCoinHandler: (value: IPortfolioCoin | null) => void;
   label: string;
 }
 
@@ -31,17 +31,9 @@ export default function CoinsFromAutocomplete({
 
   useEffect(() => {
     (async () => {
-      // if (!firstUpdate.current) {
-      //   firstUpdate.current = false;
-      //   return;
-      // }
-
       if (firstUpdate.current) {
         firstUpdate.current = false;
-      } 
-      // else {
-      //   setLoading(true);
-      // }
+      }
 
       const res = await getPortfolioCoins();
 
@@ -51,7 +43,6 @@ export default function CoinsFromAutocomplete({
       }
 
       setOptions(parseStrToJSON(res));
-      // setLoading(false);
     })();
   }, [debouncedQuery]);
 
@@ -96,7 +87,10 @@ export default function CoinsFromAutocomplete({
       ) => {
         setInputValue(newInputValue);
 
-        if (reason === "input" && newInputValue.length > 1) {
+        if (reason === "clear") {
+          setQuery("");
+          selectCoinHandler(null);
+        } else if (reason === "input" && newInputValue.length > 1) {
           setQuery(newInputValue);
         }
       }}

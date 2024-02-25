@@ -38,7 +38,7 @@ export default function BuyForm({
     return true;
   };
 
-  const toCoinHandler = (value: ICoin) => {
+  const toCoinHandler = (value: ICoin|null) => {
     setToCurrency(value);
   };
 

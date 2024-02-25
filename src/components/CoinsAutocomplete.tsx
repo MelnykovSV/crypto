@@ -23,7 +23,7 @@ interface ICoin {
 }
 
 interface ICoinsAutocompleteProps {
-  selectCoinHandler: (value: ICoin) => void;
+  selectCoinHandler: (value: ICoin | null) => void;
   label: string;
 }
 
@@ -82,7 +82,6 @@ export default function CoinsAutocomplete({
         event: React.ChangeEvent<EventTarget>,
         newValue: ICoinGeckoCoin | null
       ) => {
-
         if (newValue) {
           const {
             id: coinGeckoId,
@@ -108,8 +107,10 @@ export default function CoinsAutocomplete({
         reason
       ) => {
         setInputValue(newInputValue);
-
-        if (reason === "input" && newInputValue.length > 1) {
+        if (reason === "clear") {
+          setQuery("");
+          selectCoinHandler(null);
+        } else if (reason === "input" && newInputValue.length > 1) {
           setQuery(newInputValue);
         }
       }}

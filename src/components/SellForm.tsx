@@ -21,6 +21,7 @@ export default function SellForm({
   modalCloseHandler: () => void;
   modalLoadingHandler: (value: boolean) => void;
 }) {
+  console.log("form rerender");
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<IPortfolioCoin | null>(null);
   const [fromAmount, setFromAmount] = useState<number | null>(null);
@@ -36,6 +37,7 @@ export default function SellForm({
   };
 
   const fromCoinHandler = (value: IPortfolioCoin | null) => {
+    console.log(value);
     setFromCurrency(value);
   };
 
@@ -72,9 +74,7 @@ export default function SellForm({
           return;
         }
 
-        const {coefficient} = res
-
-
+        const { coefficient } = res;
 
         setCoefficient(coefficient);
 
