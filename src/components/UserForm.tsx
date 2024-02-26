@@ -1,11 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { userFormValidation } from "@/validation/userFormValidation";
 import { useForm } from "react-hook-form";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Controller } from "react-hook-form";
 
@@ -15,6 +14,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { CustomSession } from "@/interfaces";
 import { TextField } from "@mui/material";
 import InputMask from "react-input-mask";
+import { updateUserData } from "@/app/actions";
 
 interface UserFormValues {
   name: string;
@@ -29,9 +29,6 @@ export default function UserForm() {
     status: string;
     update: any;
   };
-  
-
-  console.log("session", session);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -70,42 +67,21 @@ export default function UserForm() {
     };
 
     setIsLoading(true);
-    try {
-      const res = await fetch("/api/user", {
-        method: "PUT",
-        body: JSON.stringify(requestBody),
-      });
 
-      console.log(res.status);
+    const res = await updateUserData(requestBody);
 
-      const body = await res.json();
-
-      console.log(body);
-
-      if (res.status === 409) {
-        setError(body.message);
-      }
-      if (res.status === 200) {
-        setError("");
-      }
-
-      if (res.ok) {
-        await session.update(requestBody);
-      }
-    } catch (error) {
-      setError("Error, try again");
-      console.log(error);
+    if (res instanceof Object && "error" in res && res.error) {
+      setError(res.error);
+      return;
     }
+
+    await session.update(requestBody);
 
     setIsLoading(false);
   };
 
   return (
-    <form
-      className=" pb-5"
-      onSubmit={handleSubmit(onSubmit, (err) => {
-        console.log(err);
-      })}>
+    <form className=" pb-5" onSubmit={handleSubmit(onSubmit)}>
       <label className="flex flex-col mb-2 h-[106px]  leading-none">
         <span className=" h-5 mb-[10px] ">Email</span>
 
@@ -153,7 +129,6 @@ export default function UserForm() {
           control={control}
           name="phone"
           render={({ field }) => {
-            console.log(field.value);
             return (
               <InputMask
                 mask="+38 (999) 999-99-99"
@@ -190,7 +165,6 @@ export default function UserForm() {
             control={control}
             name="birthday"
             render={({ field }) => {
-              console.log(field.value);
               return (
                 <DatePicker
                   value={field.value ? dayjs(field.value) : null}

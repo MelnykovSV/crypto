@@ -6,6 +6,7 @@ import { CustomSession } from "@/interfaces";
 import Image from "next/image";
 import pencilIcon from "@/assets/pencil.svg";
 import { DNA } from "react-loader-spinner";
+import { uploadAvatar } from "@/app/actions";
 
 export default function AvatarUploader() {
   const session = useSession() as {
@@ -52,9 +53,7 @@ export default function AvatarUploader() {
         return;
       }
       if (file.size > maxSizeInBytes) {
-        console.log(
-          "The uploaded file is too large. The maximum size is 600 KB."
-        );
+        setError("The uploaded file is too large. The maximum size is 600 KB.");
         e.target.value = "";
         return;
       }
@@ -65,27 +64,14 @@ export default function AvatarUploader() {
 
       setIsLoading(true);
 
-      ///start
+      const res = await uploadAvatar(formData);
 
-      try {
-        const res = await fetch("/api/user/avatar", {
-          method: "PATCH",
-          body: formData,
-        });
-        console.log(res);
-
-        const body = await res.json();
-
-        if (res.ok) {
-          await session.update({ avatar: body.avatar });
-        }
-        console.log(body);
-      } catch (error) {
-        const message = getErrorMessage(error);
-        setError(message);
+      if (res instanceof Object && "error" in res && res.error) {
+        setError(res.error);
+        return;
       }
 
-      ///end
+      await session.update({ avatar: res.avatar });
 
       setIsLoading(false);
     }

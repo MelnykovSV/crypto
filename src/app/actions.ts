@@ -17,6 +17,18 @@ import { transactionsPerPage } from "@/constants";
 import dayjs from "dayjs";
 import { coinsPerPage } from "@/constants";
 
+import { NextRequest, NextResponse } from "next/server";
+
+import cloudinary from "cloudinary";
+
+import { userFormValidation } from "@/validation/userFormValidation";
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+});
+
 const { coinMarketCupKey } = process.env;
 
 interface IUserTransactionsQuerry {
@@ -542,5 +554,148 @@ export const getCoinMarketChartData = async (
     } else {
       return { error: getErrorMessage(error) };
     }
+  }
+};
+
+export const uploadAvatar = async (formData: FormData) => {
+  try {
+    await connectDB();
+    const session = (await getServerSession(authOptions)) as CustomSession;
+
+    if (!session || !session.user) {
+      return {
+        error: "Not authenticated",
+      };
+    }
+
+    const user = await User.findById(session.user.id);
+
+    if (!user) {
+      return {
+        error: "Not authenticated",
+      };
+    }
+
+    const avatar = formData.get("avatar") as File;
+    if (
+      avatar &&
+      avatar.type &&
+      avatar.type !== "image/jpeg" &&
+      avatar.type !== "image/png"
+    ) {
+      return {
+        error: "You can use png and jpeg formats for an avatar",
+      };
+    }
+
+    const arrayBuffer = await avatar.arrayBuffer();
+
+    var mime = avatar.type;
+    var encoding = "base64";
+    var base64Data = Buffer.from(arrayBuffer).toString("base64");
+    var fileUri = "data:" + mime + ";" + encoding + "," + base64Data;
+
+    const buffer = new Uint8Array(arrayBuffer);
+
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        var result = cloudinary.v2.uploader
+          .upload(fileUri, {
+            invalidate: true,
+            transformation: [{ width: 220, height: 220, crop: "fill" }],
+          })
+          .then((result) => {
+            resolve(result);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    };
+
+    const response = (await uploadToCloudinary()) as { url: string };
+
+    if (!response) {
+      return {
+        error: "Upload failed",
+      };
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      session.user.id,
+      { avatar: response.url },
+      { new: true }
+    );
+
+    return { message: "Avatar updated", avatar: response.url };
+  } catch (error) {
+    return {
+      error: getErrorMessage(error) || "Internal server error",
+    };
+  }
+};
+
+export const updateUserData = async (req: {
+  birthday: string | null;
+  name: string;
+  email: string;
+  phone?: string | undefined;
+}) => {
+  const { email, name, phone, birthday } = req;
+
+  try {
+    const errors = await validate(userFormValidation, {
+      email,
+      name,
+      phone,
+      birthday,
+    });
+
+    if (errors) {
+      return { error: errors.join(",") || "unknown validation error" };
+    }
+
+    const session = (await getServerSession(authOptions)) as CustomSession;
+
+    if (!session || !session.user) {
+      return { error: "Not authenticated" };
+    }
+
+    const user = await User.findById(session.user.id);
+
+    if (!user) {
+      return { error: "Not authenticated" };
+    }
+
+    const userFoundByEmail = await User.findOne({ email });
+    if (
+      userFoundByEmail &&
+      userFoundByEmail._id.toString() !== session.user.id
+    ) {
+      return { error: "This email already in use" };
+    }
+
+    const userFoundByName = await User.findOne({ name });
+
+    if (userFoundByName && userFoundByName._id.toString() !== session.user.id) {
+      return { error: "This name already in use" };
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      session.user.id,
+      {
+        email,
+        name,
+        phone,
+        birthday,
+      },
+      { new: true }
+    );
+
+    return { message: "User info updated" };
+  } catch (error) {
+    return {
+      error: getErrorMessage(error) || "Internal server error",
+    };
   }
 };
