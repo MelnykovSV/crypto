@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import { DNA } from "react-loader-spinner";
 import { useState } from "react";
+import { roundValue } from "@/app/lib";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 interface IPieChartProps {
@@ -27,6 +28,13 @@ export default function PieChart({ data }: IPieChartProps) {
       events: {
         mounted: function (chartContext, options) {
           setIsChartLoading(false);
+        },
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: function (value) {
+          return `${roundValue(value)}$`;
         },
       },
     },
