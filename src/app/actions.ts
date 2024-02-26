@@ -501,7 +501,7 @@ export const getCurrenciesData = async (page: number) => {
 export const getSingleCoinData = async (coin: string) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=${coinsPerPage}&precision=3`
+      `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&precision=10`
     );
     const data = await res.json();
     if (data.status && data.status.error_code === 429) {

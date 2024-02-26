@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginFormValidation } from "@/validation/loginFormValidation";
 import Link from "next/link";
+import { DNA } from "react-loader-spinner";
 
 interface LoginValues {
   email: string;
@@ -51,6 +52,23 @@ export default function LoginForm() {
     }
     setIsLoading(false);
   };
+
+  if (sessionStatus === "loading") {
+    return (
+      <div className="h-[302px] relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100]">
+          <DNA
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form

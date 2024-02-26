@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-
 import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import { DNA } from "react-loader-spinner";
+import { roundValue } from "@/app/lib";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -14,8 +14,6 @@ interface ICoinChartProps {
 
 export default function CoinChart({ series, type }: ICoinChartProps) {
   const [isChartLoading, setIsChartLoading] = useState(true);
-
-
 
   const lineOptions: ApexOptions = {
     tooltip: {
@@ -147,7 +145,7 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
           cssClass: "apexcharts-xaxis-label",
         },
         formatter: (value) => {
-          return `${value.toFixed(6)}$`;
+          return `${roundValue(value)}$`;
         },
       },
     },

@@ -5,6 +5,7 @@ import { getErrorMessage } from "@/app/lib";
 import { CustomSession } from "@/interfaces";
 import Image from "next/image";
 import pencilIcon from "@/assets/pencil.svg";
+import { DNA } from "react-loader-spinner";
 
 export default function AvatarUploader() {
   const session = useSession() as {
@@ -12,6 +13,7 @@ export default function AvatarUploader() {
     status: string;
     update: any;
   };
+
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -22,17 +24,23 @@ export default function AvatarUploader() {
     }
   };
 
-
-
-
+  if (session.status === "loading") {
+    return (
+      <div className="h-[302px] relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100]">
+          <DNA
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper"
+          />
+        </div>
+      </div>
+    );
+  }
   const changeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
-
-
-
-
-
-
-
     const file = e.target.files?.[0];
 
     if (file) {
@@ -57,6 +65,8 @@ export default function AvatarUploader() {
 
       setIsLoading(true);
 
+      ///start
+
       try {
         const res = await fetch("/api/user/avatar", {
           method: "PATCH",
@@ -74,6 +84,9 @@ export default function AvatarUploader() {
         const message = getErrorMessage(error);
         setError(message);
       }
+
+      ///end
+
       setIsLoading(false);
     }
   };

@@ -35,7 +35,6 @@ export default function PortfolioPageBody({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formType, setFormType] = useState("buy");
 
-
   const updatePortfolioHandler = async () => {
     const res = await getUserPortfolio();
 
@@ -219,14 +218,22 @@ export default function PortfolioPageBody({
           </div>
         </div>
 
-        <h2 className="font-bold text-3xl pl-[20px]">Total price chart</h2>
+        {portfolio.coins.length ? (
+          <>
+            <h2 className="font-bold text-3xl pl-[20px]">Total price chart</h2>
 
-        <ProfitChart data={lineChartData} />
+            <ProfitChart data={lineChartData} />
 
-        <div className="flex flex-col-reverse laptop:flex-row mt-8 gap-5">
-          <PortfolioList portfolio={portfolio} priceList={priceList} />
-          <PieChart data={pieChartData} />
-        </div>
+            <div className="flex flex-col-reverse laptop:flex-row mt-8 gap-5">
+              <PortfolioList portfolio={portfolio} priceList={priceList} />
+              <PieChart data={pieChartData} />
+            </div>
+          </>
+        ) : (
+          <h2 className="font-bold text-3xl pl-[20px]">
+            Your portfolio is empty for now
+          </h2>
+        )}
 
         <Modal
           open={isModalOpen}

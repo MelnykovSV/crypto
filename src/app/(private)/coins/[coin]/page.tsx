@@ -7,6 +7,7 @@ import twitterIcon from "@/assets/twitter.svg";
 import facebookIcon from "@/assets/facebook.svg";
 import githubIcon from "@/assets/github.svg";
 import { getSingleCoinData, getCoinMarketChartData } from "@/app/actions";
+import { roundValue } from "@/app/lib";
 
 import "react-toastify/dist/ReactToastify.css";
 
@@ -42,7 +43,7 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
   }
 
   return (
-    <div className=" pr-5">
+    <div className=" pr-5 pb-10">
       <div className="flex flex-col gap-5 items-end mb-5 laptop:flex-row">
         <div className="w-full laptop:w-[70%]">
           <p className=" px-2 py-1 bg-accent w-fit rounded-lg mb-6">
@@ -58,16 +59,20 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
 
             <p className=" font-bold">{coinData.name || "Coin name"}</p>
             <p className=" text-slate-400">
-              {coinData.symbol || "Coin symbol"}
+              {coinData.symbol.toUpperCase() || "Coin symbol"}
             </p>
           </div>
 
-          <div className="flex gap-3 items-center justify-center w-fit mb-6">
+          <div className="flex gap-3 items-center justify-center w-fit mb-6 flex-wrap">
             <p className=" text-3xl font-bold">
               {coinData.market_data.current_price.usd
-                ? `$${coinData.market_data.current_price.usd.toLocaleString(
-                    "en-US"
-                  )}`
+                ? `$${
+                    coinData.market_data.current_price.usd > 1
+                      ? coinData.market_data.current_price.usd.toLocaleString(
+                          "en-US"
+                        )
+                      : roundValue(coinData.market_data.current_price.usd)
+                  }`
                 : "No data"}
             </p>
 
@@ -115,20 +120,28 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                   }%`,
                 }}></div>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between flex-wrap">
               <p>
                 {coinData.market_data.low_24h.usd
-                  ? `$${coinData.market_data.low_24h.usd.toLocaleString(
-                      "en-US"
-                    )}`
+                  ? `$${
+                      coinData.market_data.low_24h.usd > 1
+                        ? coinData.market_data.low_24h.usd.toLocaleString(
+                            "en-US"
+                          )
+                        : roundValue(coinData.market_data.low_24h.usd)
+                    }`
                   : "No data"}
               </p>
               <p>24h Range</p>
               <p>
                 {coinData.market_data.high_24h.usd
-                  ? `$${coinData.market_data.high_24h.usd.toLocaleString(
-                      "en-US"
-                    )}`
+                  ? `$${
+                      coinData.market_data.high_24h.usd > 1
+                        ? coinData.market_data.high_24h.usd.toLocaleString(
+                            "en-US"
+                          )
+                        : roundValue(coinData.market_data.high_24h.usd)
+                    }`
                   : "No data"}
               </p>
             </div>
@@ -384,6 +397,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                           <li key={item}>
                             <a
                               href={item}
+                              target="_blank"
+                              rel="noreferrer noopener"
                               className=" py-1 px-2 bg-slate-500 rounded-md">
                               {item.replace(
                                 /^(?:https?:\/\/)?(?:www\.)?(.+?)(?:\/|$)/,
@@ -396,6 +411,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                     {!!coinData.links.whitepaper && (
                       <li key={coinData.links.whitepaper}>
                         <a
+                          target="_blank"
+                          rel="noreferrer noopener"
                           href={coinData.links.whitepaper}
                           className=" py-1 px-2 bg-slate-500 rounded-md">
                           Whitepaper
@@ -420,6 +437,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                           <li key={item}>
                             <a
                               href={item}
+                              target="_blank"
+                              rel="noreferrer noopener"
                               className=" py-1 px-2 bg-slate-500 rounded-md">
                               {item.replace(
                                 /^https?:\/\/(?:www\.)?([^\/]+)\/.*$/,
@@ -447,6 +466,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                           <li key={item}>
                             <a
                               href={item}
+                              target="_blank"
+                              rel="noreferrer noopener"
                               className="flex py-1 px-2 bg-slate-500 rounded-md">
                               {item.replace(
                                 /^https?:\/\/(?:www\.)?([^\/]+)\/.*$/,
@@ -460,6 +481,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                       <li key={coinData.links.twitter_screen_name}>
                         <a
                           className="flex gap-2 py-1 px-2 bg-slate-500 rounded-md"
+                          target="_blank"
+                          rel="noreferrer noopener"
                           href={`https://twitter.com/${coinData.links.twitter_screen_name}`}>
                           <Image
                             src={twitterIcon}
@@ -478,6 +501,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                       <li key={coinData.links.facebook_username}>
                         <a
                           className="flex gap-2 py-1 px-2 bg-slate-500 rounded-md"
+                          target="_blank"
+                          rel="noreferrer noopener"
                           href={`https://www.facebook.com/${coinData.links.facebook_username}`}>
                           <Image
                             src={facebookIcon}
@@ -513,6 +538,8 @@ export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
                           <li key={item}>
                             <a
                               href={item}
+                              target="_blank"
+                              rel="noreferrer noopener"
                               className="flex gap-2 py-1 px-2 bg-slate-500 rounded-md">
                               <Image
                                 src={githubIcon}

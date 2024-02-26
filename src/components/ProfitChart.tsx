@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import { DNA } from "react-loader-spinner";
 import { useState } from "react";
+import { roundValue } from "@/app/lib";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -150,17 +151,17 @@ export default function ProfitChart({ data }: IProfitChartprops) {
           cssClass: "apexcharts-xaxis-label",
         },
         formatter: (value) => {
-          return `${value.toFixed(6)}$`;
+          return `${roundValue(value) }$`;
         },
       },
     },
   };
 
   return (
-    <div className="h-[420px] overflow-hidden relative">
+    <div className="h-[420px] overflow-hidden relative text-zinc-950">
       <ApexChart
         options={lineOptions}
-        series={[{ data }]}
+        series={[{ name: "Portfolio value", data }]}
         type="line"
         height={420}
         width={"100%"}
