@@ -93,7 +93,7 @@ const config: Config = {
           " radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%), url('/bg-gradient.svg')",
         "radial-gradient-2": "  url('/bg-gradient-orange.svg')",
         "radial-gradient-blue": "  url('/bg-gradient-blue.svg')",
-        looper: "  url('/looper.svg')",
+        looper: "  url('/Looper.svg')",
         "star-1": "  url('/star-1.svg')",
         "star-2": "  url('/star-2.svg')",
         "star-3": "  url('/star-3.svg')",
