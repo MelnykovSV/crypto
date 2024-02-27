@@ -14,6 +14,16 @@ const config: Config = {
         inter: ["var(--font-inter)"],
         mont: ["var(--font-montserrat)"],
       },
+
+      container: {
+        padding: {
+          DEFAULT: "20px",
+          sm: "50px",
+          // lg: "4rem",
+          // xl: "5rem",
+          // "2xl": "6rem",
+        },
+      },
       screens: {
         "large-mobile": "480px",
         tablet: "640px",
@@ -73,13 +83,20 @@ const config: Config = {
         "accent-blue": "#1f8ebe",
         "accent-light": "rgba(177, 2, 205, 0.4)",
         "accent-dark": "#933FFE",
+        "accent-purple": "#B982FF",
       },
       backgroundImage: {
         "gradient-conic":
           "conic-gradient(from 90deg at 50% 50%, #b102cd, #933FFE, #1f8ebe, #933FFE, #b102cd), radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%)",
-
+        heroImage: "url('/hero-bg-img@2x.png')",
         "radial-gradient-1":
           " radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%), url('/bg-gradient.svg')",
+        "radial-gradient-2": "  url('/bg-gradient-orange.svg')",
+        "radial-gradient-blue": "  url('/bg-gradient-blue.svg')",
+        looper: "  url('/looper.svg')",
+        "star-1": "  url('/star-1.svg')",
+        "star-2": "  url('/star-2.svg')",
+        "star-3": "  url('/star-3.svg')",
         "accent-gradient": "linear-gradient(101deg, #1f8ebe 0%, #b102cd 100%);",
         "auth-accent-gradient":
           "linear-gradient(225deg, #18C8FF 14.89%, #933FFE 85.85%)",

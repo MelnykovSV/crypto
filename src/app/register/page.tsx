@@ -7,7 +7,7 @@ import { Logo } from "@/components";
 export default async function RegisterPage() {
   const session = await getServerSession();
   if (session) {
-    redirect("/profile");
+    redirect("/portfolio");
   }
   return (
     <>
