@@ -88,7 +88,7 @@ const config: Config = {
       backgroundImage: {
         "gradient-conic":
           "conic-gradient(from 90deg at 50% 50%, #b102cd, #933FFE, #1f8ebe, #933FFE, #b102cd), radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%)",
-        heroImage: "url('/hero-bg-img@2x.png')",
+        heroImage: "url('/hero-bg-img.png')",
         "radial-gradient-1":
           " radial-gradient(circle, rgba(255,255,255,0)  40%, #0B0B0F 100%), url('/bg-gradient.svg')",
         "radial-gradient-2": "  url('/bg-gradient-orange.svg')",
