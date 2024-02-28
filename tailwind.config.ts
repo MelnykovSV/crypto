@@ -1,6 +1,4 @@
 import type { Config } from "tailwindcss";
-// const plugin = require("tailwindcss/plugin");
-// import BgGradientSvg from "/public/bg-gradient.svg";
 
 const config: Config = {
   content: [
@@ -19,23 +17,15 @@ const config: Config = {
         padding: {
           DEFAULT: "20px",
           sm: "50px",
-          // lg: "4rem",
-          // xl: "5rem",
-          // "2xl": "6rem",
         },
       },
       screens: {
         "large-mobile": "480px",
         tablet: "640px",
-        // // => @media (min-width: 640px) { ... }
-
-        // 'laptop': '1024px',
-        // // => @media (min-width: 1024px) { ... }
         laptop: "1024px",
         "small-desktop": "1280px",
         desktop: "1440px",
         "large-desktop": "1536px",
-        // => @media (min-width: 1280px) { ... }
       },
       animation: {
         "hue-rotate": "hue-rotate 3s linear infinite forwards",
@@ -98,6 +88,8 @@ const config: Config = {
         "star-2": "  url('/star-2.svg')",
         "star-3": "  url('/star-3.svg')",
         "accent-gradient": "linear-gradient(101deg, #1f8ebe 0%, #b102cd 100%);",
+        "darken-gradient":
+          "linear-gradient(to bottom, rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0.5));",
         "auth-accent-gradient":
           "linear-gradient(225deg, #18C8FF 14.89%, #933FFE 85.85%)",
         "progress-gradient":
@@ -105,10 +97,5 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    // plugin(function plugin1({ addUtilities, addComponents, e, config }) {
-    //   // Add your custom styles here
-    // }),
-  ],
 };
 export default config;

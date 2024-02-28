@@ -6,8 +6,9 @@ import moneyIcon from "@/assets/money.svg";
 import walletIcon from "@/assets/wallet.svg";
 import shieldImage from "@/assets/shield@2x.png";
 import bagImage from "@/assets/bag@2x.png";
-import heroBgImage from "@/assets/hero-bg-img@2x.png@2x.png";
+import heroBgImage from "@/assets/hero-bg-img@2x.png";
 import Image from "next/image";
+import arrowRightIcon from "@/assets/arrow-right.svg";
 
 export default async function Home() {
   const session = await getServerSession();
@@ -37,8 +38,16 @@ export default async function Home() {
             </div>
           </header>
           <main>
-            <section className="pt-[130px] laptop:pt-[249px] mb-10 laptop:mb-20 bg-heroImage bg-[length:875px_451px] tablet:bg-[length:1250px_645px] laptop:bg-[length:2500px_1290px] bg-no-repeat bg-top tablet:bg-[center_top_-8rem] laptop:bg-[center_top_-17rem] ">
-              <div className="container mx-auto max-w-screen-xl">
+            <section className="relative pt-[130px] laptop:pt-[249px] mb-10 laptop:mb-20 bg-heroImage-1 bg-[length:875px_451px] tablet:bg-[length:1250px_645px] laptop:bg-[length:2500px_1290px] bg-no-repeat bg-top tablet:bg-[center_top_-8rem] laptop:bg-[center_top_-17rem] ">
+              <div className="absolute left-1/2  -translate-x-1/2 top-0 tablet:top-[-8rem] laptop:top-[-17rem] w-[875px] h-[451px] tablet:w-[1250px] tablet:h-[645px] laptop:w-[2500px] laptop:h-[1290px] ">
+                <Image
+                  src={heroBgImage}
+                  alt="bg image"
+                  className="w-full h-full"
+                  sizes="(min-width: 1024px) 2500px, (min-width: 640px) 1250px, 875px"
+                />
+              </div>
+              <div className="container mx-auto max-w-screen-xl relative z-10">
                 <h1 className="text-[30px] tablet:text-[45px]   laptop:text-[85px] font-black text-white leading-[1.3] mb-[72px] text-center max-w-[780px] mx-auto">
                   We make crypto clear and simple
                 </h1>
@@ -72,9 +81,15 @@ export default async function Home() {
                     </div>
 
                     <Link
-                      className="block mx-auto w-fit font-semibold text-accent-purple"
+                      className="mx-auto w-fit font-semibold text-accent-purple flex gap-[6px] items-center"
                       href="/register">
                       Get started
+                      <Image
+                        src={arrowRightIcon}
+                        alt="arrow icon"
+                        width={24}
+                        height={24}
+                      />
                     </Link>
                   </div>
                   <div className="w-full tablet:w-[calc((100%-20px)/3)] laptop:w-[calc((100%-40px)/3)] py-4 px-2 laptop:py-8 laptop:px-6 rounded-[25px] bg-black-12 flex flex-col gap-8 justify-between">
@@ -96,9 +111,15 @@ export default async function Home() {
                     </div>
 
                     <Link
-                      className="block mx-auto w-fit font-semibold text-accent-purple"
+                      className=" mx-auto w-fit font-semibold text-accent-purple flex gap-[6px] items-center"
                       href="/register">
                       Get started
+                      <Image
+                        src={arrowRightIcon}
+                        alt="arrow icon"
+                        width={24}
+                        height={24}
+                      />
                     </Link>
                   </div>
                   <div className="w-full tablet:w-[calc((100%-20px)/3)] laptop:w-[calc((100%-40px)/3)] py-4 px-2 laptop:py-8 laptop:px-6 rounded-[25px] bg-black-12 flex flex-col gap-8 justify-between">
@@ -120,9 +141,15 @@ export default async function Home() {
                     </div>
 
                     <Link
-                      className="block mx-auto w-fit font-semibold text-accent-purple "
+                      className=" mx-auto w-fit font-semibold text-accent-purple flex gap-[6px] items-center"
                       href="/register">
                       Get started
+                      <Image
+                        src={arrowRightIcon}
+                        alt="arrow icon"
+                        width={24}
+                        height={24}
+                      />
                     </Link>
                   </div>
                 </div>
