@@ -17,5 +17,8 @@ export const registerFormValidation = object({
 
   password: string()
     .required("Please enter the password")
-    .matches(passwordRegexp, "Password is not valid."),
+    .matches(
+      passwordRegexp,
+      "Please ensure your password includes at least one lowercase letter, one uppercase letter, and one symbol or number."
+    ),
 });

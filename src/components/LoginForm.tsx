@@ -79,7 +79,7 @@ export default function LoginForm() {
           className="mb-2 p-4 bg-[#16161E] rounded-[10px]"
           {...register("email", { required: true, maxLength: 80 })}
         />
-        <span className="h-3 text-xs text-error">
+        <span className="min-h-3 text-xs text-error">
           {errors.email && errors.email.message}
         </span>
       </label>
@@ -92,7 +92,7 @@ export default function LoginForm() {
           className="mb-2 p-4 bg-[#16161E] rounded-[10px]"
           {...register("password", { required: true, maxLength: 80 })}
         />
-        <span className="h-3 text-xs text-error">
+        <span className="min-h-6 text-xs text-error">
           {errors.password && errors.password.message}
         </span>
       </label>
@@ -101,7 +101,7 @@ export default function LoginForm() {
         Don’t have an account?
       </Link>
 
-      {<span className="h-3 text-xs text-error">{error || ""}</span>}
+      {<span className="min-h-6 text-xs text-error">{error || ""}</span>}
 
       <button
         type="submit"
