@@ -6,7 +6,7 @@ import moneyIcon from "@/assets/money.svg";
 import walletIcon from "@/assets/wallet.svg";
 import shieldImage from "@/assets/shield@2x.png";
 import bagImage from "@/assets/bag@2x.png";
-import heroBgImage from "@/assets/hero-bg-img@2x.png";
+import heroBgImage from "@/assets/hero-bg-img.jpg";
 import Image from "next/image";
 import arrowRightIcon from "@/assets/arrow-right.svg";
 
@@ -39,7 +39,7 @@ export default async function Home() {
           </header>
           <main>
             <section className="relative pt-[130px] laptop:pt-[249px] mb-10 laptop:mb-20 bg-heroImage-1 bg-[length:875px_451px] tablet:bg-[length:1250px_645px] laptop:bg-[length:2500px_1290px] bg-no-repeat bg-top tablet:bg-[center_top_-8rem] laptop:bg-[center_top_-17rem] ">
-              <div className="absolute left-1/2  -translate-x-1/2 top-0 tablet:top-[-8rem] laptop:top-[-17rem] w-[875px] h-[451px] tablet:w-[1250px] tablet:h-[645px] laptop:w-[2500px] laptop:h-[1290px] ">
+              <div className="absolute left-1/2  -translate-x-1/2 top-0 tablet:top-[-8rem] laptop:top-[-13rem] w-[875px] h-[451px] tablet:w-[1250px] tablet:h-[645px] laptop:w-[2500px] laptop:h-[1290px] ">
                 <Image
                   src={heroBgImage}
                   alt="bg image"
