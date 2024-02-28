@@ -20,7 +20,7 @@ import ExchangeForm from "./ExchangeForm";
 import CoinsAutocomplete from "./CoinsAutocomplete";
 import SellForm from "./SellForm";
 import BuyForm from "./BuyForm";
-import ProfitChart from "./ProfitChart";
+import TotalPriceChart from "./TotalPriceChart";
 import PieChart from "./PieChart";
 import PortfolioList from "./PortfolioList";
 import TransactionsSearch from "./TransactionsSearch";
@@ -54,7 +54,7 @@ export {
   CoinsAutocomplete,
   SellForm,
   BuyForm,
-  ProfitChart,
+  TotalPriceChart,
   PieChart,
   PortfolioList,
   TransactionsSearch,

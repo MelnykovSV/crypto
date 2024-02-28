@@ -7,14 +7,14 @@ import { roundValue } from "@/app/lib";
 
 const ApexChart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-interface IProfitChartprops {
+interface ITotalPriceChartProps {
   data: {
     x: Date;
     y: number;
   }[];
 }
 
-export default function ProfitChart({ data }: IProfitChartprops) {
+export default function TotalPriceChart({ data }: ITotalPriceChartProps) {
   const [isChartLoading, setIsChartLoading] = useState(true);
 
   const lineOptions: ApexOptions = {

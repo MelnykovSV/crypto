@@ -25,9 +25,6 @@ cloudinary.v2.config({
 
 const { coinMarketCupKey, coinGeckoKey } = process.env;
 
-console.log("coinMarketCupKey", coinMarketCupKey);
-console.log("coinGeckoKey", coinGeckoKey);
-
 interface IUserTransactionsQuerry {
   type: "all" | "buy" | "sell" | "exchange";
   substring: string | null;

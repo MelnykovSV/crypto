@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ExchangeForm, SellForm, BuyForm } from ".";
 import { IPortfolio, IPriceList } from "@/interfaces";
 import Box from "@mui/material/Box";
@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Modal from "@mui/material/Modal";
 import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";
-import { ProfitChart, PieChart } from ".";
+import { TotalPriceChart, PieChart } from ".";
 import { calculatePortfolioPrice } from "@/app/lib";
 import { getUserPortfolio } from "@/app/actions";
 import { PortfolioList } from ".";
@@ -221,7 +221,7 @@ export default function PortfolioPageBody({
           <>
             <h2 className="font-bold text-3xl pl-[20px]">Total price chart</h2>
 
-            <ProfitChart data={lineChartData} />
+            <TotalPriceChart data={lineChartData} />
 
             <div className="flex flex-col-reverse laptop:flex-row mt-8 gap-5">
               <PortfolioList portfolio={portfolio} priceList={priceList} />
