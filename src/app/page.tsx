@@ -160,7 +160,7 @@ export default async function Home() {
               <div className="container mx-auto max-w-screen-xl  z-0">
                 <div className="max-w-[780px] mx-auto  z-0 before:content-[''] before:block before:absolute before:top-[50%] before:left-[50%] before:translate-x-[-15%]  laptop:before:translate-x-[0%] before:translate-y-[-25%] before:w-[797px] before:h-[797px] before:z-0  before:bg-cover before:bg-looper   after:content-[''] after:block after:absolute after:top-[75%] laptop:after:top-[55%] after:left-[80%]  after:w-[min(4vv,60px)] after:h-[min(4vw,60px)] after:z-0  after:bg-cover after:bg-star-3">
                   <h2 className="font-black text-[35px] laptop:text-[50px]  leading-[1.3] text-center mb-[10px] relative z-10">
-                    A cryto mining platform that invest in you
+                    A crypto platform that invest in you
                   </h2>
                   <p className="max-w-[580px] text-black-60 text-center mb-8 mx-auto relative z-10">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
