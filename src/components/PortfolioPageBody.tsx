@@ -5,7 +5,6 @@ import { IPortfolio, IPriceList } from "@/interfaces";
 import Box from "@mui/material/Box";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import Modal from "@mui/material/Modal";
 import Backdrop from "@mui/material/Backdrop";
 import Fade from "@mui/material/Fade";

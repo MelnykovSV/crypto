@@ -1,9 +1,8 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import MobileMenu from "./MobileMenu";
 import BurgerIcon from "./../assets/burger.svg";
 import Image from "next/image";
-import { useCallback } from "react";
 
 export default function MobileMenuContainer() {
   const [isOpen, setisOpen] = useState(false);
@@ -28,7 +27,6 @@ export default function MobileMenuContainer() {
           width={30}
           height={30}
           className=" block w-[30px] h-[30px]"
-
         />
       </button>
 

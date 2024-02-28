@@ -8,9 +8,7 @@ import facebookIcon from "@/assets/facebook.svg";
 import githubIcon from "@/assets/github.svg";
 import { getSingleCoinData, getCoinMarketChartData } from "@/app/actions";
 import { roundValue } from "@/app/lib";
-
 import "react-toastify/dist/ReactToastify.css";
-
 import { ImageComponent } from "@/UI";
 
 interface ICoinPageProps {
@@ -21,8 +19,8 @@ interface ICoinPageProps {
 
 export default async function CoinPage({ params: { coin } }: ICoinPageProps) {
   const initialChartData = await getCoinMarketChartData(coin, "usd", 1);
-
   const coinData = await getSingleCoinData(coin);
+
 
   if (initialChartData instanceof Object && "error" in initialChartData) {
     return (

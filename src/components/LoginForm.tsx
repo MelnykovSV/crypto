@@ -38,8 +38,6 @@ export default function LoginForm() {
     try {
       const res = await signIn("credentials", { ...data, redirect: false });
 
-      console.log(res);
-
       if (res?.status === 401) {
         setError("Invalid email or password");
         if (res?.url) router.replace("/profile");
@@ -48,7 +46,6 @@ export default function LoginForm() {
       }
     } catch (error) {
       setError("Error, try again");
-      console.log(error);
     }
     setIsLoading(false);
   };

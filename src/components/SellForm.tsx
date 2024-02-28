@@ -2,12 +2,11 @@
 import { useState, useEffect } from "react";
 import { getCoinPriceById } from "@/app/actions";
 import { CoinsFromAutocomplete } from ".";
-import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import Slider from "@mui/material/Slider";
 import { createTransaction } from "@/app/actions";
-import { IPortfolioCoin, ITransactionData } from "@/interfaces";
+import { IPortfolioCoin, ITransactionData,IPortfolio } from "@/interfaces";
 import { toast } from "react-toastify";
 
 export default function SellForm({
@@ -21,7 +20,6 @@ export default function SellForm({
   modalCloseHandler: () => void;
   modalLoadingHandler: (value: boolean) => void;
 }) {
-  console.log("form rerender");
   const [isLoading, setIsLoading] = useState(false);
   const [fromCurrency, setFromCurrency] = useState<IPortfolioCoin | null>(null);
   const [fromAmount, setFromAmount] = useState<number | null>(null);
@@ -37,7 +35,6 @@ export default function SellForm({
   };
 
   const fromCoinHandler = (value: IPortfolioCoin | null) => {
-    console.log(value);
     setFromCurrency(value);
   };
 

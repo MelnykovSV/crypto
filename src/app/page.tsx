@@ -12,6 +12,7 @@ import arrowRightIcon from "@/assets/arrow-right.svg";
 
 export default async function Home() {
   const session = await getServerSession();
+
   if (session) {
     redirect("/portfolio");
   }

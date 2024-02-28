@@ -1,7 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRef, useState } from "react";
-import { getErrorMessage } from "@/app/lib";
 import { CustomSession } from "@/interfaces";
 import Image from "next/image";
 import pencilIcon from "@/assets/pencil.svg";

@@ -78,8 +78,7 @@ export const authOptions: NextAuthOptions = {
         : token;
     },
     async session({ session, token, user }) {
-      // Note that this if condition is needed
-      // if (session.user) {
+
       session.user = {
         ...session.user,
         email: token.email,
@@ -89,7 +88,7 @@ export const authOptions: NextAuthOptions = {
         birthday: token.birthday,
         avatar: token.avatar,
       } as IUser;
-      // }
+
 
       return session;
     },

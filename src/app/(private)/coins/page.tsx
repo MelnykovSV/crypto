@@ -17,6 +17,8 @@ export default async function Page({ searchParams }: ICoinsPageProps) {
   const pagesAmount = await getTotalCoinsPages();
   const tableData = await getCurrenciesData(Number(page));
 
+
+
   if (pagesAmount instanceof Object && "error" in pagesAmount) {
     return (
       <div>

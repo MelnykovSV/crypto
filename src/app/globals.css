@@ -42,22 +42,6 @@ body {
   color: #b102cd;
 }
 
-.darken-image {
-  background-image: linear-gradient(
-      to bottom,
-      rgb(0, 0, 0, 0.5),
-      rgb(0, 0, 0, 0.5)
-    ),
-    url("/auth-bg.jpg");
-
-  background-color: #0b0b0f;
-}
-
-@media screen and (min-width: 640px) {
-  .darken-image {
-    background-image: url("/auth-bg.jpg");
-  }
-}
 
 .visually-hidden {
   clip: rect(0 0 0 0);
@@ -84,15 +68,6 @@ body {
   background-image: none;
   pointer-events: none;
 }
-/* .disabled:before {
-  background-color: gray;
-  background-image: none;
-} */
-/* .disabled:hover:before {
-  background-color: gray;
-  background-image: none;
-  opacity: 0;
-} */
 
 @keyframes ripple {
   0% {
@@ -106,8 +81,6 @@ body {
       0 0 0 30px rgba(167, 36, 196, 0);
   }
 }
-
-
 
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -157,7 +130,6 @@ input[type="number"] {
 }
 
 .apexcharts-legend {
-  /* align-items: end !important; */
   margin: 0 auto;
   justify-content: start !important;
 }

@@ -1,8 +1,6 @@
-// "use client";
 
-import { Sparkline } from "@/UI";
+import { Sparkline,ImageComponent } from "@/UI";
 import { ICoinTableData } from "@/interfaces";
-import { ImageComponent } from "@/UI";
 import Link from "next/link";
 import { roundValue } from "@/app/lib";
 

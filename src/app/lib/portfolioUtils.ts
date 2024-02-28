@@ -1,11 +1,9 @@
 import {
   IPortfolio,
   IPortfolioCoin,
-  // ITransaction,
   IPriceListData,
   ITransactionData,
 } from "@/interfaces";
-
 import { roundValue } from ".";
 
 export function calculatePortfolioPrice(
@@ -40,11 +38,7 @@ export function processTransaction(
     type,
     fromAmount,
     fromItemSymbol,
-
     fromItemCoinGeckoId,
-    fromItemCoinMarketCapId,
-    fromItemLogo,
-    fromItemName,
     toItemSymbol,
     toAmount,
     toItemCoinGeckoId,

@@ -43,7 +43,6 @@ export default function PieChart({ data }: IPieChartProps) {
       showForSingleSeries: false,
       showForNullSeries: true,
       showForZeroSeries: true,
-      // position: "bottom",
       horizontalAlign: "center",
       floating: false,
       fontSize: "16px",
@@ -67,7 +66,6 @@ export default function PieChart({ data }: IPieChartProps) {
       width: 280,
       height: undefined,
       tooltipHoverFormatter: undefined,
-      // customLegendItems: ['<div>"azazaza"</div>'],
       offsetX: 0,
       offsetY: 0,
       labels: {
@@ -85,10 +83,6 @@ export default function PieChart({ data }: IPieChartProps) {
         onClick: undefined,
         offsetX: 0,
         offsetY: 0,
-        // customHTML: function () {
-        //   console.log(this);
-        //   return ' <div class="flex w-7 justify-between"><span class="custom-marker block w-3 h-3"></span> <div class="block w-3 h-3"><img src="https://s2.coinmarketcap.com/static/img/coins/64x64/1.png" class="block w-full h-full"/></div> </div>';
-        // },
       },
       itemMargin: {
         horizontal: 5,
@@ -107,12 +101,10 @@ export default function PieChart({ data }: IPieChartProps) {
         breakpoint: 600,
         options: {
           chart: {
-            // width: 300,
             height: 800,
           },
           legend: {
             position: "bottom",
-            // show: false,
             width: 280,
             height: 300,
           },

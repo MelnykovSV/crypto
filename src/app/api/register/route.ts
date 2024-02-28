@@ -13,7 +13,6 @@ export async function POST(request: Request) {
     name,
     password,
   });
-  console.log(errors);
   if (errors) {
     return NextResponse.json(
       { errors: errors || "unknown validation error" },

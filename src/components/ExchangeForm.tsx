@@ -2,13 +2,11 @@
 import { useState, useEffect } from "react";
 import { createTransaction, getCoinPriceForExchange } from "@/app/actions";
 import { CoinsAutocomplete, CoinsFromAutocomplete } from ".";
-import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { TextField } from "@mui/material";
 import Slider from "@mui/material/Slider";
-import { IPortfolioCoin, ICoin, ITransactionData } from "@/interfaces";
+import { IPortfolioCoin, ICoin, ITransactionData,IPortfolio } from "@/interfaces";
 import { toast } from "react-toastify";
-
 
 export default function ExchangeForm({
   userPortfolio,
@@ -77,7 +75,6 @@ export default function ExchangeForm({
   useEffect(() => {
     (async () => {
       if (fromCurrency && toCurrency) {
-
         const res = await getCoinPriceForExchange(fromCurrency, toCurrency);
 
         if (res instanceof Object && "error" in res) {
@@ -89,7 +86,6 @@ export default function ExchangeForm({
 
         setCoefficient(coefficient);
         setToItemCoinMarketCapId(toCurrencyCoinMarketCapId.toString());
-
 
         if (fromAmount && toAmount) {
           setToAmount(
@@ -134,7 +130,6 @@ export default function ExchangeForm({
       fromItemCoinMarketCapId: fromCurrency?.coinMarketCapId,
       fromAmount,
     } as ITransactionData;
-
 
     await createTransaction(transactionData);
     setIsLoading(false);
@@ -219,7 +214,9 @@ export default function ExchangeForm({
                   setFromAmount(
                     Math.min(
                       Number(Number(e.target.value).toFixed(4)),
-                      Number((fromCurrency ? fromCurrency.amount : 0).toFixed(4))
+                      Number(
+                        (fromCurrency ? fromCurrency.amount : 0).toFixed(4)
+                      )
                     )
                   );
                   setToAmount(
@@ -230,7 +227,8 @@ export default function ExchangeForm({
                         ),
                         Number(
                           (
-                            (fromCurrency ? fromCurrency.amount : 0) * coefficient
+                            (fromCurrency ? fromCurrency.amount : 0) *
+                            coefficient
                           ).toFixed(4)
                         )
                       )
@@ -347,7 +345,9 @@ export default function ExchangeForm({
                   );
                   setFromAmount(
                     Math.min(
-                      Number((fromCurrency ? fromCurrency.amount : 0).toFixed(4)),
+                      Number(
+                        (fromCurrency ? fromCurrency.amount : 0).toFixed(4)
+                      ),
                       Number((Number(e.target.value) / coefficient).toFixed(4))
                     )
                   );
@@ -369,7 +369,6 @@ export default function ExchangeForm({
         className={` ${isLoading ? "loading  blocked" : ""} ${
           isDataValid() ? "" : "disabled"
         } relative z-10 block text-base w-fit min-w-32 bg-auth-accent-gradient  rounded-[10px] before:rounded-[10px] py-[17px] px-[18px] leading-none  mx-auto before:content-[''] before:absolute before:left-0  before:top-0  before:transition-opacity before:duration-300 before:ease-linear before:w-full  before:h-full before:-z-10 before:bg-accent-gradient before:opacity-0 before:bg-cover before:animate-hue-rotate hover:before:opacity-100`}>
-        {" "}
         Exchange
       </button>
     </form>

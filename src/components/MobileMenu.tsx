@@ -1,6 +1,6 @@
 "use client";
 import { createPortal } from "react-dom";
-import { useRef, useEffect, useState, ReactNode } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { AnimatePresence, motion } from "framer-motion";
 import { Logo } from ".";

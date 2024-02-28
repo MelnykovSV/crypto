@@ -2,11 +2,10 @@
 import { useState, useEffect, useRef } from "react";
 import { getCoinPrice } from "@/app/actions";
 import { CoinsAutocomplete } from ".";
-import { IPortfolio } from "@/interfaces";
 import { ImageComponent } from "@/UI";
 import { InputAdornment, TextField } from "@mui/material";
 import { createTransaction } from "@/app/actions";
-import { ICoin, ITransactionData } from "@/interfaces";
+import { ICoin, ITransactionData, IPortfolio } from "@/interfaces";
 import { toast } from "react-toastify";
 
 export default function BuyForm({
@@ -38,7 +37,7 @@ export default function BuyForm({
     return true;
   };
 
-  const toCoinHandler = (value: ICoin|null) => {
+  const toCoinHandler = (value: ICoin | null) => {
     setToCurrency(value);
   };
 
@@ -57,7 +56,6 @@ export default function BuyForm({
         }
 
         const { coefficient, toCurrencyCoinMarketCapId } = res;
-
 
         setCoefficient(coefficient);
         setToItemCoinMarketCapId(toCurrencyCoinMarketCapId.toString());

@@ -2,8 +2,8 @@
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import React from "react";
-import { FaArrowUp } from "react-icons/fa";
-import { FaArrowDown } from "react-icons/fa";
+import { FaArrowUp,FaArrowDown } from "react-icons/fa";
+
 
 export default function TransactionsSortingSwitcher() {
   const searchParams = useSearchParams();

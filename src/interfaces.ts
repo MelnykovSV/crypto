@@ -25,7 +25,6 @@ export interface ICoinData {
   atl: 0.0398177;
   atl_change_percentage: number;
   atl_date: string;
-  //   roi: null;
   last_updated: string;
   sparkline_in_7d: { price: number[] }; ///
   price_change_percentage_1h_in_currency: number; //
@@ -49,7 +48,6 @@ export interface ICoinTableData
     | "market_cap_change_24h"
     | "sparkline_in_7d"
   > {
-  // favorite: boolean;
 }
 
 export interface CustomSession extends DefaultSession {

@@ -22,7 +22,6 @@ import SellForm from "./SellForm";
 import BuyForm from "./BuyForm";
 import ProfitChart from "./ProfitChart";
 import PieChart from "./PieChart";
-import PortfolioListItem from "./PortfolioListItem";
 import PortfolioList from "./PortfolioList";
 import TransactionsSearch from "./TransactionsSearch";
 import TransactionsTable from "./TransactionsTable";
@@ -57,7 +56,6 @@ export {
   BuyForm,
   ProfitChart,
   PieChart,
-  PortfolioListItem,
   PortfolioList,
   TransactionsSearch,
   TransactionsTable,

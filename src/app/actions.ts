@@ -10,17 +10,11 @@ import { newTransactionFormValidation } from "@/validation/newTransactionValidat
 import { createPriceList, processTransaction } from "./lib";
 import { IPortfolioCoin, ICoin } from "@/interfaces";
 import connectDB from "./lib/dbConnect";
-import { IPortfolio } from "@/interfaces";
 import { IPriceList, ICoinMarketCapCoin } from "@/interfaces";
-import { AnimationDuration } from "recharts/types/util/types";
 import { transactionsPerPage } from "@/constants";
 import dayjs from "dayjs";
 import { coinsPerPage } from "@/constants";
-
-import { NextRequest, NextResponse } from "next/server";
-
 import cloudinary from "cloudinary";
-
 import { userFormValidation } from "@/validation/userFormValidation";
 
 cloudinary.v2.config({
@@ -29,7 +23,10 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const { coinMarketCupKey } = process.env;
+const { coinMarketCupKey, coinGeckoKey } = process.env;
+
+console.log("coinMarketCupKey", coinMarketCupKey);
+console.log("coinGeckoKey", coinGeckoKey);
 
 interface IUserTransactionsQuerry {
   type: "all" | "buy" | "sell" | "exchange";
@@ -160,21 +157,7 @@ export async function createTransaction(transactionData: ITransactionData) {
       throw new Error(errors.join(","));
     }
 
-    const {
-      type,
-      fromItemName,
-      fromItemSymbol,
-      fromItemLogo,
-      fromItemCoinGeckoId,
-      fromItemCoinMarketCapId,
-      fromAmount,
-      toItemName,
-      toItemSymbol,
-      toItemCoinGeckoId,
-      toItemCoinMarketCapId,
-      toItemLogo,
-      toAmount,
-    } = transactionData;
+    const { fromItemCoinMarketCapId, toItemCoinMarketCapId } = transactionData;
 
     const newTransaction = await Transaction.create({
       ...transactionData,
@@ -237,7 +220,6 @@ export async function createTransaction(transactionData: ITransactionData) {
 
     return JSON.stringify({ portfolio: updatedPortfolio, priceList });
   } catch (error) {
-    console.log(getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 }
@@ -378,7 +360,6 @@ export async function getCoinPrice(
 
     return { coefficient, toCurrencyCoinMarketCapId: foundCurrency.id };
   } catch (error) {
-    console.log(getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 }
@@ -428,7 +409,6 @@ export async function getCoinPriceForExchange(
 
     return { coefficient, toCurrencyCoinMarketCapId: foundToCurrency.id };
   } catch (error) {
-    console.log(getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 }
@@ -465,7 +445,6 @@ export async function getCoinPriceById(
 
     return { coefficient };
   } catch (error) {
-    console.log(getErrorMessage(error));
     return { error: getErrorMessage(error) };
   }
 }
@@ -473,7 +452,7 @@ export async function getCoinPriceById(
 export const getTotalCoinsPages = async () => {
   try {
     const res = await fetch(
-      "https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD",
+      `https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=${coinGeckoKey}`,
       { cache: "force-cache" }
     );
     const data = await res.json();
@@ -491,7 +470,7 @@ export const getTotalCoinsPages = async () => {
 export const getCurrenciesData = async (page: number) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/markets?order=market_cap_desc&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&per_page=${coinsPerPage}&precision=3`,
+      `https://api.coingecko.com/api/v3/coins/markets?order=market_cap_desc&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_api_key=${coinGeckoKey}&vs_currency=usd&per_page=${coinsPerPage}&precision=3`,
       { cache: "force-cache" }
     );
     const data = await res.json();
@@ -513,7 +492,7 @@ export const getCurrenciesData = async (page: number) => {
 export const getSingleCoinData = async (coin: string) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFjD&vs_currency=usd&precision=10`
+      `https://api.coingecko.com/api/v3/coins/${coin}?x_cg_api_key=${coinGeckoKey}&vs_currency=usd&precision=10`
     );
     const data = await res.json();
     if (data.status && data.status.error_code === 429) {
@@ -538,7 +517,7 @@ export const getCoinMarketChartData = async (
 ) => {
   try {
     const res = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=CG-db2xtHNdy1C4m5Vd6wRkGFj`
+      `https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=${vs_currency}&days=${days}&precision=${precision}&x_cg_api_key=${coinGeckoKey}`
     );
 
     const data = await res.json();

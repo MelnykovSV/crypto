@@ -56,7 +56,6 @@ export default function RegisterForm() {
       }
     } catch (error) {
       setError("Error, try again");
-      console.log(error);
     }
     setIsLoading(false);
   };

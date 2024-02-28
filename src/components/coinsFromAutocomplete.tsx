@@ -21,7 +21,6 @@ export default function CoinsFromAutocomplete({
 }: ICoinsAutocompleteProps) {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<readonly IPortfolioCoin[]>([]);
-
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);

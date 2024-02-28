@@ -4,12 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { userFormValidation } from "@/validation/userFormValidation";
-import { useForm } from "react-hook-form";
+import { useForm,Controller  } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { Controller } from "react-hook-form";
-
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { CustomSession } from "@/interfaces";
 import { TextField } from "@mui/material";
@@ -135,7 +132,6 @@ export default function UserForm() {
                 value={field.value}
                 disabled={false}
                 onChange={field.onChange}
-                // maskChar=" "
               >
                 <TextField
                   type="phone"

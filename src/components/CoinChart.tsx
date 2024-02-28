@@ -176,7 +176,6 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
     chart: {
       type: "area",
       stacked: false,
-      // height: 350,
       width: "100%",
       zoom: {
         type: "x",
@@ -294,9 +293,7 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
 
     case "line":
       return (
-        //Container with fixed height needed
         <div className=" text-zinc-950">
-          {/* <button></button> */}
 
           <div className="app h-[420px] overflow-hidden relative">
             {
@@ -327,7 +324,7 @@ export default function CoinChart({ series, type }: ICoinChartProps) {
     default:
       return (
         <div>
-          <h2>Some error</h2>
+          <h2>Incorrect chart type</h2>
         </div>
       );
   }

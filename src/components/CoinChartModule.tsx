@@ -1,7 +1,7 @@
 "use client";
 
 import { CoinChart } from ".";
-import { useEffect, useState, useReducer, useRef } from "react";
+import { useEffect, useState,  useRef } from "react";
 import { getCoinOHLCData, getCoinMarketChartData } from "@/api";
 import { formatCandleChartData, formatLineChartData } from "@/app/lib";
 import { usePathname } from "next/navigation";
