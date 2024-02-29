@@ -65,11 +65,11 @@ export default function AvatarUploader() {
       <div className=" p-4 rounded-full w-[250px] h-[250px] mb-2 mx-auto  ">
         {session.data && session.data.user ? (
           <div
-            className={`w-full h-full  rounded-full relative ${
+            className={`w-full h-full bg-black-20  rounded-full relative ${
               isLoading && "loading"
             }   object-cover`}>
             {session.data.user.name ? (
-              <p className="absolute w-full h-full flex justify-center items-center text-7xl -z-10">
+              <p className="absolute  w-full h-full flex justify-center items-center text-7xl ">
                 {session.data.user.name[0].toUpperCase()}
               </p>
             ) : null}
@@ -79,7 +79,7 @@ export default function AvatarUploader() {
                 alt={`User avatar`}
                 width={218}
                 height={218}
-                className="block rounded-full w-full h-full object-cover"
+                className="block relative z-20 rounded-full w-full h-full object-cover"
               />
             ) : null}
 
@@ -87,7 +87,7 @@ export default function AvatarUploader() {
               onClick={fileInputHandler}
               className={`${
                 isLoading && "blocked"
-              } rounded-full absolute bottom-4 right-4 z-10 bg-accent-dark p-2 transition-colors duration-300 ease-linear hover:bg-accent`}>
+              } rounded-full absolute bottom-4 right-4 z-30 bg-accent-dark p-2 transition-colors duration-300 ease-linear hover:bg-accent`}>
               <Image
                 src={pencilIcon}
                 alt={`Pencol icon`}
