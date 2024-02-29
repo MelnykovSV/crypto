@@ -85,6 +85,9 @@ export default function Search() {
             }) => (
               <li key={item.id}>
                 <Link
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
                   href={`/coins/${item.id}`}
                   className="flex justify-between p-2 transition-colors duration-150 ease-linear  hover:bg-accent">
                   <div className="flex justify-between w-full">

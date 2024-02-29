@@ -99,8 +99,8 @@ export async function getUserPortfolio() {
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-          cache: "no-store",
         },
+        cache: "no-store",
       }
     );
 
@@ -182,8 +182,8 @@ export async function createTransaction(transactionData: ITransactionData) {
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-          cache: "no-store",
         },
+        cache: "no-store",
       }
     );
 
@@ -394,6 +394,7 @@ export async function getCoinPriceForExchange(
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
         },
+        cache: "no-store",
       }
     );
 
@@ -421,8 +422,8 @@ export async function getCoinPriceById(
       {
         headers: {
           "X-CMC_PRO_API_KEY": coinMarketCupKey!,
-          cache: "no-store",
         },
+        cache: "no-store",
       }
     );
 
@@ -450,7 +451,7 @@ export const getTotalCoinsPages = async () => {
   try {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=${coinGeckoKey}`,
-      { cache: "force-cache" }
+      { cache: "force-cache", next: { revalidate: 3600 } }
     );
     const data = await res.json();
 
@@ -468,7 +469,7 @@ export const getCurrenciesData = async (page: number) => {
   try {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/coins/markets?order=market_cap_desc&page=${page}&sparkline=true&price_change_percentage=1h,24h,7d&x_cg_api_key=${coinGeckoKey}&vs_currency=usd&per_page=${coinsPerPage}&precision=3`,
-      { cache: "force-cache" }
+      { cache: "force-cache", next: { revalidate: 3600 } }
     );
     const data = await res.json();
 

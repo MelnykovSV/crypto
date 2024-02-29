@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import dayjs from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { userFormValidation } from "@/validation/userFormValidation";
-import { useForm,Controller  } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -69,6 +69,7 @@ export default function UserForm() {
 
     if (res instanceof Object && "error" in res && res.error) {
       setError(res.error);
+      setIsLoading(false);
       return;
     }
 
@@ -131,8 +132,7 @@ export default function UserForm() {
                 mask="+38 (999) 999-99-99"
                 value={field.value}
                 disabled={false}
-                onChange={field.onChange}
-              >
+                onChange={field.onChange}>
                 <TextField
                   type="phone"
                   className="mb-2 bg-[#16161E] rounded-[10px]"

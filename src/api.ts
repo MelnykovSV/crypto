@@ -6,7 +6,7 @@ export const getCurrenciesMap = async () => {
   try {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/coins/list?x_cg_api_key=${coinGeckoKey}`,
-      { cache: "force-cache" }
+      { cache: "force-cache", next: { revalidate: 3600 } }
     );
     const data = await res.json();
 
